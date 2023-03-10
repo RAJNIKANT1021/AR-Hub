@@ -29,7 +29,7 @@
     right: -30px;
     bottom: -80px;
 }
-form{
+.form_login{
     height: 520px;
     width: 400px;
     background-color: rgba(255,255,255,0.13);
@@ -43,14 +43,14 @@ form{
     box-shadow: 0 0 40px rgba(8,7,16,0.6);
     padding: 50px 35px;
 }
-form *{
+.form_login *{
     font-family: 'Poppins',sans-serif;
-  
+
     letter-spacing: 0.5px;
     outline: none;
     border: none;
 }
-form h3{
+.form_login.form_login h3{
     font-size: 32px;
     font-weight: 500;
     line-height: 42px;
@@ -63,7 +63,7 @@ label{
     font-size: 16px;
     font-weight: 500;
 }
-input{
+.input_login{
     display: block;
     height: 50px;
     width: 100%;
@@ -77,13 +77,13 @@ input{
 ::placeholder{
     color: #e5e5e5;
 }
-button{
-    margin-top: 50px;
+.buttonlogin{
+    margin-top: 20px;
     width: 100%;
     background-color: #ffffff;
     color: #080710;
-    padding: 15px 0;
-    font-size: 18px;
+    padding: 12px 0;
+    font-size: 23px;
     font-weight: 600;
     border-radius: 5px;
     cursor: pointer;
