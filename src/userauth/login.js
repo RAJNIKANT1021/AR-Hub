@@ -18,7 +18,7 @@ function Login() {
   <label for="password">Password</label>
   <div className='d-flex'>
   <input type="password" placeholder="Password" id="password" />
-  <RiEyeCloseFill  className="icon" id="close" style={{
+  <RiEyeCloseFill  className="icon" id="close"  style={{
     position:'absolute',
     right:0,
     fontSize:27,
