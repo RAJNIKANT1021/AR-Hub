@@ -1,9 +1,8 @@
 import React from 'react'
 import './navbar.css'
 function Navbar() {
-  return (
-    
- <nav class="navbar navbar-expand-lg navbar-dark fixed-top "  >
+  return (   
+ <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
   <a class="navbar-brand" href="#">AR HUB</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
