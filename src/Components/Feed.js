@@ -4,7 +4,7 @@ import { Carousel } from "react-responsive-carousel";
 import "./Feed.css";
 import NewsCard from "./Feed_component/NewsCard";
 
-function Feed() {  rajoopo
+function Feed() { 
   return (
     <>
       <div className="d-flex flex-column">
@@ -87,7 +87,7 @@ function Feed() {  rajoopo
       }}>
       
         
-      <p className="px-4 heading" style ={{font: 'Work Sans',fontSize:'40px', color:'red',margin:'2px'}}>Sports
+      <p className="px-4 heading" style ={{font: 'Work Sans',fontSize:'40px', color:'beige',margin:'2px'}}>Sports
           </p>
         <div className="row__posters" >
           
@@ -114,7 +114,7 @@ function Feed() {  rajoopo
       </div>
     
       <div  style={{
-         marginTop:'100px'
+        marginTop:'100px'
       }}>
         <div className="row__posters">
           {/* several row posters */}
@@ -136,7 +136,7 @@ function Feed() {  rajoopo
         </div>
       </div>
       <div style={{
-         marginTop:'100px'
+        marginTop:'100px'
       }}>
         <div className="row__posters">
           {/* several row posters */}
@@ -152,7 +152,7 @@ function Feed() {  rajoopo
         </div>
       </div>
       <div style={{
-         marginTop:'100px'
+        marginTop:'100px'
       }}>
         <div className="row__posters">
           {/* several row posters */}
