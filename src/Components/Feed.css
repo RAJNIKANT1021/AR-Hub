@@ -58,5 +58,6 @@
     transform: scale(1.08);
   }
   .header{
-background-color: #0f172a;
-  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;}
+background-color: #1e293b;
+box-shadow:  rgba(217, 208, 208, 0.3) 0px 2px 2px -3px, rgba(238, 234, 234, 0.2) 0px 1px 0px inset;
+}

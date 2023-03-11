@@ -8,7 +8,7 @@ function Feed() {
   return (
     <>
       <div className="d-flex flex-column">
-        <div className="p-2 justify-content-center crousel">
+        <div className="justify-content-center crousel">
           <Carousel
             className="crousel_insider"
             showStatus={false}
@@ -113,9 +113,11 @@ function Feed() {
         </div>
       </div>
     
-      <div  style={{
+      <div className="header"   style={{
         marginTop:'100px'
       }}>
+          <p className="px-4 heading" style ={{font: 'Work Sans',fontSize:'40px', color:'beige',margin:'2px'}}>Health
+          </p>
         <div className="row__posters">
           {/* several row posters */}
           <div className="row__poster row__posterLarge">
@@ -135,9 +137,11 @@ function Feed() {
           </div>
         </div>
       </div>
-      <div style={{
+      <div className="header" style={{
         marginTop:'100px'
       }}>
+          <p className="px-4 heading" style ={{font: 'Work Sans',fontSize:'40px', color:'beige',margin:'2px'}}>Business
+          </p>
         <div className="row__posters">
           {/* several row posters */}
           <div className="row__poster row__posterLarge">

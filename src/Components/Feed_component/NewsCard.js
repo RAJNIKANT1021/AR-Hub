@@ -10,8 +10,11 @@ function NewsCard() {
      <div class="card" style={{backgroundColor:'#1e293b'}}>
        <div class="face face1">
          <div class="content">
-            <i class="fab fa-windows"></i>            
-           <h3>Windows</h3>
+         <img
+                src="https://source.unsplash.com/category/food/1600x900"
+                class="d-block w-100"
+                alt=""
+              />
          </div>
        </div>
        <div class="face face2">
