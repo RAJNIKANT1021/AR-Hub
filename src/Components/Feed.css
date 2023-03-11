@@ -7,7 +7,10 @@
  
 
 } */
-
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans&display=swap');
+.heading{
+  font-family: 'Work Sans', sans-serif;
+}
 @media screen and (max-width: 480px) {
     .crousel_insider{
         position: absolute;
@@ -28,7 +31,7 @@
     display: flex;
     overflow-x: scroll;
     overflow-y: hidden;
-    padding: 20px;
+    
   }
   
   .row__posters::-webkit-scrollbar {
