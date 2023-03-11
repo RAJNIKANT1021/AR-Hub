@@ -77,8 +77,20 @@ function Feed() {
           </Carousel>
         </div>
       </div>
-      <div className="p-2">
-        <div className="row__posters">
+      
+        
+
+      
+      <div style={{
+         marginTop:'100px',
+         backgroundColor:'pink'
+      }}>
+      
+        
+      <p className="px-4 heading" style ={{font: 'Work Sans',fontSize:'40px', color:'red',margin:'2px'}}>Sports
+          </p>
+        <div className="row__posters" >
+          
           {/* several row posters */}
           <div className="row__poster row__posterLarge">
             <NewsCard />
@@ -100,7 +112,10 @@ function Feed() {
           </div>
         </div>
       </div>
-      <div className="p-2">
+    
+      <div  style={{
+         marginTop:'100px'
+      }}>
         <div className="row__posters">
           {/* several row posters */}
           <div className="row__poster row__posterLarge">
@@ -120,7 +135,9 @@ function Feed() {
           </div>
         </div>
       </div>
-      <div className="p-2">
+      <div style={{
+         marginTop:'100px'
+      }}>
         <div className="row__posters">
           {/* several row posters */}
           <div className="row__poster row__posterLarge">
@@ -134,7 +151,9 @@ function Feed() {
           </div>
         </div>
       </div>
-      <div className="p-2">
+      <div style={{
+         marginTop:'100px'
+      }}>
         <div className="row__posters">
           {/* several row posters */}
           <div className="row__poster row__posterLarge">
