@@ -2,7 +2,7 @@ import React from 'react'
 
 function Games() {
   return (
-    <div>Games</div>
+    <div className='flex'>Games</div>
   )
 }
 

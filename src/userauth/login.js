@@ -3,7 +3,7 @@ import './login.css'
 import {RiEyeFill} from 'react-icons/ri'
 import {RiEyeCloseFill} from 'react-icons/ri'
 function Login() {
-  return (<>
+  return (<div className='flex space-evenly'>
 
   <div className="background">
   <div className="shape"></div>
@@ -58,7 +58,7 @@ function Login() {
 
   
   </form>
-</>
+  </div>
   )
 }
 
