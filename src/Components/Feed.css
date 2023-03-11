@@ -1,0 +1,20 @@
+
+.crousel_insider{
+   position: absolute;
+  
+    width: 72vw;
+    align-items: center;
+ 
+
+}
+@media screen and (max-width: 480px) {
+    .crousel_insider{
+        position: absolute;
+       
+         width: 40vh;
+         align-items: center;
+      
+     
+     }
+ 
+  }

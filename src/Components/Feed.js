@@ -1,45 +1,56 @@
 import React from 'react'
-
+import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
+import { Carousel } from 'react-responsive-carousel';
+import './Feed.css'
 function Feed() {
   return (
-    <div id="carouselExampleDark" class="carousel carousel-dark slide" data-bs-ride="carousel">
-  <div class="carousel-indicators">
-    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
-    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
-  </div>
-  <div class="carousel-inner">
-    <div class="carousel-item active" data-bs-interval="10000">
-      <img src="https://stock.adobe.com/in/images/portrait-of-fashion-asian-man/564833147" class="d-block w-100" alt="..."/>
-      <div class="carousel-caption d-none d-md-block">
-        <h5>First slide label</h5>
-        <p>Some representative placeholder content for the first slide.</p>
-      </div>
+
+    <div className='d-flex justify-content-center'>
+        <Carousel className='crousel_insider'
+          showStatus={false}
+          showThumbs={false}
+          autoPlay={true}
+         
+          infiniteLoop={true}
+          interval={5000}
+          stopOnHover={false}
+         
+        >
+          
+                <div>
+                <img class="d-block w-10" src="https://source.unsplash.com/category/cricket/1600x900" alt=''/>
+                   
+                </div>
+                <div>
+                <img src="https://source.unsplash.com/category/food/1600x900" class="d-block w-100" alt=""/>
+                    
+                </div>
+                <div>
+                <img src="https://source.unsplash.com/category/india/1600x900" class="d-block w-100" alt=""/>
+                   
+                </div>
+                <div>
+                <img src="https://source.unsplash.com/category/dubai/1600x900" class="d-block w-100" alt=""/>
+                    
+                </div>  <div>
+                <img src="https://source.unsplash.com/category/school/1600x900" class="d-block w-100 h-" alt=""/>
+                    
+                </div>  <div>
+                <img src="https://source.unsplash.com/category/love/1600x900" class="d-block w-100 h-" alt=""/>
+                    
+                </div>  <div>
+                <img src="https://source.unsplash.com/category/children/1600x900" class="d-block w-100 h-" alt=""/>
+                    
+                </div>  <div>
+                <img src="https://source.unsplash.com/category/mother/1600x900" class="d-block w-100 h-" alt=""/>
+                    
+                </div>
+              
+            </Carousel>
+
     </div>
-    <div class="carousel-item" data-bs-interval="2000">
-      <img src="https://stock.adobe.com/in/images/fuego-volcano-eruption-in-guatemala/564818179" class="d-block w-100" alt="..."/>
-      <div class="carousel-caption d-none d-md-block">
-        <h5>Second slide label</h5>
-        <p>Some representative placeholder content for the second slide.</p>
-      </div>
-    </div>
-    <div class="carousel-item">
-      <img src="https://stock.adobe.com/in/images/balloons-shapes-background/564835708" class="d-block w-100" alt="..."/>
-      <div class="carousel-caption d-none d-md-block">
-        <h5>Third slide label</h5>
-        <p>Some representative placeholder content for the third slide.</p>
-      </div>
-    </div>
-  </div>
-  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Previous</span>
-  </button>
-  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Next</span>
-  </button>
-</div>
+  
+   
   )
 }
 
