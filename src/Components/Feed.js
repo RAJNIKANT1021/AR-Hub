@@ -4,7 +4,7 @@ import { Carousel } from "react-responsive-carousel";
 import "./Feed.css";
 import NewsCard from "./Feed_component/NewsCard";
 
-function Feed() {  rajoo
+function Feed() {  rajoopo
   return (
     <>
       <div className="d-flex flex-column">
