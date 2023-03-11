@@ -4,7 +4,7 @@ import { Carousel } from "react-responsive-carousel";
 import "./Feed.css";
 import NewsCard from "./Feed_component/NewsCard";
 
-function Feed() {  rajoopo
+function Feed() { 
   return (
     <>
       <div className="d-flex flex-column">
@@ -81,9 +81,9 @@ function Feed() {  rajoopo
         
 
       
-      <div style={{
+      <div className="header" style={{
          marginTop:'100px',
-         backgroundColor:'pink'
+       
       }}>
       
         
