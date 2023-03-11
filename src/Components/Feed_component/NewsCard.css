@@ -11,7 +11,7 @@
   } */
   .container{
     transform: translateY(100px);
-    width: 1000px;
+    
     position: relative;
     display: flex;
     justify-content: space-between;

@@ -89,11 +89,26 @@ function Feed() {
           <div className="row__poster row__posterLarge">
             <NewsCard />
           </div>
+          <div className="row__poster row__posterLarge">
+            <NewsCard />
+          </div>
+          <div className="row__poster row__posterLarge">
+            <NewsCard />
+          </div>
+          <div className="row__poster row__posterLarge">
+            <NewsCard />
+          </div>
         </div>
       </div>
       <div className="p-2">
         <div className="row__posters">
           {/* several row posters */}
+          <div className="row__poster row__posterLarge">
+            <NewsCard />
+          </div>
+          <div className="row__poster row__posterLarge">
+            <NewsCard />
+          </div>
           <div className="row__poster row__posterLarge">
             <NewsCard />
           </div>
