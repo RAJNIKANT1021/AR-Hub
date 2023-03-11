@@ -1,12 +1,13 @@
 
-.crousel_insider{
+/* .crousel_insider{
    position: absolute;
   
     width: 72vw;
     align-items: center;
  
 
-}
+} */
+
 @media screen and (max-width: 480px) {
     .crousel_insider{
         position: absolute;
@@ -17,4 +18,39 @@
      
      }
  
+  }
+  .row {
+    margin-left: 20px;
+    color: white;
+  }
+  
+  .row__posters {
+    display: flex;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    padding: 20px;
+  }
+  
+  .row__posters::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .row__poster {
+    width: 100%;
+    object-fit: contain;
+    max-height: 100px;
+    margin-right: 10px;
+    transition: transform 450ms;
+  }
+  
+  .row__posterLarge {
+    max-height: max-content;
+  }
+  
+  .row__posterLarge:hover {
+    transform: scale(1.09);
+  }
+  
+  .row__poster:hover {
+    transform: scale(1.08);
   }
