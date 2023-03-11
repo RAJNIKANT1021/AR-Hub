@@ -1,41 +1,63 @@
 import * as React from 'react';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import { Hidden } from '@mui/material';
-
-
+import './NewsCard.css';
 function NewsCard() {
   return (
     <div className='px-3 my-2' style={{
     
     }}>
 
-  
-    <Card sx={{ minWidth: 345 }}>
-    <CardMedia
-      component="img"
-      alt="green iguana"
-      height="140"
-      image="/static/images/cards/contemplative-reptile.jpg"
-    />
-    <CardContent>
-      <Typography gutterBottom variant="h5" component="div">
-        Lizard
-      </Typography>
-      <Typography variant="body2" color="text.secondary">
-        Lizards are a widespread group of squamate reptiles, with over 6,000
-        species, ranging across all continents except Antarctica
-      </Typography>
-    </CardContent>
-    <CardActions>
-      <Button size="small">Share</Button>
-      <Button size="small">Learn More</Button>
-    </CardActions>
-  </Card>
+<div class="container">
+     <div class="card">
+       <div class="face face1">
+         <div class="content">
+            <i class="fab fa-windows"></i>            
+           <h3>Windows</h3>
+         </div>
+       </div>
+       <div class="face face2">
+         <div class="content">
+           <p> Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde ab repudiandae, explicabo voluptate et hic cum ratione a. Officia delectus illum perferendis maiores quia molestias vitae fugiat aspernatur alias corporis?</p>
+           <a href="#" type="button">Read More</a>
+         </div>
+       </div>
+    </div>
+    
+    <div class="card">
+       <div class="face face1">
+         <div class="content">
+      <i class="fab fa-android"></i>               <h3>Android</h3>
+         </div>
+       </div>
+       <div class="face face2">
+         <div class="content">
+           <p> Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde ab repudiandae, explicabo voluptate et hic cum ratione a. Officia delectus illum perferendis maiores quia molestias vitae fugiat aspernatur alias corporis?</p>
+           <a href="#" type="button">Read More</a>
+         </div>
+       </div>
+    </div>
+    
+    
+    <div class="card">
+       <div class="face face1">
+         <div class="content">
+           <i class="fab fa-apple"></i>
+            <h3>Apple</h3>
+         </div>
+       </div>
+       <div class="face face2">
+         <div class="content">
+           <p> Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde ab repudiandae, explicabo voluptate et hic cum ratione a. Officia delectus illum perferendis maiores quia molestias vitae fugiat aspernatur alias corporis?</p>
+           <a href="#" type="button">Read More</a>
+         </div>
+       </div>
+    </div>
+    
+    
+    
+    
+    
+    
+  </div>
   </div>
   )
 }
