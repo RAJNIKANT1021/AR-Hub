@@ -7,7 +7,7 @@ function NewsCard() {
     }}>
 
 <div class="container">
-     <div class="card">
+     <div class="card" style={{backgroundColor:'#1e293b'}}>
        <div class="face face1">
          <div class="content">
             <i class="fab fa-windows"></i>            
