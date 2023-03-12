@@ -3,7 +3,7 @@ import Avatar from '@mui/material/Avatar';
 import { deepOrange, deepPurple } from '@mui/material/colors';
 import './chattile.css'
 
-function ChatTile() {
+function ChatTile({name}) {
   return (
     <div className='tilehover' >
         <div className='d-flex flex-row ' style={{
@@ -38,7 +38,7 @@ function ChatTile() {
                     
                     color:'#ffffff'
                 }}>
-                    Ajitesh Srivastava
+                   {name}   
 
                 </div>
                 <div style={{
