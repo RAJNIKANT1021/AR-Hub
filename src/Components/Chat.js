@@ -1,4 +1,4 @@
-import { height } from "@mui/system";
+
 import React from "react";
 import { Button } from "@mui/material";
 import { RxHamburgerMenu } from "react-icons/rx";
@@ -144,16 +144,16 @@ function Chat() {
                 overflowY: "scroll",
               }}
             >
-              <ChatTile />
-              <ChatTile />
-              <ChatTile />
-              <ChatTile />
-              <ChatTile />
-              <ChatTile />
-              <ChatTile />
-              <ChatTile />
-              <ChatTile />
-              <ChatTile />
+              <ChatTile name={'Ajiteh'}/>
+              <ChatTile name={'aditya'}  />
+              <ChatTile  name={'rajnikant'}/>
+              <ChatTile name={'hey'}/>
+              <ChatTile name={'Ajitheh'}/>
+              <ChatTile name={'Ajiteh'} />
+              <ChatTile name={'Ajiteh'}/>
+              <ChatTile name={'Ajiteh'} />
+              <ChatTile name={'Ajiteh'}/>
+              <ChatTile name={'Ajiteh'} />
             </div>
           </div>
         </div>
@@ -179,7 +179,7 @@ function Chat() {
               backgroundColor: "white",
             }}
           >
-            sender msghey hey
+            
           </div>
           <div
             style={{
