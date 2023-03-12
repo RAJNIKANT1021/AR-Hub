@@ -7,7 +7,7 @@ function NewsCard() {
     }}>
 
 <div class="container">
-     <div class="card" style={{backgroundColor:'#1e293b'}}>
+     <div class="card" style={{backgroundColor:'#374045'}}>
        <div class="face face1">
          <div class="content">
             <img

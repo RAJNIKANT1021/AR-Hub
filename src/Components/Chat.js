@@ -4,7 +4,6 @@ import { Button } from "@mui/material";
 import { RxHamburgerMenu } from "react-icons/rx";
 import "./chat.css";
 import ChatTile from "./Chat_component/ChatTile";
-
 function Chat() {
   return (
     <div>
@@ -131,7 +130,7 @@ function Chat() {
                     >
                       125
                     </div>
-                  </Button>
+                  </Button  >
                 </div>
               </div>
             </div>
@@ -171,7 +170,7 @@ function Chat() {
               backgroundColor: "brown",
             }}
           >
-            
+            <img src="https://4kwallpapers.com/images/walls/thumbs_3t/10307.jpg"/>
           </div>
           <div
             style={{
