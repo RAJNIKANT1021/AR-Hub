@@ -16,7 +16,7 @@ function ChatTile() {
 
                 justifyContent:'center',
             }}>
-            <Avatar sx={{ bgcolor: deepPurple[500], width: 56, height: 56  }}>OP</Avatar>
+            <Avatar sx={{ bgcolor: deepPurple[500], width: 56, height: 56  }}>AS</Avatar>
             </div>
             <div className='d-flex flex-column' style={{
                 // backgroundColor:'#212121',
@@ -54,7 +54,7 @@ function ChatTile() {
            </div>
            <div className="d-flex flex-row pl-3"style={{
                 //  backgroundColor:'#212121',
-                 color:'#ffffff',
+                 color:'#ffffff',   
                 
             
             }}>
