@@ -58,7 +58,7 @@
 
 
 .container .card .face.face1 .content{
-    opacity: .2;
+    opacity: 1;
     transition:  0.5s;
     text-align: center;
     
@@ -89,7 +89,7 @@
      justify-content: center;
      padding: 20px;
     box-sizing: border-box;
-    box-shadow: 0 20px 50px rgba(0,0,0,.8);
+    /* box-shadow: 0 20px 50px rgba(0,0,0,.8); */
     transform: translateY(-100px);
   }
   
@@ -100,7 +100,7 @@
     font-size: 10pt;
     margin: 0 ;
     padding: 0;
-    color:#333;
+    color:#bfb9b9;
 }
   
 .container .card .face.face2 .content a{
@@ -113,7 +113,7 @@
     display: inline-block;
 }
 .container .card .face.face2 .content a:hover{
-    background: #333 ;
+    background: #d5cbcb ;
     color: whitesmoke; 
-    box-shadow: inset 0px 0px 10px rgba(0,0,0,0.5);
+    /* box-shadow: inset 0px 0px 10px rgba(0,0,0,0.5); */
 }
