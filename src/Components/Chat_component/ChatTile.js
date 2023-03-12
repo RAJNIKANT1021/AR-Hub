@@ -63,7 +63,8 @@ Pandey
                 </div>
                 <div style={{
                     paddingLeft:'3px',
-                    color:'#aaaaaa'
+                    color:'#aaaaaa',
+                    overflow:'hidden',
                 }}>
 :Tanmoy randi hai bhai shi mein aaj fir sh...
                 </div>

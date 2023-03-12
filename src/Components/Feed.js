@@ -3,6 +3,7 @@ import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a lo
 import { Carousel } from "react-responsive-carousel";
 import "./Feed.css";
 import NewsCard from "./Feed_component/NewsCard";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 function Feed() { 
   return (
@@ -19,56 +20,56 @@ function Feed() {
             stopOnHover={false}
           >
             <div>
-              <img
+              <LazyLoadImage
                 class="d-block w-100"
                 src="https://source.unsplash.com/category/cricket/1600x900"
                 alt=""
               />
             </div>
             <div>
-              <img
+              <LazyLoadImage
                 src="https://source.unsplash.com/category/food/1600x900"
                 class="d-block w-100"
                 alt=""
               />
             </div>
             <div>
-              <img
+              <LazyLoadImage
                 src="https://source.unsplash.com/category/india/1600x900"
                 class="d-block w-100"
                 alt=""
               />
             </div>
             <div>
-              <img
+              <LazyLoadImage
                 src="https://source.unsplash.com/category/dubai/1600x900"
                 class="d-block w-100"
                 alt=""
               />
             </div>{" "}
             <div>
-              <img
+              <LazyLoadImage
                 src="https://source.unsplash.com/category/school/1600x900"
                 class="d-block w-100 h-"
                 alt=""
               />
             </div>{" "}
             <div>
-              <img
+              <LazyLoadImage
                 src="https://source.unsplash.com/category/love/1600x900"
                 class="d-block w-100 h-"
                 alt=""
               />
             </div>{" "}
             <div>
-              <img
+              <LazyLoadImage
                 src="https://source.unsplash.com/category/children/1600x900"
                 class="d-block w-100 h-"
                 alt=""
               />
             </div>{" "}
             <div>
-              <img
+              <LazyLoadImage
                 src="https://source.unsplash.com/category/mother/1600x900"
                 class="d-block w-100 h-"
                 alt=""

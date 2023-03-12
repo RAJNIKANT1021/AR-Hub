@@ -2,7 +2,44 @@ import React from 'react'
 import './login.css' 
 import {RiEyeFill} from 'react-icons/ri'
 import {RiEyeCloseFill} from 'react-icons/ri'
-function Login() {
+import { createUserWithEmailAndPassword,signInWithEmailAndPassword } from 'firebase/auth'
+import {auth} from './FireAuth';
+import {  useNavigate } from "react-router-dom";
+
+
+function Login({checker}) {
+  const navigate = useNavigate();
+  
+
+  const  handleclick=()=>{
+    const Email= document.getElementById('username').value;
+    const Password=document.getElementById('password').value;
+    console.log({Email,Password})
+    createUserWithEmailAndPassword(auth,Email,Password).then((userCredential)=>{
+    navigate("/home")
+  checker(true);
+    }).catch((error)=>{
+     
+      alert(error)
+    })
+  }
+  const handlelogin =()=>{
+    const Email= document.getElementById('username').value;
+    const Password=document.getElementById('password').value;
+    signInWithEmailAndPassword(auth, Email, Password)
+  .then((userCredential) => {
+    navigate("/home")
+    const user = userCredential.user;
+    checker(true);
+    // ...
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    alert(errorMessage)
+  });
+
+  }
   return (<div className='flex space-evenly'>
 
   <div className="background">
@@ -11,11 +48,11 @@ function Login() {
 </div>
 
  
-<form className='form_login'>
+<div className='form_login'>
   <label htmlFor="username" style={{color:'white'}}>Username</label>
-  <input className='input_login' type="text" placeholder="Email or Phone" id="username"/>
+  <input className='input_login' type="text" placeholder="Email or Phone" id="username"  />
 
-  <label htmlFor="password" style={{color:'white'}}>Password</label>
+  <label htmlFor="password"  style={{color:'white'}}> Password</label>
   <div className='d-flex'>
   <input className='input_login'type="password" placeholder="Password" id="password" />
   <RiEyeCloseFill  className="icon" id="close" onClick={()=>{
@@ -52,12 +89,12 @@ function Login() {
 
   </div>
 <div className="flex my-3">
-<button className='btn btn-primary buttonlogin'>Log In</button>   
-  <button className='btn btn-primary  buttonlogin'>Sign Up</button> 
+<button className='btn btn-primary buttonlogin' onClick={()=>{handlelogin()}}>Log In</button>   
+  <button className='btn btn-primary  buttonlogin' onClick={()=>{handleclick()}}>Sign Up</button> 
 </div>
 
   
-  </form>
+  </div>
   </div>
   )
 }

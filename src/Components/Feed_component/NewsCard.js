@@ -1,5 +1,6 @@
 import * as React from 'react';
 import './NewsCard.css';
+import { LazyLoadImage } from "react-lazy-load-image-component";
 function NewsCard() {
   return (
     <div className='px-3 my-2' style={{
@@ -10,7 +11,7 @@ function NewsCard() {
      <div class="card" style={{backgroundColor:'#374045'}}>
        <div class="face face1">
          <div class="content">
-            <img
+            <LazyLoadImage
                 src="https://source.unsplash.com/category/food/1600x900"
                 class="d-block w-100"
                 alt=""

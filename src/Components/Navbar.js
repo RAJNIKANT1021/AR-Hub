@@ -1,7 +1,19 @@
-import React from 'react'
+import React ,{useContext}from 'react'
 import './navbar.css'
-import { Link } from 'react-router-dom';
-function Navbar() {
+import { Link, Navigate, useNavigate } from 'react-router-dom';
+import LoginContext from '../Context/LoginContext';
+
+function Navbar({loggedin,checker}) {
+  const Navigate=useNavigate();
+
+  const logout =()=>{
+    checker(false);
+    Navigate('/');
+  }
+ 
+
+  
+  
   return (   
  <nav className="flex navbar navbar-expand-lg navbar-dark navbar-default">
   <Link  className="navbar-brand" to="#">AR HUB</Link >
@@ -34,7 +46,7 @@ function Navbar() {
           Dropdown
         </Link >
         <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-          <Link  className="dropdown-item" to="/Login">Login</Link >
+          <Link  className="dropdown-item" to="/">Login</Link >
           <Link  className="dropdown-item" to="#">Another action</Link >
           <div className="dropdown-divider"></div>
           <Link  className="dropdown-item" to="#">Something else here</Link >
@@ -46,17 +58,27 @@ function Navbar() {
       <input className="searchbar form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"/>
       <button className="btn btn-primary my-2 my-sm-0 " style={{color:"white"}}type="submit">Search</button>
     </form>
-    <button className="  btn btn-primary my-2 my-sm-0 mx-2" style={{color:"white"}}type="submit">
-      <Link to="/login" style={{
+   {!loggedin && <button className="  btn btn-primary my-2 my-sm-0 mx-2" style={{color:"white"}}type="submit">
+    <Link to="/" style={{
         textDecoration:'none',
         color:'white'
       }}>
       Login
         </Link>
+      
     
         
       
-    </button>
+    </button>} 
+    {loggedin && <button className="  btn btn-primary my-2 my-sm-0 mx-2" style={{color:"white"}}type="submit" onClick={()=>{logout()}}>
+   
+      Logout
+      
+      
+    
+        
+      
+    </button> }
   
   </div>
 </nav>
