@@ -41,13 +41,13 @@
   .row__poster {
     width: 100%;
     object-fit: contain;
-    max-height: 100px;
+    max-height: 400;
     margin-right: 10px;
     transition: transform 450ms;
   }
   
   .row__posterLarge {
-    max-height: max-content;
+    max-height: 400px;
   }
   
   .row__posterLarge:hover {

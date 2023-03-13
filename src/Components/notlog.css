@@ -1,5 +1,18 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@1,500&display=swap');
+.image1-contain{
+    object-fit: cover;
+    object-position: center;
+}
+.image1{
+    height: 32rem;
+    width:40rem;
+    z-index: -1;
+    position: absolute;
+    backdrop-filter: blur(13px);
+    backdrop-filter: blur(33px);
+    border-radius: 12px;
+}
 
 .notloggedin{
     /* From https://css.glass */
@@ -9,7 +22,8 @@ background-color: #0f172a;
 box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 backdrop-filter: blur(13px);
 -webkit-backdrop-filter: blur(7.7px);
-border: 1px solid rgba(243, 228, 228, 0.3);
+border: 1px sol
+id rgba(243, 228, 228, 0.3);
 }
 .logcontent{
     box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
@@ -20,9 +34,19 @@ backdrop-filter: blur(0.9px);
 -webkit-backdrop-filter: blur(0.9px);
 border: 1px solid rgba(243, 228, 228, 0.3);
 }
+.btttn{margin-top: 20px;
+    border-radius: 12px;
+}
+
 .headeer{
     font-family: 'Josefin Sans', sans-serif;
-    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+    /* box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+    box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px; */
+    background-color: transparent;
+box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+backdrop-filter: blur(.1px);
+-webkit-backdrop-filter: blur(0.9px);
+border-bottom: 1px solid rgba(243, 228, 228, 0.3);
 
 }
 

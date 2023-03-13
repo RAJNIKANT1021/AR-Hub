@@ -104,11 +104,11 @@
 .moviephoto:hover{
     transform: scale(1.07)
 }
-.image-contain{
+.imagemov-contain{
     object-fit: cover;
     object-position: center;
 }
-.image{
+.imagemov{
     height: 250px;
     width:250px;
 }

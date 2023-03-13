@@ -2,10 +2,11 @@ import React from 'react'
 import Avatar from '@mui/material/Avatar';
 import { deepOrange, deepPurple } from '@mui/material/colors';
 import './chattile.css'
-
-function ChatTile({name}) {
+const classnamm ="chatdatahovered";
+function ChatTile({name,hoverr}) {
+    
   return (
-    <div className='tilehover' >
+    <div className={"tilehover"} >
         <div className='d-flex flex-row ' style={{
             height:'4.4rem',
           

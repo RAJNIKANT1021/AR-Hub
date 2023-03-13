@@ -35,7 +35,7 @@ function App() {
       {loggedin &&<Route path="books" element={<Books/>}/> }
       {loggedin && <Route path="games" element={<Games/>}/>}
       {loggedin && <Route path="feed" element={<Feed/>}/>}
-      {loggedin && <Route path="chat" element={<Chat/>}/> }
+      {!loggedin && <Route path="chat" element={<Chat/>}/> }
       {!loggedin && <Route path="home" element={<Home/>} />}
       {!loggedin && <Route path="movies" element={<ToShow/>}/>}
       {!loggedin && <Route path="books" element={<ToShow/>}/> }
