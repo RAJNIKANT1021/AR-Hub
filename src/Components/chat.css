@@ -28,6 +28,11 @@
         background-color: #2c2c2c;
         border-radius: 10px;
     }
+    .chatdatahovered{
+        background-color: #6ca2c1;
+        border-radius: 10px;
+
+    }
     .chatnav{
         border-radius: 10px;
     }
@@ -40,9 +45,36 @@
         background: #FFE;
         cursor: pointer;
     }
-    .message{
+    .tab:focus{
+        cursor: pointer;
+        background-color: #766ac8;
+        opacity: 1;
+    
+        z-index: 33;
+        border-radius: 10px;
 
     }
+    .tab:focus:hover{
+
+      
+        opacity: 1;
+    
+        background-color:#766ac8 ;
+        border-radius: 10px;
+    
+    }
+   
+   .tab:hover{
+    cursor: pointer;
+    background-color: rgb(109, 116, 116);
+    opacity: 1;
+
+    z-index: 33;
+    border-radius: 10px;
+
+   }
+   
+  
     .menuitem span {
         position: absolute;
         bottom: 0;
