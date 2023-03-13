@@ -56,20 +56,19 @@ function Navbar({loggedin,checker}) {
     <div className="form-inline my-2 my-lg-0">
       <input className="searchbar form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"/>
       <button className="btn btn-primary my-2 my-sm-0 " style={{color:"white"}}type="submit">Search</button>
-    </form>
+    </div>
    {!loggedin && <button className="  btn btn-primary my-2 my-sm-0 mx-2" style={{color:"white"}}type="submit">
     <Link to="/" style={{
         textDecoration:'none',
         color:'white'
       }}>
-        <button className="  btn btn-primary my-2 my-sm-0 mx-2" style={{color:"white"}}type="submit">Login</button>
-      
+      Login
         </Link>
       
     
         
       
-  } 
+    </button>} 
     {loggedin && <button className="  btn btn-primary my-2 my-sm-0 mx-2" style={{color:"white"}}type="submit" onClick={()=>{logout()}}>
    
       Logout
