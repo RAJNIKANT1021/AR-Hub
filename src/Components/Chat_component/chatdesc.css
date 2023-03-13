@@ -6,3 +6,14 @@
     height: 250px;
     width:250px;
 }
+/* .message {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+    animation: slide-in 0.3s ease;
+  }
+  
+  .message:last-child {
+    animation: slide-in-last 0.3s ease;
+  }
+   */

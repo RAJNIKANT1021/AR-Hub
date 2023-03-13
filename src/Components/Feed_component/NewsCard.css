@@ -21,7 +21,7 @@
 }
 
 .container .card{
-    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 2px, rgba(0, 0, 0, 0.3) 0px 2px 2px -3px, rgba(0, 0, 0, 0.2) 0px 1px 0px inset;
+    
     position: relative;
 }
 
@@ -101,7 +101,7 @@
     font-size: 10pt;
     margin: 0 ;
     padding: 0;
-    color:#bfb9b9;
+    color:#333;
 }
   
 .container .card .face.face2 .content a{
@@ -114,7 +114,7 @@
     display: inline-block;
 }
 .container .card .face.face2 .content a:hover{
-    background: #d5cbcb ;
-    color: whitesmoke; 
-    /* box-shadow: inset 0px 0px 10px rgba(0,0,0,0.5); */
+    background: #333 ;
+    /* color: whitesmoke;  */
+    box-shadow: inset 0px 0px 10px rgba(0,0,0,0.5);
 }

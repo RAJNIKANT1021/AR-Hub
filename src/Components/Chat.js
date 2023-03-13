@@ -153,32 +153,37 @@ function Chat() {
               <ChatTile name={"Ajiteh"}/>
 
               </div>
-              <div className="tab" tabindex="2">
+              <div className="tab hoverr" tabindex="2">
               <ChatTile name={"Ajiteh"}/>
 
               </div>
-              <div className="tab" tabindex="3">
+              <div className="tab hoverr" tabindex="3">
               <ChatTile name={"Ajiteh"}/>
 
               </div>
-              <div className="tab" tabindex="4">
+              <div className="tab hoverr" tabindex="4">
               <ChatTile name={"Ajiteh"}/>
 
               </div>
-              <div className="tab" tabindex="5">
+              <div className="tab hoverr" tabindex="5">
+              <ChatTile name={"Ajiteh"}/>
+
+              </div>
+              <div className="tab hoverr" tabindex="6">
+              <ChatTile name={"Ajiteh"}/>
+
+              </div>
+              <div className="tab hoverr" tabindex="7">
+              <ChatTile name={"Ajiteh"}/>
+
+              </div>
+              <div className="tab hoverr" tabindex="8">
               <ChatTile name={"Ajiteh"}/>
 
               </div>
              
-              <ChatTile name={"aditya"}  />
-              <ChatTile name={"rajnikant"} />
-              <ChatTile name={"hey"} />
-              <ChatTile name={"Ajitheh"} />
-              <ChatTile name={"Ajiteh"} />
-              <ChatTile name={"Ajiteh"} />
-              <ChatTile name={"Ajiteh"} />
-              <ChatTile name={"Ajiteh"} />
-              <ChatTile name={"Ajiteh"} />
+            
+             
             </div>
           </div>
         </div>

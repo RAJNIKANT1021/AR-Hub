@@ -3,20 +3,38 @@ import './login.css'
 import {RiEyeFill} from 'react-icons/ri'
 import {RiEyeCloseFill} from 'react-icons/ri'
 import { createUserWithEmailAndPassword,signInWithEmailAndPassword } from 'firebase/auth'
-import {auth} from './FireAuth';
-import {  useNavigate } from "react-router-dom";
-
-
+import {auth,db} from './FireAuth';
+import {useNavigate } from "react-router-dom";
+import { collection } from 'firebase/firestore';
 function Login({checker}) {
   const navigate = useNavigate();
   
 
+  const createChat=async(userid,Name,Email)=>{
+    await db.collection("users").doc(userid).doc("displayData").add({
+      userName: Name,
+      Email:Email,
+      Bio:"hey i am using A2R Hub",
+
+    })
+  }
   const  handleclick=()=>{
     const Email= document.getElementById('username').value;
+    const Name= document.getElementById('name').value;
     const Password=document.getElementById('password').value;
     console.log({Email,Password})
+
     createUserWithEmailAndPassword(auth,Email,Password).then((userCredential)=>{
     navigate("/home")
+    const user = userCredential.user;
+ 
+
+  
+    
+       user.displayName=Name;
+       createChat(user.uid,Name,Email);
+        
+      
   checker(true);
     }).catch((error)=>{
      
@@ -25,11 +43,12 @@ function Login({checker}) {
   }
   const handlelogin =()=>{
     const Email= document.getElementById('username').value;
+   
     const Password=document.getElementById('password').value;
     signInWithEmailAndPassword(auth, Email, Password)
   .then((userCredential) => {
     navigate("/home")
-    const user = userCredential.user;
+   
     checker(true);
     // ...
   })
@@ -50,6 +69,8 @@ function Login({checker}) {
  
 <div className='form_login'>
   <label htmlFor="username" style={{color:'white'}}>Username</label>
+  <input className='input_login' type="text" placeholder="Display Name" id="name"  />
+  <label htmlFor="username" style={{color:'white'}}>Email</label>
   <input className='input_login' type="text" placeholder="Email or Phone" id="username"  />
 
   <label htmlFor="password"  style={{color:'white'}}> Password</label>

@@ -16,7 +16,7 @@ function Navbar({loggedin,checker}) {
   
   return (   
  <nav className="flex navbar navbar-expand-lg navbar-dark navbar-default">
-  <Link  className="navbar-brand" to="#">AR HUB</Link >
+  <Link  className="navbar-brand" to="#">A2R HUB</Link >
   <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span className="navbar-toggler-icon"></span>
   </button>
@@ -58,18 +58,19 @@ function Navbar({loggedin,checker}) {
       <input className="searchbar form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"/>
       <button className="btn btn-primary my-2 my-sm-0 " style={{color:"white"}}type="submit">Search</button>
     </div>
-   {!loggedin && <button className="  btn btn-primary my-2 my-sm-0 mx-2" style={{color:"white"}}type="submit">
+   {!loggedin && 
     <Link to="/" style={{
         textDecoration:'none',
         color:'white'
       }}>
-      Login
+        <button className="  btn btn-primary my-2 my-sm-0 mx-2" style={{color:"white"}}type="submit">Login</button>
+      
         </Link>
       
     
         
       
-    </button>} 
+  } 
     {loggedin && <button className="  btn btn-primary my-2 my-sm-0 mx-2" style={{color:"white"}}type="submit" onClick={()=>{logout()}}>
    
       Logout
