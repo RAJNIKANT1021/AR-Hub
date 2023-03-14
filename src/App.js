@@ -30,14 +30,14 @@ function App() {
     <Routes>  
       <Route path="/" element={<Login checker={checker}/>}/>
       {loggedin && <Route path="home" element={<Home/>} />}
-      {loggedin && <Route path="movies" element={<Movies/>}/>}
+      {!loggedin && <Route path="movies" element={<Movies/>}/>}
       {loggedin && <Route path="books" element={<Books/>}/> }
       {loggedin &&<Route path="books" element={<Books/>}/> }
       {loggedin && <Route path="games" element={<Games/>}/>}
       {loggedin && <Route path="feed" element={<Feed/>}/>}
-      {!loggedin && <Route path="chat" element={<Chat/>}/> }
+      {loggedin && <Route path="chat" element={<Chat/>}/> }
       {!loggedin && <Route path="home" element={<Home/>} />}
-      {!loggedin && <Route path="movies" element={<ToShow/>}/>}
+      {loggedin && <Route path="movies" element={<ToShow/>}/>}
       {!loggedin && <Route path="books" element={<ToShow/>}/> }
       {!loggedin &&<Route path="books" element={<ToShow/>}/> }
       {!loggedin && <Route path="games" element={<ToShow/>}/>}
