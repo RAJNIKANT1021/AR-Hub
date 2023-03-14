@@ -5,24 +5,44 @@ import {RiEyeCloseFill} from 'react-icons/ri'
 import { createUserWithEmailAndPassword,signInWithEmailAndPassword } from 'firebase/auth'
 import {auth,db} from './FireAuth';
 import {useNavigate } from "react-router-dom";
-import { collection } from 'firebase/firestore';
+import { collection, doc, setDoc,getDoc, addDoc } from "firebase/firestore";
 function Login({checker}) {
   const navigate = useNavigate();
   
+  
 
-  const createChat=async(userid,Name,Email)=>{
-    await db.collection("users").doc(userid).doc("displayData").add({
-      userName: Name,
-      Email:Email,
-      Bio:"hey i am using A2R Hub",
+  const createChat=async(Name,Email,uid)=>{
+    const docRef = doc(db, "A2B_USERS",'Users')
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+     var myObject=docSnap.data()
+     var count = Object.keys(myObject).length+1;
+     console.log(count)
+    } else {
+      // doc.data() will be undefined in this case
+    count=1;
+      console.log("No such document!");
+    }
 
-    })
+   
+    await setDoc(doc(db, "A2B_USERS","Users",uid,'displayname') ,{
+      name: Name,
+      email: Email,
+      Bio: "hey i am using A2b"
+    });
+    await setDoc(doc(db, "A2B_USERS","Users"), {
+      [count]:uid
+  }, { merge: true })
+   
+  
+  
   }
-  const  handleclick=()=>{
+  const  handleclick=async()=>{
     const Email= document.getElementById('username').value;
     const Name= document.getElementById('name').value;
     const Password=document.getElementById('password').value;
     console.log({Email,Password})
+   
 
     createUserWithEmailAndPassword(auth,Email,Password).then((userCredential)=>{
     navigate("/home")
@@ -32,24 +52,42 @@ function Login({checker}) {
   
     
        user.displayName=Name;
-       createChat(user.uid,Name,Email);
+     
+       
         
       
-  checker(true);
-    }).catch((error)=>{
+ 
+  createChat(Name,Email,user.uid)
+  checker(true,user.uid);
+    }
+    
+    ).catch((error)=>{
      
       alert(error)
     })
   }
-  const handlelogin =()=>{
+  const handlelogin =async()=>{
+    // const docRef = doc(db, "A2B_USERS",'Users')
+    // const docSnap = await getDoc(docRef);
+    // if (docSnap.exists()) {
+    //  var myObject=docSnap.data()
+    //  var count = Object.keys(myObject).length+1;
+    //  console.log(count)
+    // } else {
+    //   // doc.data() will be undefined in this case
+    
+    //   console.log("No such document!");
+    // }
     const Email= document.getElementById('username').value;
    
     const Password=document.getElementById('password').value;
     signInWithEmailAndPassword(auth, Email, Password)
   .then((userCredential) => {
     navigate("/home")
+    createChat("heyy",Email);
+    const user = userCredential.user;
    
-    checker(true);
+    checker(true,user.uid);
     // ...
   })
   .catch((error) => {

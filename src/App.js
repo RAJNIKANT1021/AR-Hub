@@ -2,7 +2,7 @@ import React ,{useContext,useState}from 'react'
 import './App.css'
 import Navbar from "./Components/Navbar";
 import Login from "./userauth/login";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route,useLocation } from "react-router-dom";
 import Movies from "./Components/Movies";
 import Home from "./Components/Home";
 import Games from "./Components/Games";
@@ -14,10 +14,14 @@ import ToShow from './Components/ToShow';
 
 
 function App() { 
-  const [loggedin, setloggedin] = useState(false);
 
-  function checker(id){
+  const location = useLocation();
+  const [loggedin, setloggedin] = useState(false);
+  const[uid,setuid]=useState(null);
+
+  function checker(id,uid){
     setloggedin(id);
+    setuid(uid);
 
 
 
@@ -25,19 +29,20 @@ function App() {
 
 
   return(
-    <BrowserRouter>
+    
+   <>
     <Navbar loggedin={loggedin} checker={checker} />
     <Routes>  
       <Route path="/" element={<Login checker={checker}/>}/>
       {loggedin && <Route path="home" element={<Home/>} />}
-      {!loggedin && <Route path="movies" element={<Movies/>}/>}
+      {loggedin && <Route path="movies" element={<Movies/>}/>}
       {loggedin && <Route path="books" element={<Books/>}/> }
       {loggedin &&<Route path="books" element={<Books/>}/> }
       {loggedin && <Route path="games" element={<Games/>}/>}
       {loggedin && <Route path="feed" element={<Feed/>}/>}
-      {loggedin && <Route path="chat" element={<Chat/>}/> }
+      {!loggedin && <Route path="chat" element={<Chat/>}/> }
       {!loggedin && <Route path="home" element={<Home/>} />}
-      {loggedin && <Route path="movies" element={<ToShow/>}/>}
+      {!loggedin && <Route path="movies" element={<ToShow/>}/>}
       {!loggedin && <Route path="books" element={<ToShow/>}/> }
       {!loggedin &&<Route path="books" element={<ToShow/>}/> }
       {!loggedin && <Route path="games" element={<ToShow/>}/>}
@@ -51,7 +56,8 @@ function App() {
      
       
     </Routes>
-  </BrowserRouter>  
+    </>
+    
   )
 }
 export default App;
