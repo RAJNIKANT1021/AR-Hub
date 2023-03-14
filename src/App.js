@@ -8,6 +8,7 @@ import Games from "./Components/Games";
 function App() { 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   const location = useLocation();
   const [loggedin, setloggedin] = useState(false);
   const[uid,setuid]=useState(null);
@@ -19,6 +20,12 @@ function App() {
 
   function checker(id){
     setloggedin(id);
+=======
+  const [loggedin, setloggedin] = useState(false);
+
+  function checker(id){
+    setloggedin(id);
+>>>>>>> parent of 7ab1c9d (hey)
 =======
   const [loggedin, setloggedin] = useState(false);
 
@@ -38,6 +45,7 @@ function App() {
     <Routes>  
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       <Route exact path="/" element={<Login checker={checker} key={location.key}/>}/>
       {loggedin && <Route  exact path="home" element={<Home key={location.key}/>}   />}
       {loggedin && <Route exact path="movies" element={<Movies key={location.key}/>}  />}
@@ -54,6 +62,8 @@ function App() {
       {!loggedin && <Route exact path="feed" element={<ToShow/>}/>}
       {!loggedin && <Route exact path="chat" element={<ToShow/>}/> }
 =======
+=======
+>>>>>>> parent of 7ab1c9d (hey)
 =======
 >>>>>>> parent of 7ab1c9d (hey)
       <Route path="/" element={<Login checker={checker}/>}/>
