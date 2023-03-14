@@ -9,7 +9,8 @@ import { deepOrange, deepPurple } from "@mui/material/colors";
 import Message from "./Message";
 import { HiStatusOnline, HiOutlineDotsVertical } from "react-icons/hi";
 
-function ChatDescription() {
+function ChatDescription({descname,bio}) {
+  console.log(descname)
   
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState("");
@@ -67,13 +68,13 @@ function ChatDescription() {
                 color: "white",
               }}
             >
-              Ajitesh arivastava
+              {descname}
             </div>
             <div
               className="px-2 pb-3"
               style={{ color: "#a8a8a8", fontSize: "13px" }}
             >
-              We're all astronauts, really, aren't we?!
+             {bio}
             </div>
           </div>
 
