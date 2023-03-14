@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from "react";
+import React,{useState} from "react";
 import { Button } from "@mui/material";
 import { RxHamburgerMenu } from "react-icons/rx";
 import "./chat.css";
@@ -9,108 +9,8 @@ import { deepOrange, deepPurple } from "@mui/material/colors";
 
 import { HiStatusOnline, HiOutlineDotsVertical } from "react-icons/hi";
 import ChatDescription from "./Chat_component/ChatDescription";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "../userauth/FireAuth";
-import { useLocation } from "react-router-dom";
-function Chat({uid,key}) {
-  
-const[showchatdesc,setshowchatdesc]=useState(false);
-  const[arraynames,setarraynames]=useState([]);
-  const[userid,setuserid]=useState(null)
-  const[descname,setdescname]=useState(null)
-  const[bio,setbio]=useState(null)
-
-  useEffect(()=>{
-    
-   
-   
-    
-    const setup =async() => {
-      setuserid(uid)
-      
-      const docRef = doc(db, "A2B_USERS","Users")
-      const docSnap = await getDoc(docRef);
-      
-      if (docSnap.exists()) {
-        let population= docSnap.data();
-        let array=[]
-        for (const key in population) {
-          if (population.hasOwnProperty(key)) {
-
-          
-            
-        
-            array.push(population[key])}
-            
-          
-        }
-     const arraynamed=[];
-     for(let j=0;j<array.length;j++){
-      if(array[j]!==uid){
-      const docRef = doc(db, "A2B_USERS","Users",array[j],'displayname')
-      const docSnap = await getDoc(docRef);
-      
-      if (docSnap.exists()) {
-        arraynamed.push({name:docSnap.data().name,
-          bio:docSnap.data().Bio,
-          uid:array[j],
-        
-        })
-       
-    
-        
-        
-       } else {
-        // doc.data() will be undefined in this case
-        console.log("No such document!");
-    }
-    }}
-    setarraynames(arraynamed)
-    
-    } else {
-        // doc.data() will be undefined in this case
-        console.log("No such document!");
-      }
-      
-      
-    };
-    setup();
-
-  },[key,uid,userid])
-
-  
-    
-  
-    
-      
-  
-  
-  
-  
-
-
-  // const userdatafetch =async()=>{
- 
-  // }
-
-  
-    const descriptionheader=(id)=>{
-      setshowchatdesc(true);
-      
-      for(let j=0;j<arraynames.length;j++){
-        
-        if(id===arraynames[j].uid){
-          console.log(arraynames[j])
-          setdescname(arraynames[j].name);
-          setbio(arraynames[j].bio)
-        }
-      }
-
-
-    }
-    
-  
-  
+function Chat() {
+  const [hoverr, sethoverr] = useState(null);
   return (
     <div>
       <div className="d-flex flex-row">
@@ -248,18 +148,39 @@ const[showchatdesc,setshowchatdesc]=useState(false);
                 height: "33.2rem",
                 overflowY: "scroll",
               }}
-            >{
-              arraynames.length!==0 &&
-              arraynames.map((names,i) =>  <div className="tab hoverr" tabIndex={i} id={names.uid} onFocus={(e)=>{descriptionheader(e.target.id)}} key={i} >
-              <ChatTile name={names.name}  key={i} />
+            >
+              <div className="tab hoverr" tabindex="1">
+              <ChatTile name={"Ajiteh"}/>
 
-              </div>)
-            
-                
-              
-            }
-             
-         
+              </div>
+              <div className="tab hoverr" tabindex="2">
+              <ChatTile name={"Ajiteh"}/>
+
+              </div>
+              <div className="tab hoverr" tabindex="3">
+              <ChatTile name={"Ajiteh"}/>
+
+              </div>
+              <div className="tab hoverr" tabindex="4">
+              <ChatTile name={"Ajiteh"}/>
+
+              </div>
+              <div className="tab hoverr" tabindex="5">
+              <ChatTile name={"Ajiteh"}/>
+
+              </div>
+              <div className="tab hoverr" tabindex="6">
+              <ChatTile name={"Ajiteh"}/>
+
+              </div>
+              <div className="tab hoverr" tabindex="7">
+              <ChatTile name={"Ajiteh"}/>
+
+              </div>
+              <div className="tab hoverr" tabindex="8">
+              <ChatTile name={"Ajiteh"}/>
+
+              </div>
              
             
              
@@ -267,7 +188,7 @@ const[showchatdesc,setshowchatdesc]=useState(false);
           </div>
         </div>
         <div style={{ backgroundColor: "purple", flex: 1, height: "91vh" }}>
-         {showchatdesc===true && <ChatDescription descname={descname} bio={bio} key={descname}/>}
+          <ChatDescription/>
           {/* header */}
           </div>
           </div>

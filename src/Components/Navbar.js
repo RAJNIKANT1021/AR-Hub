@@ -6,7 +6,7 @@ function Navbar({loggedin,checker}) {
   const Navigate=useNavigate();
 
   const logout =()=>{
-    checker(false,null);
+    checker(false);
     Navigate('/');
   }
  
