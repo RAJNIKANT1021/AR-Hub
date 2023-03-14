@@ -31,6 +31,7 @@ function App() {
   return(
     
    <>
+   {/* jgh */}
     <Navbar loggedin={loggedin} checker={checker} />
     <Routes>  
       <Route exact path="/" element={<Login checker={checker} key={location.key}/>}/>
