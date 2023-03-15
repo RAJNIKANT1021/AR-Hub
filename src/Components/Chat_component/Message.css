@@ -1,0 +1,122 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap');
+
+  .reciever{
+    display: flex;
+    justify-content: flex-start;
+
+    animation: slide-in-lastrec 0.5s ease;
+    min-width: 60px;
+
+
+  }
+  .msgtime{
+    color:#bfb9e5;
+   position: absolute;
+    font-size: 11px;
+    bottom: 0;
+    right:0;
+    width:60px;
+    margin-bottom: 3px;
+
+   
+  }
+  .msgcontainer{
+    min-width: 60px;
+    margin-bottom: 10px;
+    font-family: 'Playfair Display', serif;
+    
+  }
+  
+  .message1:last-child {
+    animation: slide-in-last 0.5s ease-in;
+  }
+  .message1:last-child {
+    animation: slide-in-last 0.5s ease-in;
+  }
+  .sender{
+    display: flex;
+    justify-content: flex-end;
+
+    animation: slide-in 0.4s ease;
+    min-width: 60px;
+   
+   
+
+  }
+  .text1 {
+    position: relative;
+    background-color: #766ac8;
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+    line-height: 1.5;
+    max-width: 27rem;
+    display:flex;
+    /* flex-wrap: wrap;
+    resize: vertical;
+    overflow-wrap: break-word;
+    overflow-wrap:normal; */
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
+    border-top-left-radius: 14px;
+    border-bottom-left-radius: 9px;
+    border-top-right-radius: 7px;
+    border-bottom-right-radius: 0px;
+  }
+  
+  @keyframes slide-in {
+    0% {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0%);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slide-in-lastrec {
+    0% {
+      transform: translateX(-100%);
+     
+      opacity: 0;
+    }
+    50% {
+      transform: translateY(-40%);
+      transform: translateY(20%);
+    }
+    70% {
+      transform: translateX(1%);
+     
+    }
+    100% {
+      transform: translateX(0%);
+      opacity: 1;
+    }
+  }
+  @keyframes slide-inrec {
+    0% {
+      transform: translateX(-150%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0%);
+      opacity: 1;
+    }
+  }
+  
+  /* @keyframes slide-in-lastrec {
+    0% {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    50% {
+      transform: translateX(20%);
+    }
+    100% {
+      transform: translateX(0%);
+      opacity: 1;
+    }
+  } */

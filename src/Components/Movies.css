@@ -1,0 +1,114 @@
+/* body {
+    padding: 0;
+    margin: 0;
+    height: 100vh;
+    width: 100%;
+    background: #07051a;
+} */
+
+.searchbar4{
+    
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    margin-top: 90px;
+    /* transform: translateX(-10px); */
+    transition: all 1s;
+    width: 50px;
+    height: 50px;
+    background: white;
+    box-sizing: border-box;
+    border-radius: 25px;
+    border: 4px solid white;
+    padding: 5px;
+}
+
+.searchbar2{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;;
+    height: 42.5px;
+    line-height: 30px;
+    outline: 0;
+    border: 0;
+    display: none;
+    font-size: 1em;
+    border-radius: 20px;
+    padding: 0 20px;
+}
+
+.fa{
+    box-sizing: border-box;
+    padding: 10px;
+    width: 42.5px;
+    height: 42.5px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-radius: 50%;
+    color: #07051a;
+    text-align: center;
+    font-size: 1.2em;
+    transition: all 1s;
+}
+
+.searchbar4:hover,
+.searchbar4:valid{
+    width: 600px;
+    cursor: pointer;
+}
+
+.searchbar4:hover .searchbar2,
+.searchbar4:valid .searchbar2{
+    display: block;
+}
+
+.searchbar4:hover .fa,
+.searchbar4:valid .fa{
+    background: #07051a;
+    color: white;
+}
+
+
+.searchbar3{
+  display: none;
+  position: absolute;
+  top: 70px;
+  bottom:0;
+  left: 0;
+  right: 0;
+  font-size: 20px;
+  color: white;
+  text-align: center; 
+  width: 100%;
+}
+
+.searchbar4:valid .searchbar3 {
+  display: block;
+}
+
+.moviephoto{
+    transition: transform .4s;
+    border-radius: 4px;
+    height: 250px;
+    width: 250px;
+    background-color: white;
+    
+    /* display: inline-block;
+    overflow: auto ;
+    object-fit: fill; */
+    
+}
+.moviephoto:hover{
+    transform: scale(1.07)
+}
+.imagemov-contain{
+    object-fit: cover;
+    object-position: center;
+}
+.imagemov{
+    height: 250px;
+    width:250px;
+}

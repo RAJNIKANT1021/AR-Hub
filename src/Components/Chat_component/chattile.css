@@ -1,0 +1,13 @@
+
+.tilehover{
+    padding: 4px,;
+}
+.chatdatahovered{
+    cursor: pointer;
+    background-color: #766ac8;
+    opacity: 1;
+
+    z-index: 33;
+    border-radius: 10px;
+
+}
