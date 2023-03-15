@@ -1,0 +1,70 @@
+[debug] [2023-03-15T17:36:54.426Z] ----------------------------------------------------------------------
+[debug] [2023-03-15T17:36:54.431Z] Command:       C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2023-03-15T17:36:54.432Z] CLI Version:   11.24.1
+[debug] [2023-03-15T17:36:54.432Z] Platform:      win32
+[debug] [2023-03-15T17:36:54.433Z] Node Version:  v16.13.2
+[debug] [2023-03-15T17:36:54.435Z] Time:          Wed Mar 15 2023 23:06:54 GMT+0530 (India Standard Time)
+[debug] [2023-03-15T17:36:54.435Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-03-15T17:36:54.581Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-03-15T17:36:54.582Z] > authorizing via signed-in user (rajnikant1021@gmail.com)
+[debug] [2023-03-15T17:36:54.582Z] [iam] checking project ar-hub-d45d1 for permissions ["datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get","firebasedatabase.instances.update","firebasehosting.sites.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]
+[debug] [2023-03-15T17:36:54.586Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/ar-hub-d45d1:testIamPermissions [none]
+[debug] [2023-03-15T17:36:54.587Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/ar-hub-d45d1:testIamPermissions x-goog-quota-user=projects/ar-hub-d45d1
+[debug] [2023-03-15T17:36:54.587Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/ar-hub-d45d1:testIamPermissions {"permissions":["datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get","firebasedatabase.instances.update","firebasehosting.sites.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]}
+[debug] [2023-03-15T17:36:56.610Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/ar-hub-d45d1:testIamPermissions 200
+[debug] [2023-03-15T17:36:56.611Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/ar-hub-d45d1:testIamPermissions {"permissions":["datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get","firebasedatabase.instances.update","firebasehosting.sites.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]}
+[debug] [2023-03-15T17:36:56.615Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/ar-hub-d45d1 [none]
+[debug] [2023-03-15T17:36:57.813Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/ar-hub-d45d1 200
+[debug] [2023-03-15T17:36:57.814Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/ar-hub-d45d1 {"projectId":"ar-hub-d45d1","projectNumber":"275466964793","displayName":"AR-HUB","name":"projects/ar-hub-d45d1","resources":{"hostingSite":"ar-hub-d45d1","realtimeDatabaseInstance":"ar-hub-d45d1-default-rtdb","storageBucket":"ar-hub-d45d1.appspot.com","locationId":"us-central"},"state":"ACTIVE","etag":"1_43c54708-89c4-44a1-adc5-ccad4b59c386"}
+[debug] [2023-03-15T17:36:57.815Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/ar-hub-d45d1 [none]
+[debug] [2023-03-15T17:36:59.096Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/ar-hub-d45d1 200
+[debug] [2023-03-15T17:36:59.097Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/ar-hub-d45d1 {"projectId":"ar-hub-d45d1","projectNumber":"275466964793","displayName":"AR-HUB","name":"projects/ar-hub-d45d1","resources":{"hostingSite":"ar-hub-d45d1","realtimeDatabaseInstance":"ar-hub-d45d1-default-rtdb","storageBucket":"ar-hub-d45d1.appspot.com","locationId":"us-central"},"state":"ACTIVE","etag":"1_43c54708-89c4-44a1-adc5-ccad4b59c386"}
+[info] 
+[info] === Deploying to 'ar-hub-d45d1'...
+[info] 
+[info] i  deploying database, storage, firestore, hosting 
+[info] i  database: checking rules syntax... 
+[debug] [2023-03-15T17:36:59.108Z] >>> [apiv2][query] GET https://firebasedatabase.googleapis.com/v1beta/projects/ar-hub-d45d1/locations/-/instances/ar-hub-d45d1-default-rtdb [none]
+[debug] [2023-03-15T17:37:00.467Z] <<< [apiv2][status] GET https://firebasedatabase.googleapis.com/v1beta/projects/ar-hub-d45d1/locations/-/instances/ar-hub-d45d1-default-rtdb 200
+[debug] [2023-03-15T17:37:00.468Z] <<< [apiv2][body] GET https://firebasedatabase.googleapis.com/v1beta/projects/ar-hub-d45d1/locations/-/instances/ar-hub-d45d1-default-rtdb {"name":"projects/275466964793/locations/us-central1/instances/ar-hub-d45d1-default-rtdb","project":"projects/275466964793","databaseUrl":"https://ar-hub-d45d1-default-rtdb.firebaseio.com","type":"DEFAULT_DATABASE","state":"ACTIVE"}
+[debug] [2023-03-15T17:37:00.472Z] >>> [apiv2][query] PUT https://ar-hub-d45d1-default-rtdb.firebaseio.com/.settings/rules.json dryRun=true
+[debug] [2023-03-15T17:37:00.472Z] >>> [apiv2][body] PUT https://ar-hub-d45d1-default-rtdb.firebaseio.com/.settings/rules.json "{\n  /* Visit https://firebase.google.com/docs/database/security to learn more about security rules. */\n  \"rules\": {\n    \".read\": false,\n    \".write\": false\n  }\n}"
+[debug] [2023-03-15T17:37:01.795Z] <<< [apiv2][status] PUT https://ar-hub-d45d1-default-rtdb.firebaseio.com/.settings/rules.json 200
+[debug] [2023-03-15T17:37:01.796Z] <<< [apiv2][body] PUT https://ar-hub-d45d1-default-rtdb.firebaseio.com/.settings/rules.json {"status":"ok"}
+[info] +  database: rules syntax for database ar-hub-d45d1-default-rtdb is valid 
+[debug] [2023-03-15T17:37:01.800Z] >>> [apiv2][query] GET https://appengine.googleapis.com/v1/apps/ar-hub-d45d1 [none]
+[debug] [2023-03-15T17:37:03.860Z] <<< [apiv2][status] GET https://appengine.googleapis.com/v1/apps/ar-hub-d45d1 200
+[debug] [2023-03-15T17:37:03.861Z] <<< [apiv2][body] GET https://appengine.googleapis.com/v1/apps/ar-hub-d45d1 {"name":"apps/ar-hub-d45d1","id":"ar-hub-d45d1","authDomain":"gmail.com","locationId":"us-central","codeBucket":"staging.ar-hub-d45d1.appspot.com","servingStatus":"SERVING","defaultHostname":"ar-hub-d45d1.uc.r.appspot.com","defaultBucket":"ar-hub-d45d1.appspot.com","serviceAccount":"ar-hub-d45d1@appspot.gserviceaccount.com","gcrDomain":"us.gcr.io","databaseType":"CLOUD_FIRESTORE","featureSettings":{"splitHealthChecks":true,"useContainerOptimizedOs":true}}
+[info] i  firebase.storage: checking storage.rules for compilation errors... 
+[debug] [2023-03-15T17:37:03.873Z] >>> [apiv2][query] POST https://firebaserules.googleapis.com/v1/projects/ar-hub-d45d1:test [none]
+[debug] [2023-03-15T17:37:03.874Z] >>> [apiv2][body] POST https://firebaserules.googleapis.com/v1/projects/ar-hub-d45d1:test [omitted]
+[debug] [2023-03-15T17:37:06.013Z] <<< [apiv2][status] POST https://firebaserules.googleapis.com/v1/projects/ar-hub-d45d1:test 200
+[debug] [2023-03-15T17:37:06.014Z] <<< [apiv2][body] POST https://firebaserules.googleapis.com/v1/projects/ar-hub-d45d1:test {}
+[info] +  firebase.storage: rules file storage.rules compiled successfully 
+[info] i  firestore: reading indexes from firestore.indexes.json... 
+[info] i  cloud.firestore: checking firestore.rules for compilation errors... 
+[debug] [2023-03-15T17:37:06.025Z] >>> [apiv2][query] POST https://firebaserules.googleapis.com/v1/projects/ar-hub-d45d1:test [none]
+[debug] [2023-03-15T17:37:06.026Z] >>> [apiv2][body] POST https://firebaserules.googleapis.com/v1/projects/ar-hub-d45d1:test [omitted]
+[debug] [2023-03-15T17:37:07.839Z] <<< [apiv2][status] POST https://firebaserules.googleapis.com/v1/projects/ar-hub-d45d1:test 200
+[debug] [2023-03-15T17:37:07.839Z] <<< [apiv2][body] POST https://firebaserules.googleapis.com/v1/projects/ar-hub-d45d1:test {}
+[info] +  cloud.firestore: rules file firestore.rules compiled successfully 
+[debug] [2023-03-15T17:37:07.848Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/ar-hub-d45d1/versions [none]
+[debug] [2023-03-15T17:37:07.849Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/ar-hub-d45d1/versions {"status":"CREATED","labels":{"deployment-tool":"cli-firebase"}}
+[debug] [2023-03-15T17:37:10.096Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/ar-hub-d45d1/versions 200
+[debug] [2023-03-15T17:37:10.096Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/ar-hub-d45d1/versions {"name":"projects/275466964793/sites/ar-hub-d45d1/versions/b9c49e69f1e2a989","status":"CREATED","config":{},"labels":{"deployment-tool":"cli-firebase"}}
+[debug] [2023-03-15T17:37:10.099Z] >>> [apiv2][query] GET https://firebaserules.googleapis.com/v1/projects/ar-hub-d45d1/releases pageSize=10&pageToken=
+[debug] [2023-03-15T17:37:11.939Z] <<< [apiv2][status] GET https://firebaserules.googleapis.com/v1/projects/ar-hub-d45d1/releases 200
+[debug] [2023-03-15T17:37:11.940Z] <<< [apiv2][body] GET https://firebaserules.googleapis.com/v1/projects/ar-hub-d45d1/releases {"releases":[{"name":"projects/ar-hub-d45d1/releases/cloud.firestore","rulesetName":"projects/ar-hub-d45d1/rulesets/e58f92bd-4bc8-41a7-bdf1-aee70bc9a3da","createTime":"2023-03-13T17:32:47.190716Z","updateTime":"2023-03-15T17:30:12.456523Z"},{"name":"projects/ar-hub-d45d1/releases/firebase.storage","rulesetName":"projects/ar-hub-d45d1/rulesets/81b6544f-35d8-4ba6-9615-25b19ac23ebc","createTime":"2023-03-13T15:56:55.679157Z","updateTime":"2023-03-13T15:56:55.679157Z"},{"name":"projects/ar-hub-d45d1/releases/firebase.storage/ar-hub-d45d1.appspot.com","rulesetName":"projects/ar-hub-d45d1/rulesets/646c9bcf-fed6-47ce-9285-808064ebfb20","createTime":"2023-03-13T13:07:03.918961Z","updateTime":"2023-03-15T17:30:11.502045Z"}]}
+[debug] [2023-03-15T17:37:11.981Z] >>> [apiv2][query] GET https://firebaserules.googleapis.com/v1/projects/ar-hub-d45d1/rulesets/81b6544f-35d8-4ba6-9615-25b19ac23ebc [none]
+[debug] [2023-03-15T17:37:19.921Z] <<< [apiv2][status] GET https://firebaserules.googleapis.com/v1/projects/ar-hub-d45d1/rulesets/81b6544f-35d8-4ba6-9615-25b19ac23ebc 200
+[debug] [2023-03-15T17:37:19.922Z] <<< [apiv2][body] GET https://firebaserules.googleapis.com/v1/projects/ar-hub-d45d1/rulesets/81b6544f-35d8-4ba6-9615-25b19ac23ebc [omitted]
+[info] i  storage: uploading rules storage.rules... 
+[debug] [2023-03-15T17:37:19.926Z] >>> [apiv2][query] POST https://firebaserules.googleapis.com/v1/projects/ar-hub-d45d1/rulesets [none]
+[debug] [2023-03-15T17:37:19.926Z] >>> [apiv2][body] POST https://firebaserules.googleapis.com/v1/projects/ar-hub-d45d1/rulesets [omitted]
+[debug] [2023-03-15T17:37:44.198Z] Error: Timed out.
+    at Timeout._onTimeout (C:\Users\rajni\AppData\Roaming\nvm\v16.13.2\node_modules\firebase-tools\lib\utils.js:253:49)
+    at listOnTimeout (node:internal/timers:557:17)
+    at processTimers (node:internal/timers:500:7)
+[error] 
+[error] Error: An unexpected error has occurred.
