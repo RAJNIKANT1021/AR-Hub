@@ -13,7 +13,7 @@ import { db } from "../../userauth/FireAuth";
 
 function ChatDescription({descname,bio,messageid,chatsData,uid}) {
   console.log(messageid)
-  const[sender,setsender]=useState(null);
+ 
   
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState("");
