@@ -41,18 +41,20 @@ function ChatDescription({descname,bio,messageid,chatsData,uid}) {
   };
   const handleSubmit = async(event) => {
     event.preventDefault();
+    let text =inputValue;
+    setInputValue("");
 
 
 
     await updateDoc(doc(db, "userchats", messageid), {
       messages: arrayUnion({
         id:uuid(),
-        inputValue,
+        inputValue:text,
         senderId:uid,
         date: Timestamp.now(),
       }),
     });
-    setInputValue("");
+    
   };
 
   return (
