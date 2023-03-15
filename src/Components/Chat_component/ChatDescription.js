@@ -41,6 +41,7 @@ function ChatDescription({descname,bio,messageid,chatsData,uid}) {
   };
   const handleSubmit = async(event) => {
     event.preventDefault();
+    setInputValue("");
 
 
 
@@ -52,7 +53,7 @@ function ChatDescription({descname,bio,messageid,chatsData,uid}) {
         date: Timestamp.now(),
       }),
     });
-    setInputValue("");
+   
   };
 
   return (
