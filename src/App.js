@@ -1,15 +1,15 @@
-import React ,{useContext,useState}from 'react'
+import React ,{useState}from 'react'
 import './App.css'
 import Navbar from "./Components/Navbar";
 import Login from "./userauth/login";
-import { BrowserRouter, Routes, Route,useLocation } from "react-router-dom";
+import {  Routes, Route,useLocation } from "react-router-dom";
 import Movies from "./Components/Movies";
 import Home from "./Components/Home";
 import Games from "./Components/Games";
 import Feed from "./Components/Feed";
 import Chat from "./Components/Chat";
 import Books from "./Components/Books";
-import LoginContext from './Context/LoginContext';
+
 import ToShow from './Components/ToShow';
 
 

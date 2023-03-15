@@ -1,116 +1,96 @@
-import React,{useState,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@mui/material";
 import { RxHamburgerMenu } from "react-icons/rx";
 import "./chat.css";
 import ChatTile from "./Chat_component/ChatTile";
-import Avatar from "@mui/material/Avatar";
-import { BsEmojiSmile, BsFillSendFill } from "react-icons/bs";
-import { deepOrange, deepPurple } from "@mui/material/colors";
 
-import { HiStatusOnline, HiOutlineDotsVertical } from "react-icons/hi";
+
+
 import ChatDescription from "./Chat_component/ChatDescription";
-import { doc, getDoc } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  onSnapshot,
+  setDoc,
+} from "firebase/firestore";
 import { db } from "../userauth/FireAuth";
-import { useLocation } from "react-router-dom";
-function Chat({uid,key}) {
-  
-const[showchatdesc,setshowchatdesc]=useState(false);
-  const[arraynames,setarraynames]=useState([]);
-  const[userid,setuserid]=useState(null)
-  const[descname,setdescname]=useState(null)
-  const[bio,setbio]=useState(null)
 
-  useEffect(()=>{
-    
-   
-   
-    
-    const setup =async() => {
-      setuserid(uid)
-      
-      const docRef = doc(db, "A2B_USERS","Users")
-      const docSnap = await getDoc(docRef);
-      
-      if (docSnap.exists()) {
-        let population= docSnap.data();
-        let array=[]
-        for (const key in population) {
-          if (population.hasOwnProperty(key)) {
+function Chat({ uid }) {
 
-          
-            
-        
-            array.push(population[key])}
-            
-          
-        }
-     const arraynamed=[];
-     for(let j=0;j<array.length;j++){
-      if(array[j]!==uid){
-      const docRef = doc(db, "A2B_USERS","Users",array[j],'displayname')
-      const docSnap = await getDoc(docRef);
-      
-      if (docSnap.exists()) {
-        arraynamed.push({name:docSnap.data().name,
-          bio:docSnap.data().Bio,
-          uid:array[j],
-        
-        })
-       
+  const[sendrecid,setsendrecid]=useState(null);
+  const[senderid,setsenderid]=useState(null);
+  const[recieverid,setrecieverid]=useState(null);
+  const [showchatdesc, setshowchatdesc] = useState(false);
+  const [arraynames, setarraynames] = useState([]);
+ 
+  const [descname, setdescname] = useState(null);
+  const [bio, setbio] = useState(null);
+
+  useEffect(() => {
     
-        
-        
-       } else {
-        // doc.data() will be undefined in this case
-        console.log("No such document!");
-    }
-    }}
-    setarraynames(arraynamed)
     
-    } else {
-        // doc.data() will be undefined in this case
-        console.log("No such document!");
-      }
-      
-      
+    const unsub=onSnapshot(
+      doc(db, "A2B_USERS", "Users", "usersdetails", "details"),
+      (doc) => {
+        const arraynamed = [];
+        const detail = doc.data();
+
+        for (const key in detail) {
+          if (detail.hasOwnProperty(key)) {
+            if(key !==uid){
+            const us = detail[key];
+
+            arraynamed.push({
+              name: us.name,
+              bio: us.Bio,
+              uid: key,
+            });
+          }
+        }}
+        setarraynames(arraynamed) }
+    );
+
+    return () => {
+     unsub()
     };
-    setup();
-
-  },[key,uid,userid])
-
-  
-    
-  
-    
-      
-  
-  
-  
-  
+  }, [uid]);
 
 
   // const userdatafetch =async()=>{
- 
+
   // }
 
-  
-    const descriptionheader=(id)=>{
-      setshowchatdesc(true);
-      
-      for(let j=0;j<arraynames.length;j++){
-        
-        if(id===arraynames[j].uid){
-          console.log(arraynames[j])
-          setdescname(arraynames[j].name);
-          setbio(arraynames[j].bio)
-        }
-      }
+  const descriptionheader = async(id, names) => {
+    let onetooneid;
 
-
-    }
+   
     
-  
-  
+    if(uid>id){
+      onetooneid=`${uid}${id}`
+      setsenderid(uid);
+      setrecieverid(id);
+      
+    }else{
+      onetooneid=`${id}${uid}`
+      setsenderid(uid);
+      setrecieverid(id);
+    }
+
+    const docRef = doc(db, "userchats",onetooneid);
+    const docSnap = await getDoc(docRef);
+    if(docSnap.exists()){
+      
+    }else{
+      setDoc(docRef,{messages:[]});
+    }
+   
+    setshowchatdesc(true);
+    setdescname(names.name);
+    setbio(names.bio);
+    setsendrecid(onetooneid);
+  };
+ 
+
   return (
     <div>
       <div className="d-flex flex-row">
@@ -155,7 +135,7 @@ const[showchatdesc,setshowchatdesc]=useState(false);
                         name=""
                         placeholder="Search AR hub"
                       />
-                      <a href="#" class="search_icon">
+                      <a href="SERCH" class="search_icon">
                         <i class="fas fa-search"></i>
                       </a>
                     </div>
@@ -248,29 +228,30 @@ const[showchatdesc,setshowchatdesc]=useState(false);
                 height: "33.2rem",
                 overflowY: "scroll",
               }}
-            >{
-              arraynames.length!==0 &&
-              arraynames.map((names,i) =>  <div className="tab hoverr" tabIndex={i} id={names.uid} onFocus={(e)=>{descriptionheader(e.target.id)}} key={i} >
-              <ChatTile name={names.name}  key={i} />
-
-              </div>)
-            
-                
-              
-            }
-             
-         
-             
-            
-             
+            >
+              {arraynames.map((names, i) => (
+                <div
+                  className="tab hoverr"
+                  tabIndex={i}
+                  id={names.uid}
+                  onFocus={(e) => {
+                    descriptionheader(e.target.id, names);
+                  }}
+                  key={i}
+                >
+                  <ChatTile name={names.name} key={i} />
+                </div>
+              ))}
             </div>
           </div>
         </div>
         <div style={{ backgroundColor: "purple", flex: 1, height: "91vh" }}>
-         {showchatdesc===true && <ChatDescription descname={descname} bio={bio} key={descname}/>}
+          {showchatdesc === true && (
+            <ChatDescription descname={descname} bio={bio} key={descname} messageid={sendrecid}  uid={uid}/>
+          )}
           {/* header */}
-          </div>
-          </div>
+        </div>
+      </div>
     </div>
   );
 }

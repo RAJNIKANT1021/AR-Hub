@@ -5,7 +5,7 @@ import {RiEyeCloseFill} from 'react-icons/ri'
 import { createUserWithEmailAndPassword,signInWithEmailAndPassword } from 'firebase/auth'
 import {auth,db} from './FireAuth';
 import {useNavigate } from "react-router-dom";
-import { collection, doc, setDoc,getDoc, addDoc } from "firebase/firestore";
+import {doc, setDoc,getDoc} from "firebase/firestore";
 function Login({checker}) {
   const navigate = useNavigate();
   
@@ -21,22 +21,29 @@ function Login({checker}) {
     } else {
       // doc.data() will be undefined in this case
     count=1;
-      console.log("No such document!");
+    }
+    await setDoc(doc(db, "A2B_USERS","Users") ,{
+     [count]:uid
+    }, { merge: true });
+
+ 
+   
+    await setDoc(doc(db, "A2B_USERS","Users",'usersdetails',"details"),{
+   
+    [uid]:{
+    name:Name,
+    email: Email,
+      Bio: "hey i am using A2b",
+      uid:uid,
+    
+
     }
 
-   
-    await setDoc(doc(db, "A2B_USERS","Users",uid,'displayname') ,{
-      name: Name,
-      email: Email,
-      Bio: "hey i am using A2b"
-    });
-    await setDoc(doc(db, "A2B_USERS","Users"), {
-      [count]:uid
-  }, { merge: true })
-   
-  
-  
-  }
+   }, { merge: true })
+
+
+
+ }
   const  handleclick=async()=>{
     const Email= document.getElementById('username').value;
     const Name= document.getElementById('name').value;
@@ -84,14 +91,14 @@ function Login({checker}) {
     signInWithEmailAndPassword(auth, Email, Password)
   .then((userCredential) => {
     navigate("/home")
-    createChat("heyy",Email);
+    // createChat("heyy",Email);
     const user = userCredential.user;
    
     checker(true,user.uid);
+    
     // ...
   })
   .catch((error) => {
-    const errorCode = error.code;
     const errorMessage = error.message;
     alert(errorMessage)
   });

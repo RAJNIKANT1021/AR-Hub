@@ -1,16 +1,19 @@
 import React, { useState,useEffect, useRef } from "react";
-import { Button } from "@mui/material";
-import { RxHamburgerMenu } from "react-icons/rx";
+
+import uuid from 'react-uuid';
 import "../chat.css";
 
 import Avatar from "@mui/material/Avatar";
 import { BsEmojiSmile, BsFillSendFill } from "react-icons/bs";
-import { deepOrange, deepPurple } from "@mui/material/colors";
+import { deepPurple } from "@mui/material/colors";
 import Message from "./Message";
 import { HiStatusOnline, HiOutlineDotsVertical } from "react-icons/hi";
+import { arrayUnion, doc, onSnapshot, Timestamp, updateDoc } from "firebase/firestore";
+import { db } from "../../userauth/FireAuth";
 
-function ChatDescription({descname,bio}) {
-  console.log(descname)
+function ChatDescription({descname,bio,messageid,chatsData,uid}) {
+  console.log(messageid)
+  const[sender,setsender]=useState(null);
   
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState("");
@@ -19,21 +22,36 @@ function ChatDescription({descname,bio}) {
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }
+  useEffect(() => {
+    const unSub = onSnapshot(doc(db, "userchats",messageid), (doc) => {
+      doc.exists() && setMessages(doc.data().messages);
+    });
+
+    return () => {
+      unSub();
+    };
+  }, [messageid]);
 
   useEffect(() => {
     scrollToBottom()
   }, [messages]);
 
   const handleInputChange = (event) => {
-    setInputValue(event.target.value);
+    setInputValue(event);
   };
-  const handleSubmit = (event) => {
+  const handleSubmit = async(event) => {
     event.preventDefault();
-    const newMessage = {
-      id: Math.random().toString(36).substr(2, 9),
-      text: inputValue,
-    };
-    setMessages([...messages, newMessage]);
+
+
+
+    await updateDoc(doc(db, "userchats", messageid), {
+      messages: arrayUnion({
+        id:uuid(),
+        inputValue,
+        senderId:uid,
+        date: Timestamp.now(),
+      }),
+    });
     setInputValue("");
   };
 
@@ -105,9 +123,12 @@ function ChatDescription({descname,bio}) {
           }}
         >
           <div className="chat-box" >
-            <div className="messages">
-              {messages.map((message) => (
-                <Message key={message.id} text={message.text} />
+            <div className="messsage1">
+              {messages.map((m) => (
+                m.senderId===uid?
+                <Message key={m.id} message={m} sender={true}/>
+                :
+                <Message key={m.id} message={m} sender={false}/>
               ))}
             </div>
             <div ref={messagesEndRef} />
@@ -139,7 +160,7 @@ function ChatDescription({descname,bio}) {
                     style={{ flex: 1, width: "66rem" }}
                   >
                     <div>
-                      <a href="#" class="imoji">
+                      <a href="PIC" class="imoji">
                         <BsEmojiSmile style={{ fontSize: "29px" }} />
                       </a>
                     </div>
@@ -151,7 +172,7 @@ function ChatDescription({descname,bio}) {
                       value={inputValue}
                       placeholder="Message"
                       onChange={(e) => {
-                        handleInputChange(e);
+                        handleInputChange(e.target.value);
                       }}
                       style={{
                         flex: 1,
