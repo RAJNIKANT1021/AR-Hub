@@ -16,7 +16,7 @@ import { Logout, PersonAdd, Settings } from "@mui/icons-material";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 
-function ChatDescription({descname,bio,messageid,chatsData,uid}) {
+function ChatDescription({descname,bio,messageid,uid}) {
   console.log(messageid)
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
