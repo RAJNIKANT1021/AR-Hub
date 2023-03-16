@@ -19,20 +19,37 @@ function ChatTile({name}) {
     
   return (
 
-    <div className={"tilehover"} >
+    <div className="tilehover mt-3">
         
               
-{ (<div className='d-flex flex-row ' style={{
-                    height:'4.4rem',
+{ (<div className='px-4'style={{ 
+                         
+        
+                   
+                        height:'4.4rem',
+                   }}>
+<div className='d-flex flex-row' style={{
+  
+  
+                        
+        
+                   
+  height:'4.4rem',
+borderBottomColor:'#292A33',
+borderWidth:'3px',
+borderBottomStyle:'solid',
+
                   
                 }}>
                     <div className='flex pt-1 px-1 ' style={{
-                        //   backgroundColor:'#212121',
-                        alignItems:'center',
+                        // alignItems:'center',
+                        
         
-                        justifyContent:'center',
+                        // justifyContent:'center',
+                        //   backgroundColor:'#212121',
+                        
                     }}>
-                    <Avatar sx={{ bgcolor: deepPurple[500], width: 56, height: 56  }}>AS</Avatar>
+                    <Avatar sx={{ bgcolor: deepPurple[500], width: 56, height: 56  }} src="https://img.freepik.com/free-psd/3d-illustration-person-with-rainbow-sunglasses_23-2149436196.jpg?w=740&t=st=1679001679~exp=1679002279~hmac=c53ea30da094c90d0bae1bf703599d8572b711d931d2bbe519571eae87eb5a23" alt="hwt"/>
                     </div>
                     <div className='d-flex flex-column' style={{
                         // backgroundColor:'#212121',
@@ -59,37 +76,42 @@ function ChatTile({name}) {
                         </div>
                         <div style={{
                             
-                             color:'#686c72',
-                             paddingRight:'9px'
+                             color:'#65656C',
+                             paddingRight:'9px',
+                             fontSize:'14px'
                             
                         }}>
-                            sat
+                            12:12
         
                         </div>
         
                    </div>
                    <div className="d-flex flex-row pl-3"style={{
                         //  backgroundColor:'#212121',
-                         color:'#ffffff',   
+                         color:'#65666C',   
+                         fontSize:'14px'
                         
                     
                     }}>
-                        <div className=''>
-        Pandey
-                        </div>
-                        <div style={{
+                        
+                         Tanmoy randi h
+                        {/* <div className=''>
+    
+                        </div> */}
+                        {/* <div style={{
                             paddingLeft:'3px',
                             color:'#aaaaaa',
                             overflow:'hidden',
                         }}>
-        :Tanmoy randi hai bhai shi mein aaj fir sh...
-                        </div>
+       
+                        </div> */}
                         
         
         </div>
         
                     </div>
         
+                </div>
                 </div>
             )}
                

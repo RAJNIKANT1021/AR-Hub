@@ -11,13 +11,13 @@ import { HiStatusOnline, HiOutlineDotsVertical } from "react-icons/hi";
 import { arrayUnion, doc, onSnapshot, Timestamp, updateDoc } from "firebase/firestore";
 import { db } from "../../userauth/FireAuth";
 import { Box, Divider, IconButton, ListItemIcon, Menu, MenuItem, Tooltip } from "@mui/material";
-import { Logout, PersonAdd, Settings } from "@mui/icons-material";
+import { Logout, MoreVert, PersonAdd, Settings } from "@mui/icons-material";
 
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import InputEmoji from 'react-input-emoji'
 
 
 function ChatDescription({descname,bio,messageid,uid}) {
-  console.log(messageid)
+  const [ emoji, setemoji] = useState('');
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -79,53 +79,63 @@ function ChatDescription({descname,bio,messageid,uid}) {
   return (
     <>
       <div
-        class="d-flex flex-row p-1"
-        style={{ backgroundColor: "#212121", height: "9.10vh" }}
+        class="d-flex flex-row"
+        style={{ backgroundColor: "#1F2029", height: "13.6vh" ,zIndex:'2000' ,
+      
+      
+        borderTop: "3px",
+        borderTopColor: "#292A33",
+        borderTopStyle: "solid",
+
+        
+        borderRight: "3px",
+        borderRightColor: "#292A33",
+       borderRightStyle: "solid",
+     
+      
+      
+      }}
       >
         <div
-          className="d-flex flex-row"
+          className="d-flex flex-row mt-3 "
           style={{
+            borderBottom: "2px",
+            borderBottomColor: "#292A33",
+            borderBottomStyle: "solid",
+      
+            
+            
             flex: 1,
           }}
         >
-          <div className="p-1">
-            <Avatar sx={{ bgcolor: deepPurple[500], width: 48, height: 48 }}>
-              AS
-            </Avatar>
+          <div className="mr-4 pt-1 ml-4 pl-2">
+            <Avatar sx={{ bgcolor: deepPurple[500], width: 56, height: 56 }} src="https://img.freepik.com/free-psd/3d-illustration-person-with-rainbow-sunglasses_23-2149436196.jpg?w=740&t=st=1679001679~exp=1679002279~hmac=c53ea30da094c90d0bae1bf703599d8572b711d931d2bbe519571eae87eb5a23" alt="hwt"/>
+            
           </div>
           <div
             className="d-flex flex-column "
-            style={{ flex: 1, backgroundColor: "#212121" }}
+            style={{ flex: 1, backgroundColor: "#1F2029" }}
           >
             <div
-              className="px-2 pt-1"
+              className="mt-1"
               style={{
-                flex: 1,
-                backgroundColor: "#212121",
-                fontSize: "17px",
-                fontWeight: 600,
+              
+                backgroundColor: "#1F2029",
+                fontSize: "23px",
+                
                 color: "white",
               }}
             >
               {descname}
             </div>
             <div
-              className="px-2 pb-3"
-              style={{ color: "#a8a8a8", fontSize: "13px" }}
+              className="pl-1"
+              style={{ color: "#a8a8a8", fontSize: "13px",top:0,backgroundColor:'' }}
             >
-             {bio}
-            </div>
+             online            </div>
           </div>
 
-          <div className="d-flex flex-row pt-1 mostly-customized-scrollbar" style={{ color: "green" }}>
-            <HiStatusOnline className="px-2" style={{ fontSize: "50px" }} />
-          </div>
-          <div
-            className="pt-2 mt-1"
-            style={{ color: "green", fontSize: "20px" }}
-          >
-            online
-          </div>
+         
 
           <div
             className="pt-2 ml-4 pr-3 mr-3"
@@ -141,7 +151,7 @@ function ChatDescription({descname,bio,messageid,uid}) {
                       aria-haspopup="true"
                       aria-expanded={open ? "true" : undefined}
                     >
-                      <MoreVertIcon/>
+                      <MoreVert/>
                       {/* <Avatar sx={{ width: 56, height: 56 }}>M</Avatar> */}
                       
                     </IconButton>
@@ -211,7 +221,7 @@ function ChatDescription({descname,bio,messageid,uid}) {
                     </MenuItem>
                   </Menu>
                 </Box>
-            <HiOutlineDotsVertical />
+           
           </div>
         </div>
       </div>
@@ -219,8 +229,23 @@ function ChatDescription({descname,bio,messageid,uid}) {
         <div
           className="d-flex flex-column chatdata mostly-customized-scrollbar"
           style={{
-            height: "73.5vh",
-            backgroundColor: "brown",
+            height: "68.5vh",
+            backgroundColor: "#17181F",
+
+             
+      
+        borderTop: "3px",
+        borderTopColor: "#292A33",
+        borderTopStyle: "solid",
+        borderBottom: "3px",
+        borderBottomColor: "#292A33",
+        borderBottomStyle: "solid",
+
+        
+        borderRight: "3px",
+        borderRightColor: "#292A33",
+       borderRightStyle: "solid",
+     
           }}
         >
           <div className="chat-box mostly-customized-scrollbar" >
@@ -242,8 +267,8 @@ function ChatDescription({descname,bio,messageid,uid}) {
         <div
             className="d-flex flex-row justify-content-center mostly-customized-scrollbar"
             style={{
-              height: "9.13vh",
-              backgroundColor: "#2c2c2c",
+              height: "9vh",
+              backgroundColor: "#1F2029",
             }}
           >
             <div
