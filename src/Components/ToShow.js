@@ -15,7 +15,7 @@ function ToShow() {
         
 
         <div className="logcontent"style={{height:'32rem',width:'40rem'}}>
-        <img className='image1 image1-contain' src="https://images.unsplash.com/photo-1580234811497-9df7fd2f357e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2067&q=80"/>
+        <img className='image1 image1-contain' src="https://images.unsplash.com/photo-1580234811497-9df7fd2f357e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2067&q=80" alt =""/>
           <div className='d-flex flex-column'>
           <div className='d-flex flex-row headeer'style={{ justifyContent:'center',alignItems:'center'}}>
             <div  style={{paddingLeft:'5rem',color:'#007bfe',fontSize:'30px'}}>
@@ -57,7 +57,7 @@ function ToShow() {
           </div>
           <div className='d-flex flex-column pt-2 mb-4'style={{justifyContent:'center',alignItems:'center'}}>
             <div>
-            <button className='btn btn-dark header btttn' style={{width:'31rem',   fontSize:'23px'}} onClick={()=>{Navigate('/')}}>Please Login To Continue  ------></button>   
+            <button className='btn btn-dark header btttn' style={{width:'31rem',   fontSize:'23px'}} onClick={()=>{Navigate('/')}}>Please Login To Continue  ------</button>   
   
             </div>
             
