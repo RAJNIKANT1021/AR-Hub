@@ -1,11 +1,8 @@
-import React ,{useEffect, useState}from 'react'
+import React from 'react'
 import Avatar from '@mui/material/Avatar';
-import { deepOrange, deepPurple } from '@mui/material/colors';
+import {  deepPurple } from '@mui/material/colors';
 import './chattile.css'
-import { doc, getDoc } from 'firebase/firestore';
-import { db } from '../../userauth/FireAuth';
-import { useLocation } from 'react-router-dom';
-import { isPlainObject } from 'jquery';
+
 
 function ChatTile({name}) {
    
