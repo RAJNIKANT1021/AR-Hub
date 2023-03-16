@@ -13,8 +13,7 @@
     
     .chatdata{
         overflow-y: scroll;
-        background: -moz-linear-gradient(-45deg, #183850 0, #183850 25%, #192C46 50%, #22254C 75%, #22254C 100%);
-  background: -webkit-linear-gradient(-45deg, #183850 0, #183850 25%, #192C46 50%, #22254C 75%, #22254C 100%);
+     background-color: "#17181F";
     }
     .chatnav:hover{
         background-color: #2c2c2c;
@@ -46,6 +45,38 @@
         border-radius: 10px;
 
     }
+    .bouncing-loader {
+      display: flex;
+     
+    }
+    @keyframes bouncing-loader {
+      to {
+        opacity: 0;
+        transform: translateY(-0.2px); 
+      }
+    }
+    
+    .bouncing-loader > div:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+    
+    .bouncing-loader > div:nth-child(3) {
+      animation-delay: 0.3s;
+    }
+  
+    
+    
+    
+    .bouncing-loader > div {
+      width: 5px;
+      height: 5px;
+      margin: 1px 2px;
+      border-radius: 50%;
+      background-color: #eeeded;
+      
+      opacity: 1;
+      animation: bouncing-loader .6s infinite alternate;
+    }
     .tab:focus:hover{
 
       
@@ -58,7 +89,7 @@
     .chat-box {
         display: flex;
         flex-direction: column;
-        height: 60vh;
+        height: 50vh;
       }
 .message {
     display: flex;
