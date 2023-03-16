@@ -11,7 +11,7 @@ const Message = ({ message ,sender}) => {
 
     <>
     {
-      sender===true?    <div className="my-5 sender" style={{backgroundColor:''}}>
+      sender===true?    <div className="my-5 sender mostly-customized-scrollbar" style={{backgroundColor:''}}>
       <div className="d-flex flex-row">
       <div className="text1 d-flex flex-column" style={{backgroundColor:''}} >
        

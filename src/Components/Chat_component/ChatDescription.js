@@ -10,9 +10,22 @@ import Message from "./Message";
 import { HiStatusOnline, HiOutlineDotsVertical } from "react-icons/hi";
 import { arrayUnion, doc, onSnapshot, Timestamp, updateDoc } from "firebase/firestore";
 import { db } from "../../userauth/FireAuth";
+import { Box, Divider, IconButton, ListItemIcon, Menu, MenuItem, Tooltip } from "@mui/material";
+import { Logout, PersonAdd, Settings } from "@mui/icons-material";
+
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+
 
 function ChatDescription({descname,bio,messageid,chatsData,uid}) {
   console.log(messageid)
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
  
   
   const [messages, setMessages] = useState([]);
@@ -104,7 +117,7 @@ function ChatDescription({descname,bio,messageid,chatsData,uid}) {
             </div>
           </div>
 
-          <div className="d-flex flex-row pt-1" style={{ color: "green" }}>
+          <div className="d-flex flex-row pt-1 mostly-customized-scrollbar" style={{ color: "green" }}>
             <HiStatusOnline className="px-2" style={{ fontSize: "50px" }} />
           </div>
           <div
@@ -118,20 +131,100 @@ function ChatDescription({descname,bio,messageid,chatsData,uid}) {
             className="pt-2 ml-4 pr-3 mr-3"
             style={{ color: "#a8a8a8", fontSize: "30px" }}
           >
+             <Box>
+                  <Tooltip title="Account settings">
+                    <IconButton  
+                      onClick={handleClick}
+                      size="small"
+                      sx={{ ml: 2 }}
+                      aria-controls={open ? "account-menu" : undefined}
+                      aria-haspopup="true"
+                      aria-expanded={open ? "true" : undefined}
+                    >
+                      <MoreVertIcon/>
+                      {/* <Avatar sx={{ width: 56, height: 56 }}>M</Avatar> */}
+                      
+                    </IconButton>
+                  </Tooltip>
+                  <Menu
+                    anchorEl={anchorEl}
+                    id="account-menu"
+                    open={open}
+                    onClose={handleClose}
+                    onClick={handleClose}
+                    PaperProps={{
+                      elevation: 0,
+                      sx: {
+                        backgroundColor: "black",
+                        color: "white",
+                        overflow: "visible",
+                        filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                        mt: 1.5,
+                        "& .MuiAvatar-root": {
+                          width: 32,
+                          height: 32,
+                          ml: -0.5,
+                          mr: 1,
+                        },
+                        "&:before": {
+                          backgroundColor: "black",
+                          content: '""',
+                          display: "block",
+                          position: "absolute",
+                          top: 0,
+                          right: 12,
+                          width: 10,
+                          height: 10,
+
+                          transform: "translateY(-50%) rotate(45deg)",
+                          zIndex: 0,
+                        },
+                      },
+                    }}
+                    transformOrigin={{ horizontal: "right", vertical: "top" }}
+                    anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+                  >
+                    <MenuItem onClick={handleClose}>
+                      <Avatar /> Profile
+                    </MenuItem>
+                    <MenuItem onClick={handleClose}>
+                      <Avatar /> My account
+                    </MenuItem>
+                    <Divider />
+                    <MenuItem onClick={handleClose}>
+                      <ListItemIcon style={{ color: "whitesmoke" }}>
+                        <PersonAdd fontSize="small" color="whitesmoke" />
+                      </ListItemIcon>
+                      Add another account
+                    </MenuItem>
+                    <MenuItem onClick={handleClose}>
+                      <ListItemIcon style={{ color: "whitesmoke" }}>
+                        <Settings fontSize="small" color="whitesmoke" />
+                      </ListItemIcon>
+                      Settings
+                    </MenuItem>
+                    <MenuItem onClick={handleClose}>
+                      <ListItemIcon style={{ color: "whitesmoke" }}>
+                        <Logout fontSize="small" color="whitesmoke" />
+                      </ListItemIcon>
+                      Logout
+                    </MenuItem>
+                  </Menu>
+                </Box>
             <HiOutlineDotsVertical />
           </div>
         </div>
       </div>
-      <div class="d-flex flex-column justify-content-between">
+      <div class="d-flex flex-column justify-content-between mostly-customized-scrollbar">
         <div
-          className="d-flex flex-column chatdata"
+          className="d-flex flex-column chatdata mostly-customized-scrollbar"
           style={{
             height: "73.5vh",
             backgroundColor: "brown",
           }}
         >
-          <div className="chat-box" >
-            <div className="messsage1">
+          <div className="chat-box mostly-customized-scrollbar" >
+            <div className="messsage1 mostly-customized-scrollbar">
               {messages.map((m) => (
                 m.senderId===uid?
                 <Message key={m.id} message={m} sender={true}/>
@@ -147,7 +240,7 @@ function ChatDescription({descname,bio,messageid,chatsData,uid}) {
           
         </div>
         <div
-            className="d-flex flex-row justify-content-center"
+            className="d-flex flex-row justify-content-center mostly-customized-scrollbar"
             style={{
               height: "9.13vh",
               backgroundColor: "#2c2c2c",
@@ -164,7 +257,7 @@ function ChatDescription({descname,bio,messageid,chatsData,uid}) {
                   }}
                 >
                   <div
-                    class="d-flex flex-row inputter"
+                    class="d-flex flex-row inputter mostly-customized-scrollbar"
                     style={{ flex: 1, width: "66rem" }}
                   >
                     <div>
