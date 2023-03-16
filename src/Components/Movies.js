@@ -28,14 +28,14 @@ function Movies() {
             setsearchinput("");
           }}
           style={{ color: "white" }}
-        >
+       href="okk" >
           Clear
         </a>
       </form>
       <div className="d-flex flex-column">
         <div className="d-flex py-4 flex-row justify-content-around">
           <div className="moviephoto">
-            <img className="imagemov imagemov-contain" src="https://www.cnet.com/a/img/resize/cedc65214df4403e322281306f00b0684d84ad61/hub/2019/03/14/dd4d8d9c-5f16-4f6b-a7d8-65a00d095c2c/avengers-endgame-poster-square-crop.jpg?auto=webp&fit=crop&height=675&width=1200"/>
+            <img className="imagemov imagemov-contain" src="https://www.cnet.com/a/img/resize/cedc65214df4403e322281306f00b0684d84ad61/hub/2019/03/14/dd4d8d9c-5f16-4f6b-a7d8-65a00d095c2c/avengers-endgame-poster-square-crop.jpg?auto=webp&fit=crop&height=675&width=1200" alt="hey"/>
             <Box
             style={{marginLeft:'160px',marginTop:'-20px'}}
               sx={{ 

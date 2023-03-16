@@ -1,7 +1,7 @@
-import React ,{useContext}from 'react'
+import React from 'react'
 import './navbar.css'
-import { Link, Navigate, useNavigate } from 'react-router-dom';
-import LoginContext from '../Context/LoginContext';
+import { Link, useNavigate } from 'react-router-dom';
+
 
 function Navbar({loggedin,checker}) {
   const Navigate=useNavigate();

@@ -11,7 +11,6 @@ import {
   MenuItem,
   Tooltip,
 } from "@mui/material";
-import { RxHamburgerMenu } from "react-icons/rx";
 import "./chat.css";
 import ChatTile from "./Chat_component/ChatTile";
 
@@ -31,8 +30,6 @@ function Chat({ uid }) {
     setAnchorEl(null);
   };
   const [sendrecid, setsendrecid] = useState(null);
-  const [senderid, setsenderid] = useState(null);
-  const [recieverid, setrecieverid] = useState(null);
   const [showchatdesc, setshowchatdesc] = useState(false);
   const [arraynames, setarraynames] = useState([]);
 
@@ -79,12 +76,11 @@ function Chat({ uid }) {
 
     if (uid > id) {
       onetooneid = `${uid}${id}`;
-      setsenderid(uid);
-      setrecieverid(id);
+  
     } else {
       onetooneid = `${id}${uid}`;
-      setsenderid(uid);
-      setrecieverid(id);
+    
+    
     }
 
     const docRef = doc(db, "userchats", onetooneid);
