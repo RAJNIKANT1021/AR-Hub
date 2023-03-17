@@ -252,9 +252,9 @@ function ChatDescription({descname,bio,messageid,uid}) {
             <div className="messsage1 mostly-customized-scrollbar">
               {messages.map((m) => (
                 m.senderId===uid?
-                <Message key={m.id} message={m} sender={true}/>
+                <Message key={m.id} descname={descname} message={m} sender={true}/>
                 :
-                <Message key={m.id} message={m} sender={false}/>
+                <Message key={m.id} descname={descname}message={m} sender={false}/>
               ))}
             </div>
             <div ref={messagesEndRef} />

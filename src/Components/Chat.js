@@ -161,7 +161,7 @@ function Chat({ uid }) {
                     PaperProps={{
                       elevation: 0,
                       sx: {
-                        backgroundColor: "#1F2029",
+                        backgroundColor: "black",
                         color: "white",
                         overflow: "visible",
                         filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
