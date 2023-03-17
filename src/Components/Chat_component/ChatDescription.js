@@ -7,17 +7,17 @@ import Avatar from "@mui/material/Avatar";
 import { BsEmojiSmile, BsFillSendFill } from "react-icons/bs";
 import { deepPurple } from "@mui/material/colors";
 import Message from "./Message";
-import { HiStatusOnline, HiOutlineDotsVertical } from "react-icons/hi";
+
 import { arrayUnion, doc, onSnapshot, Timestamp, updateDoc } from "firebase/firestore";
 import { db } from "../../userauth/FireAuth";
 import { Box, Divider, IconButton, ListItemIcon, Menu, MenuItem, Tooltip } from "@mui/material";
 import { Logout, MoreVert, PersonAdd, Settings } from "@mui/icons-material";
 
-import InputEmoji from 'react-input-emoji'
+
 
 
 function ChatDescription({descname,bio,messageid,uid}) {
-  const [ emoji, setemoji] = useState('');
+ 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
