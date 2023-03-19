@@ -1,23 +1,42 @@
-import React, { useState,useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
-import uuid from 'react-uuid';
+import uuid from "react-uuid";
 import "../chat.css";
-
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Avatar from "@mui/material/Avatar";
-import { BsEmojiSmile, BsFillSendFill } from "react-icons/bs";
+import { BsEmojiSmile } from "react-icons/bs";
 import { deepPurple } from "@mui/material/colors";
 import Message from "./Message";
+import Diversity1Icon from "@mui/icons-material/Diversity1";
+import PersonIcon from "@mui/icons-material/Person";
+import HttpsOutlinedIcon from "@mui/icons-material/HttpsOutlined";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import CallIcon from '@mui/icons-material/Call';
+import { IoIosVideocam}  from 'react-icons/io';
+import { BsSearch}  from 'react-icons/bs';
 
-import { arrayUnion, doc, onSnapshot, Timestamp, updateDoc } from "firebase/firestore";
+
+import {
+  arrayUnion,
+  doc,
+  onSnapshot,
+  Timestamp,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "../../userauth/FireAuth";
-import { Box, Divider, IconButton, ListItemIcon, Menu, MenuItem, Tooltip } from "@mui/material";
-import { Logout, MoreVert, PersonAdd, Settings } from "@mui/icons-material";
+import {
+  Box,
+  IconButton,
+  ListItemIcon,
+  Menu,
+  MenuItem,
+  Tooltip,
+} from "@mui/material";
+import FaceIcon from "@mui/icons-material/Face";
 
+import SendRoundedIcon from "@mui/icons-material/SendRounded";
 
-
-
-function ChatDescription({descname,bio,messageid,uid}) {
- 
+function ChatDescription({ descname, bio, messageid, uid, setshowmyaccount }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -26,17 +45,16 @@ function ChatDescription({descname,bio,messageid,uid}) {
   const handleClose = () => {
     setAnchorEl(null);
   };
- 
-  
+
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState("");
-  const messagesEndRef = useRef(null)
+  const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
   useEffect(() => {
-    const unSub = onSnapshot(doc(db, "userchats",messageid), (doc) => {
+    const unSub = onSnapshot(doc(db, "userchats", messageid), (doc) => {
       doc.exists() && setMessages(doc.data().messages);
     });
 
@@ -46,83 +64,73 @@ function ChatDescription({descname,bio,messageid,uid}) {
   }, [messageid]);
 
   useEffect(() => {
-    scrollToBottom()
+    scrollToBottom();
   }, [messages]);
 
   const handleInputChange = (event) => {
     setInputValue(event);
   };
-  const handleSubmit = async(event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    
 
-  let text =inputValue;
-   setInputValue("");
+    let text = inputValue;
+    setInputValue("");
 
-
-       await updateDoc(doc(db, "userchats", messageid), {
+    await updateDoc(doc(db, "userchats", messageid), {
       messages: arrayUnion({
-        id:uuid(),
-        inputValue:text,
-        senderId:uid,
+        id: uuid(),
+        inputValue: text,
+        senderId: uid,
         date: Timestamp.now(),
       }),
     });
-   
-
-
-
-
-    
   };
 
   return (
     <>
       <div
         class="d-flex flex-row"
-        style={{ backgroundColor: "#1F2029", height: "13.6vh" ,zIndex:'2000' ,
-      
-      
-        borderTop: "3px",
-        borderTopColor: "#292A33",
-        borderTopStyle: "solid",
+        style={{
+          backgroundColor: "#1F2029",
+          height: "",
+          zIndex: "2000",
+          overflowX: "hidden",
 
-        
-        borderRight: "3px",
-        borderRightColor: "#292A33",
-       borderRightStyle: "solid",
-     
-      
-      
-      }}
+          borderTop: "3px",
+          borderTopColor: "#292A33",
+          borderTopStyle: "solid",
+
+          borderRight: "3px",
+          borderRightColor: "#292A33",
+          borderRightStyle: "solid",
+        }}
       >
         <div
-          className="d-flex flex-row mt-3 "
+          className="d-flex flex-row pt-2 mb-1"
           style={{
-            borderBottom: "2px",
-            borderBottomColor: "#292A33",
-            borderBottomStyle: "solid",
-      
-            
-            
-            flex: 1,
+            // borderBottom: "2px",
+            // borderBottomColor: "#292A33",
+            // borderBottomStyle: "solid",
+            overflowX: "hidden",
           }}
         >
-          <div className="mr-4 pt-1 ml-4 pl-2">
-            <Avatar sx={{ bgcolor: deepPurple[500], width: 56, height: 56 }} src="https://img.freepik.com/free-psd/3d-illustration-person-with-rainbow-sunglasses_23-2149436196.jpg?w=740&t=st=1679001679~exp=1679002279~hmac=c53ea30da094c90d0bae1bf703599d8572b711d931d2bbe519571eae87eb5a23" alt="hwt"/>
-            
+          <div className="d-flex mr-4  ml-4 pl-2">
+            <Avatar
+              sx={{ bgcolor: deepPurple[500], width: 56, height: 56 }}
+              src="https://img.freepik.com/free-psd/3d-illustration-person-with-rainbow-sunglasses_23-2149436196.jpg?w=740&t=st=1679001679~exp=1679002279~hmac=c53ea30da094c90d0bae1bf703599d8572b711d931d2bbe519571eae87eb5a23"
+              alt="hwt"
+            />
           </div>
           <div
             className="d-flex flex-column "
-            style={{ flex: 1, backgroundColor: "#1F2029" }}
+            style={{ flex: 1, backgroundColor: "#1F2029", overflowX: "hidden" }}
           >
             <div
               className="mt-1"
               style={{
-              
                 backgroundColor: "#1F2029",
                 fontSize: "23px",
-                
+
                 color: "white",
               }}
             >
@@ -130,30 +138,53 @@ function ChatDescription({descname,bio,messageid,uid}) {
             </div>
             <div
               className="pl-1"
-              style={{ color: "#a8a8a8", fontSize: "13px",top:0,backgroundColor:'' }}
+              style={{
+                color: "#a8a8a8",
+                fontSize: "13px",
+                top: 0,
+                backgroundColor: "",
+              }}
             >
-             online            </div>
+              online{" "}
+            </div>
           </div>
-
-         
-
+          
+        </div>
+        <div className="d-flex flex-row " style={{justifyContent:'flex-end',alignItems:'center',flex:1}}>
+        <div
+            className="d-flex  mx-3"
+            style={{ color: "#a8a8a8", fontSize: "20px" , }}
+          >
+          <BsSearch/>
+          </div>
+          
+        <div
+            className="d-flex  mx-3"
+            style={{ color: "#a8a8a8", fontSize: "33px" }}
+          >
+          <CallIcon fontSize="medium"/>
+          </div>
           <div
-            className="pt-2 ml-4 pr-3 mr-3"
+            className="d-flex  mx-3"
+            style={{ color: "#a8a8a8", fontSize: "35px" }}
+          >
+          <IoIosVideocam/>
+          </div>
+        <div
+            className="d-flex  mx-3"
             style={{ color: "#a8a8a8", fontSize: "30px" }}
           >
              <Box>
                   <Tooltip title="Account settings">
-                    <IconButton  
+                    <IconButton
                       onClick={handleClick}
                       size="small"
-                      sx={{ ml: 2 }}
+                      sx={{ color:'#a8a8a8' }}
                       aria-controls={open ? "account-menu" : undefined}
                       aria-haspopup="true"
                       aria-expanded={open ? "true" : undefined}
                     >
-                      <MoreVert/>
-                      {/* <Avatar sx={{ width: 56, height: 56 }}>M</Avatar> */}
-                      
+                    <MoreVertIcon fontSize="large"/>
                     </IconButton>
                   </Tooltip>
                   <Menu
@@ -182,7 +213,7 @@ function ChatDescription({descname,bio,messageid,uid}) {
                           display: "block",
                           position: "absolute",
                           top: 0,
-                          right: 12,
+                          right: 16,
                           width: 10,
                           height: 10,
 
@@ -194,134 +225,152 @@ function ChatDescription({descname,bio,messageid,uid}) {
                     transformOrigin={{ horizontal: "right", vertical: "top" }}
                     anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
                   >
-                    <MenuItem onClick={handleClose}>
-                      <Avatar /> Profile
-                    </MenuItem>
-                    <MenuItem onClick={handleClose}>
-                      <Avatar /> My account
-                    </MenuItem>
-                    <Divider />
-                    <MenuItem onClick={handleClose}>
+                    <MenuItem onClick={() => { handleClose(); setshowmyaccount(true) }}>
                       <ListItemIcon style={{ color: "whitesmoke" }}>
-                        <PersonAdd fontSize="small" color="whitesmoke" />
+                        <PersonIcon fontSize="small" color="whitesmoke" />
                       </ListItemIcon>
-                      Add another account
+
+                      Profile
                     </MenuItem>
                     <MenuItem onClick={handleClose}>
                       <ListItemIcon style={{ color: "whitesmoke" }}>
-                        <Settings fontSize="small" color="whitesmoke" />
+                        <HttpsOutlinedIcon fontSize="small" color="whitesmoke" />
                       </ListItemIcon>
-                      Settings
+
+                      Privacy
+                    </MenuItem>
+
+                    <MenuItem onClick={handleClose}>
+                      <ListItemIcon style={{ color: "whitesmoke" }}>
+                        <FaceIcon fontSize="small" color="whitesmoke" />
+                      </ListItemIcon>
+                      Avatar
                     </MenuItem>
                     <MenuItem onClick={handleClose}>
                       <ListItemIcon style={{ color: "whitesmoke" }}>
-                        <Logout fontSize="small" color="whitesmoke" />
+                        <NotificationsIcon fontSize="small" color="whitesmoke" />
                       </ListItemIcon>
-                      Logout
+                      Notification
+                    </MenuItem>
+                    <MenuItem onClick={handleClose}>
+                      <ListItemIcon style={{ color: "whitesmoke" }}>
+                        <Diversity1Icon fontSize="small" color="whitesmoke" />
+                      </ListItemIcon>
+                      Invite a friend
                     </MenuItem>
                   </Menu>
                 </Box>
-           
           </div>
+
         </div>
       </div>
+
       <div class="d-flex flex-column justify-content-between mostly-customized-scrollbar">
         <div
           className="d-flex flex-column chatdata mostly-customized-scrollbar"
           style={{
-            height: "68.5vh",
+            height: "74vh",
             backgroundColor: "#17181F",
 
-             
-      
-        borderTop: "3px",
-        borderTopColor: "#292A33",
-        borderTopStyle: "solid",
-        borderBottom: "3px",
-        borderBottomColor: "#292A33",
-        borderBottomStyle: "solid",
+            overflowX: "hidden",
 
-        
-        borderRight: "3px",
-        borderRightColor: "#292A33",
-       borderRightStyle: "solid",
-     
+            borderTop: "3px",
+            borderTopColor: "#292A33",
+            borderTopStyle: "solid",
+            borderBottom: "3px",
+            borderBottomColor: "#292A33",
+            borderBottomStyle: "solid",
+
+            borderRight: "3px",
+            borderRightColor: "#292A33",
+            borderRightStyle: "solid",
           }}
         >
-          <div className="chat-box mostly-customized-scrollbar" >
+          <div className="chat-box mostly-customized-scrollbar">
             <div className="messsage1 mostly-customized-scrollbar">
-              {messages.map((m) => (
-                m.senderId===uid?
-                <Message key={m.id} descname={descname} message={m} sender={true}/>
-                :
-                <Message key={m.id} descname={descname}message={m} sender={false}/>
-              ))}
+              {messages.map((m) =>
+                m.senderId === uid ? (
+                  <Message
+                    key={m.id}
+                    descname={descname}
+                    message={m}
+                    sender={true}
+                  />
+                ) : (
+                  <Message
+                    key={m.id}
+                    descname={descname}
+                    message={m}
+                    sender={false}
+                  />
+                )
+              )}
             </div>
             <div ref={messagesEndRef} />
 
             {/* <img src="https://4kwallpapers.com/images/walls/thumbs_3t/10307.jpg"/> */}
           </div>
-          
-          
         </div>
         <div
-            className="d-flex flex-row justify-content-center mostly-customized-scrollbar"
+          className="d-flex flex-row mostly-customized-scrollbar"
+          style={{
+            height: "",
+            backgroundColor: "#1F2029",
+          }}
+        >
+          <div
+            className="d-flex flex-row"
             style={{
-              height: "9vh",
               backgroundColor: "#1F2029",
+              flex: 1,
+              paddingLeft: "10vw",
+              paddingRight: "10vw",
             }}
           >
-            <div
-              className="d-flex flex-row"
-              style={{ alignItems: "center", justifyContent: "center" }}
-            >
-              <div class="d-flex flex-row" style={{}}>
-                <form
-                  onSubmit={(e) => {
-                    handleSubmit(e);
-                  }}
+            <div class="d-flex flex-row" style={{ flex: 1 }}>
+              <form
+                style={{ flex: 1, backgroundColor: "" }}
+                onSubmit={(e) => {
+                  handleSubmit(e);
+                }}
+              >
+                <div
+                  class="d-flex flex-row inputter mostly-customized-scrollbar mt-2 mb-2"
+                  style={{ flex: 1, width: "" }}
                 >
+                  <div>
+                    <a href="PIC" class="imoji">
+                      <BsEmojiSmile style={{ fontSize: "5rem" }} />
+                    </a>
+                  </div>
+
+                  <input
+                    style={{ flex: 1 }}
+                    class="pl-4 search_input blinking-cursor"
+                    type="text"
+                    name=""
+                    value={inputValue}
+                    placeholder="Message"
+                    onChange={(e) => {
+                      handleInputChange(e.target.value);
+                    }}
+                  />
+
                   <div
-                    class="d-flex flex-row inputter mostly-customized-scrollbar"
-                    style={{ flex: 1, width: "66rem" }}
+                    className="p-1"
+                    onSubmit={() => {
+                      handleSubmit();
+                    }}
                   >
-                    <div>
-                      <a href="PIC" class="imoji">
-                        <BsEmojiSmile style={{ fontSize: "29px" }} />
-                      </a>
-                    </div>
-
-                    <input
-                      class="search_input px-3"
-                      type="text"
-                      name=""
-                      value={inputValue}
-                      placeholder="Message"
-                      onChange={(e) => {
-                        handleInputChange(e.target.value);
-                      }}
-                      style={{
-                        flex: 1,
-                      }}
-                    />
-
-                    <div className="p-1">
-                      <button
-                        class="imoji"
-                        onClick={() => {
-                          handleSubmit();
-                        }}
-                      >
-                        <BsFillSendFill
-                          style={{ fontSize: "29px", float: "left" }}
-                        />
-                      </button>
+                    <div class="imoji">
+                      <SendRoundedIcon />
                     </div>
                   </div>
-                </form>
-              </div>
+                </div>
+              </form>
             </div>
-            </div>
+          </div>
+        </div>
       </div>
     </>
   );

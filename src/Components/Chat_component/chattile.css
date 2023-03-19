@@ -1,7 +1,9 @@
 
 .tilehover{
-    padding: 4px,;
+    padding: 4px;
+    
 }
+
 .chatdatahovered{
     cursor: pointer;
     background-color: #766ac8;

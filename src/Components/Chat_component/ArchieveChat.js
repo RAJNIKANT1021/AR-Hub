@@ -2,10 +2,9 @@ import React from 'react'
 import Avatar from '@mui/material/Avatar';
 import {  deepPurple } from '@mui/material/colors';
 import './chattile.css'
-import { Button } from '@mui/material';
 
 
-function ChatTile({name}) {
+function ArchieveChat({name}) {
    
   
    
@@ -20,9 +19,7 @@ function ChatTile({name}) {
     
   return (
 
-  
-    <div className="tilehover mt-md-3 handy">
-        
+    <div className="tilehover mt-3">
         
               
 { (<div className='px-4'style={{ 
@@ -44,7 +41,6 @@ borderBottomStyle:'solid',
 
                   
                 }}>
-                     
                     <div className='flex pt-1 px-1 ' style={{
                         // alignItems:'center',
                         
@@ -114,18 +110,16 @@ borderBottomStyle:'solid',
         </div>
         
                     </div>
-                   
+        
                 </div>
-            
                 </div>
             )}
                
         
-               
+       
     </div>
-
             
   )
 }
 
-export default ChatTile
+export default ArchieveChat;

@@ -12,10 +12,10 @@ li:after {
     width: 100%;
     background: rgb(6, 6, 33);
   }
+  @-webkit-keyframes text-pop-up-top{0%{-webkit-transform:translateY(0);transform:translateY(0);-webkit-transform-origin:50% 50%;transform-origin:50% 50%;text-shadow:none}100%{-webkit-transform:translateY(-50px);transform:translateY(-50px);-webkit-transform-origin:50% 50%;transform-origin:50% 50%;text-shadow:0 1px 0 #ccc,0 2px 0 #ccc,0 3px 0 #ccc,0 4px 0 #ccc,0 5px 0 #ccc,0 6px 0 #ccc,0 7px 0 #ccc,0 8px 0 #ccc,0 9px 0 #ccc,0 50px 30px rgba(0,0,0,.3)}}@keyframes text-pop-up-top{0%{-webkit-transform:translateY(0);transform:translateY(0);-webkit-transform-origin:50% 50%;transform-origin:50% 50%;text-shadow:none}100%{-webkit-transform:translateY(-50px);transform:translateY(-50px);-webkit-transform-origin:50% 50%;transform-origin:50% 50%;text-shadow:0 1px 0 #ccc,0 2px 0 #ccc,0 3px 0 #ccc,0 4px 0 #ccc,0 5px 0 #ccc,0 6px 0 #ccc,0 7px 0 #ccc,0 8px 0 #ccc,0 9px 0 #ccc,0 50px 30px rgba(0,0,0,.3)}}
 
   .navbar{
     background-color: #1f2937;
-    box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
 
 
 
@@ -23,6 +23,7 @@ li:after {
 
 
   }
+  .text-pop-up-top{-webkit-animation:text-pop-up-top 10s cubic-bezier(.25,.46,.45,.94) infinite both;animation:text-pop-up-top 10s cubic-bezier(.25,.46,.45,.94) infinite both}
   .searchbar{
     background-color: transparent;
     color:white;

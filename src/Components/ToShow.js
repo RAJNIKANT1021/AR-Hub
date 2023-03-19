@@ -7,7 +7,7 @@ function ToShow() {
     return (
         <>
         
-      <div className="d-flex flex-row  notloggedin" style={{
+      <div className="d-flex flex-row  notloggedin " style={{
        height:'40rem',
        justifyContent:'center',
        alignItems:'center',

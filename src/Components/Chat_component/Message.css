@@ -52,7 +52,7 @@
     padding-bottom: 6px;
     padding-left: 6px;
     font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-    border:1px solid #7A7B7F;
+    border: 0.1pt solid #7a7b7f73;
     /* border-radius: 5px; */
     font-size: 18px;
     line-height: 1.5;
@@ -76,7 +76,7 @@
     position: relative;
     background-color: #766ac8;
     color: #fff;
-    border:1px solid #277bcf;
+    border:0.1pt solid #6798c9;
     padding-top: 6px;
     padding-left:20px;
     padding-bottom: 6px;
