@@ -15,6 +15,9 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import CallIcon from '@mui/icons-material/Call';
 import { IoIosVideocam}  from 'react-icons/io';
 import { BsSearch}  from 'react-icons/bs';
+import useSound from 'use-sound';
+import sentmsgsound from './Sounds/sentmsg.mp3'
+import recmsgsound from './Sounds/msgrec.mp3'
 
 
 import {
@@ -48,7 +51,10 @@ function ChatDescription({ descname, bio, messageid, uid, setshowmyaccount }) {
     setAnchorEl(null);
   };
 
+  const [playsent] = useSound(sentmsgsound);
+  const [palyrec] = useSound(recmsgsound);
   const [showemoji, setshowemoji] = useState(false);
+  const[recievesmsg,setrecievesmsg]=useState(0);
 
   
 
@@ -61,13 +67,32 @@ function ChatDescription({ descname, bio, messageid, uid, setshowmyaccount }) {
   };
   useEffect(() => {
     const unSub = onSnapshot(doc(db, "userchats", messageid), (doc) => {
-      doc.exists() && setMessages(doc.data().messages);
+      if(doc.exists()) {setMessages(doc.data().messages);
+        let array=doc.data().messages;
+        let count=0;
+        for(let i=0;i<array.length;i++){
+          if(  array[i].senderId !== uid ){
+
+            count++;
+
+          }
+          
+        }
+        if(count-recievesmsg===1){
+          palyrec();
+
+
+        } 
+        setrecievesmsg(count);
+      
+      
+      }
     });
 
     return () => {
       unSub();
     };
-  }, [messageid]);
+  }, [messageid,recievesmsg,uid,palyrec]);
 
   useEffect(() => {
     scrollToBottom();
@@ -78,6 +103,9 @@ function ChatDescription({ descname, bio, messageid, uid, setshowmyaccount }) {
   };
   const handleSubmit = async (event) => {
     event.preventDefault();
+    playsent();
+
+
 
     let text = inputValue;
     setInputValue("");
