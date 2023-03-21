@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 
 import uuid from "react-uuid";
 import "../chat.css";
+import "./chatdesc.css"
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Avatar from "@mui/material/Avatar";
 import { BsEmojiSmile } from "react-icons/bs";
@@ -35,6 +36,7 @@ import {
 import FaceIcon from "@mui/icons-material/Face";
 
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
+import EmojiPicker from "emoji-picker-react";
 
 function ChatDescription({ descname, bio, messageid, uid, setshowmyaccount }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -45,6 +47,10 @@ function ChatDescription({ descname, bio, messageid, uid, setshowmyaccount }) {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const [showemoji, setshowemoji] = useState(false);
+
+  
 
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState("");
@@ -114,6 +120,7 @@ function ChatDescription({ descname, bio, messageid, uid, setshowmyaccount }) {
             overflowX: "hidden",
           }}
         >
+        
           <div className="d-flex mr-4  ml-4 pl-2">
             <Avatar
               sx={{ bgcolor: deepPurple[500], width: 56, height: 56 }}
@@ -286,8 +293,10 @@ function ChatDescription({ descname, bio, messageid, uid, setshowmyaccount }) {
             borderRightStyle: "solid",
           }}
         >
+          
           <div className="chat-box mostly-customized-scrollbar">
             <div className="messsage1 mostly-customized-scrollbar">
+          
               {messages.map((m) =>
                 m.senderId === uid ? (
                   <Message
@@ -310,6 +319,14 @@ function ChatDescription({ descname, bio, messageid, uid, setshowmyaccount }) {
 
             {/* <img src="https://4kwallpapers.com/images/walls/thumbs_3t/10307.jpg"/> */}
           </div>
+          {
+            showemoji===true &&
+            <div className="animateemoji mx-4" style={{position:'absolute', bottom:'0',marginBottom:'4rem',backgroundColor:''}}>
+
+            <EmojiPicker  theme={'auto'} width={'auto'}onEmojiClick={(e)=>{setInputValue(`${inputValue}${e.emoji}`)}}/>
+          </div>
+          }
+       
         </div>
         <div
           className="d-flex flex-row mostly-customized-scrollbar"
@@ -338,10 +355,10 @@ function ChatDescription({ descname, bio, messageid, uid, setshowmyaccount }) {
                   class="d-flex flex-row inputter mostly-customized-scrollbar mt-2 mb-2"
                   style={{ flex: 1, width: "" }}
                 >
-                  <div>
-                    <a href="PIC" class="imoji">
-                      <BsEmojiSmile style={{ fontSize: "5rem" }} />
-                    </a>
+                  <div tabIndex={100} class="iemoji handy">
+                 
+                      <BsEmojiSmile style={{ fontSize: "5rem" }} onClick={()=>{setshowemoji(!showemoji)}}/>
+                 
                   </div>
 
                   <input

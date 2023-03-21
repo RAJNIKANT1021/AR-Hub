@@ -25,6 +25,8 @@ import ChatDescription from "./Chat_component/ChatDescription";
 import { doc, getDoc, onSnapshot, setDoc } from "firebase/firestore";
 import { db } from "../userauth/FireAuth";
 import { FiSearch } from "react-icons/fi";
+import { MdOutlineCancel } from "react-icons/md";
+
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import Userinfo from "./Chat_component/Userinfo";
 
@@ -33,6 +35,7 @@ function Chat({ uid }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [archieveview, setarchieveview] = useState(false);
   const [showmyaccount, setshowmyaccount] = useState(null);
+  const [searchopen,setsearchopen]=useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -48,6 +51,19 @@ function Chat({ uid }) {
   }
   const openmyaccount = () => {
     
+
+
+  }
+  const handlesearchopen=()=>{
+    if(searchopen===null){
+      setsearchopen(true);
+
+    }else if(searchopen===true){
+      setsearchopen(false);
+    }else if(searchopen===false){
+      setsearchopen(true);
+    }
+
 
 
   }
@@ -246,24 +262,72 @@ function Chat({ uid }) {
                   </Menu>
                 </Box>
 
-                <div
-                  class="d-flex align-items-center pl-3"
-                  style={{ flex: 1, fontSize: "2rem", color: "#FFFFFF" }}
-                >
-                  Aman
+
+    <div
+    class="d-flex align-items-center pl-3"
+    style={{ flex: 1, fontSize: "2rem", color: "#FFFFFF" }}
+  >
+   {
+    searchopen!==true &&  <span>Aman</span>
+}
+   
+  </div>
+
+  
+
+              
+              {
+                searchopen===true &&(
+                  <div className="d-flex flex-row">
+                <div classs="d-flex align-items-center" style={{  fontSize: "1.3rem", color: "#FFFFFF" }}>
+                  <input className="animateee my-2 pb-1 pl-3" type="text" placeholder ="search contacts" style={{
+               }}/>
+
                 </div>
 
                 <div
-                  className="d-flex justify-content-center align-items-center mx-3"
-                  style={{ backgroundColor: "#1F2029" }}
+                  className="d-flex justify-content-center align-items-center animato"
+                  style={{  }}
                 >
-                  <Tooltip title="Search Chats">
-                    <IconButton>
-                      <FiSearch style={{ color: "#ABABAE", fontSize: "2rem" }} />
+                  <Tooltip title="Cancel  ">
+                    <IconButton onClick={()=>{handlesearchopen()}}>
+                    <MdOutlineCancel style={{ color: "#ABABAE", fontSize: "2rem" }} />
+                  
                     </IconButton>
                   </Tooltip>
                   {/* {isloading===true &&<CircularProgress color="primary" size={22}  />} */}
                 </div>
+                </div>
+
+                )
+              }
+
+{
+                searchopen!==true &&(
+                  <div className="d-flex flex-row">
+                {/* <div classs="d-flex align-items-center" style={{  fontSize: "1.3rem", color: "#FFFFFF" }}>
+                  <input className="animateee my-2 pb-1 pl-3" type="text" placeholder ="search contacts" style={{
+               }}/>
+
+                </div> */}
+
+                <div
+                  className="d-flex justify-content-center align-items-center"
+                  style={{ backgroundColor: "#1F2029" }}
+                >
+                  <Tooltip title="Search Chats">
+                    <IconButton  onClick={()=>{handlesearchopen()}}>
+                      <FiSearch style={{ color: "#ABABAE", fontSize: "2rem" }}/>
+                    </IconButton>
+                  </Tooltip>
+                  {/* {isloading===true &&<CircularProgress color="primary" size={22}  />} */}
+                </div>
+                </div>
+
+                )
+              }
+                
+               
               </div>
 
               {/* <div
