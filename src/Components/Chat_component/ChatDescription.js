@@ -41,7 +41,7 @@ import FaceIcon from "@mui/icons-material/Face";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
 import EmojiPicker from "emoji-picker-react";
 
-function ChatDescription({ descname, bio, messageid, uid, setshowmyaccount }) {
+function ChatDescription({ descname, bio, messageid, uid, setshowmyaccount,status}) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -171,10 +171,23 @@ function ChatDescription({ descname, bio, messageid, uid, setshowmyaccount }) {
             >
               {descname}
             </div>
-            <div
+            {
+              status==="offline"&&   <div
               className="pl-1"
               style={{
-                color: "#a8a8a8",
+                color: "grey",
+                fontSize: "13px",
+                top: 0,
+                backgroundColor: "",
+              }}
+            >
+              offline{" "}
+            </div>
+            }{
+              status==="online"&&   <div
+              className="pl-1"
+              style={{
+                color: "#2e7d32",
                 fontSize: "13px",
                 top: 0,
                 backgroundColor: "",
@@ -182,6 +195,9 @@ function ChatDescription({ descname, bio, messageid, uid, setshowmyaccount }) {
             >
               online{" "}
             </div>
+
+            }
+          
           </div>
           
         </div>

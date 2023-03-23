@@ -1,12 +1,22 @@
 import React from 'react'
 import './navbar.css'
 import { Link, useNavigate } from 'react-router-dom';
+import { Badge } from '@mui/material';
+import NotificationsActiveOutlinedIcon from '@mui/icons-material/NotificationsActiveOutlined';
+import { doc, updateDoc } from 'firebase/firestore';
+import { db } from '../userauth/FireAuth';
 
-
-function Navbar({loggedin,checker}) {
+function Navbar({loggedin,checker,uid}) {
   const Navigate=useNavigate();
 
-  const logout =()=>{
+  const logout =async()=>{
+
+
+      const userstat = doc(db, "A2B_USERS", "Users", "usersdetails", "details");
+      const updates = {};
+      updates[uid + ".status"] = "offline";
+      await updateDoc(userstat, updates);
+    
     checker(false,null);
     Navigate('/');
   }
@@ -39,9 +49,16 @@ function Navbar({loggedin,checker}) {
       <li className="nav-item">
         <Link  className="nav-link" to="/feed">Feed</Link >
       </li>
+    
       <li className="nav-item">
-        <Link  className="nav-link" to="/chat">Chat</Link >
+    
+     
+        <Link  className="nav-link" to="/chat">   <Badge badgeContent={4} color="secondary"> Chat    </Badge> </Link >
+      
+      
       </li>
+        
+    
       <li className="nav-item dropdown">
         <Link  className="nav-link dropdown-toggle" to="hello" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Dropdown

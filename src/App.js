@@ -31,7 +31,7 @@ function App() {
   return(
     
    <>
-    <Navbar loggedin={loggedin} checker={checker} />
+    <Navbar loggedin={loggedin} checker={checker} uid={uid} />
     <Routes>  
       <Route exact path="/" element={<Login checker={checker} key={location.key}/>}/>
       {loggedin && <Route  exact path="home" element={<Home key={location.key}/>}   />}

@@ -11,6 +11,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: #0f172a;
 }
+input {-webkit-appearance: none; box-shadow: none !important; }
+:-webkit-autofill { color: #fff !important; }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',

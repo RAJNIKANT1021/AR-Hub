@@ -2,7 +2,7 @@ import React from 'react'
 import Avatar from '@mui/material/Avatar';
 import {  deepPurple } from '@mui/material/colors';
 import './chattile.css'
-import { Button } from '@mui/material';
+import {  Chip } from '@mui/material';
 
 
 function ChatTile({name}) {
@@ -92,13 +92,20 @@ borderBottomStyle:'solid',
                    </div>
                    <div className="d-flex flex-row pl-3"style={{
                         //  backgroundColor:'#212121',
-                         color:'#65666C',   
-                         fontSize:'14px'
+                       
+                         
                         
                     
                     }}>
+                        <div style={{  color:'#65666C',   
+                         fontSize:'14px',flex:1}}>
+                        working on it
+                            </div>
+                            <div className='px-3'> 
+                            <Chip label="4" color="success" size="small" />
+                                </div>
                         
-                         working on it
+                        
                         {/* <div className=''>
     
                         </div> */}

@@ -1,5 +1,5 @@
 
-@-webkit-keyframes tracking-in-expand{0%{letter-spacing:-.5em;opacity:0}40%{opacity:.6}100%{opacity:1}}@keyframes tracking-in-expand{0%{letter-spacing:-.5em;opacity:0}40%{opacity:.6}100%{opacity:1}}
+
 .searchbar{
     margin-bottom: 4px;
     margin-top: 3px;
@@ -378,7 +378,7 @@
           }
           to {
             /* returns the sun to its default position */
-            width: 13vw;
+            width: 29vh;
             border-radius:25px 0 0 25px;
             background-color:#1F2029;
             border-color:#1a1a1b;
@@ -394,7 +394,7 @@
   border-radius:25px 0 0 25px;
   background-color:#1F2029;
   border-color:#1a1a1b;
-  width: 13vw;
+  width: 29vh;
   animation: 1s cubic-bezier(0.23, 1, 0.320, 1) 0s openeer;
 }
 input{

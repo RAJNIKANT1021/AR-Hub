@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { useId } from 'react'
 import './login.css' 
 import {RiEyeFill} from 'react-icons/ri'
 import {RiEyeCloseFill} from 'react-icons/ri'
 import { createUserWithEmailAndPassword,signInWithEmailAndPassword } from 'firebase/auth'
 import {auth,db} from './FireAuth';
 import {useNavigate } from "react-router-dom";
-import {doc, setDoc,getDoc} from "firebase/firestore";
+import {doc, setDoc,getDoc,updateDoc} from "firebase/firestore";
 function Login({checker}) {
   const navigate = useNavigate();
   
@@ -26,6 +26,14 @@ function Login({checker}) {
      [count]:uid
     }, { merge: true });
 
+    await setDoc(doc(db, "searchList","Users") ,{
+      [count]:{
+      'uid':uid,
+      name:Name,
+      
+      }
+     }, { merge: true });
+
  
    
     await setDoc(doc(db, "A2B_USERS","Users",'usersdetails',"details"),{
@@ -35,6 +43,9 @@ function Login({checker}) {
     email: Email,
       Bio: "hey i am using A2b",
       uid:uid,
+      status:'online',
+      friends:[],
+      blocklist:[],
     
 
     }
@@ -73,6 +84,12 @@ function Login({checker}) {
       alert(error)
     })
   }
+  const changestatus = async (uid) => {
+    const userstat = doc(db, "A2B_USERS", "Users", "usersdetails", "details");
+    const updates = {};
+    updates[uid + ".status"] = "online";
+    await updateDoc(userstat, updates);
+  }
   const handlelogin =async()=>{
     // const docRef = doc(db, "A2B_USERS",'Users')
     // const docSnap = await getDoc(docRef);
@@ -93,8 +110,10 @@ function Login({checker}) {
     navigate("/home")
     // createChat("heyy",Email);
     const user = userCredential.user;
-   
+    
+    changestatus(user.uid)
     checker(true,user.uid);
+
     
     // ...
   })
