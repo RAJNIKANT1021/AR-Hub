@@ -33,6 +33,7 @@ import Myavatar from "./Myavatar";
 import SearchList from "./Chat_component/SearchList";
 
 function Chat({ uid }) {
+  const[username,setusername]=useState('');
   const [showfriendrequest, setshowfriendrequest] = useState(false);
   const [showsearchlist, setshowsearchlist] = useState(false);
   const [showavatar, setshowavatar] = useState(false);
@@ -44,6 +45,7 @@ function Chat({ uid }) {
   const [showmyaccount, setshowmyaccount] = useState(null);
   const [searchopen, setsearchopen] = useState(null);
   const [searchinput, setsearchinput] = useState('');
+  const [chatid, setchatid] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -74,7 +76,6 @@ function Chat({ uid }) {
 
   const [descname, setdescname] = useState(null);
   const [bio, setbio] = useState(null);
-
   useEffect(() => {
     setisloading(true);
     const unsub = onSnapshot(
@@ -82,11 +83,27 @@ function Chat({ uid }) {
       (doc) => {
         const arraynamed = [];
         const detail = doc.data();
+      
 
         for (const key in detail) {
           if (detail.hasOwnProperty(key)) {
+
+            
+            if (key === uid) {
+              const us = detail[key];
+              setusername(us.name);
+             
+            
+              
+            
+              
+            
+            }
             if (key !== uid) {
               const us = detail[key];
+             
+            
+              
             
               
               arraynamed.push({
@@ -106,11 +123,15 @@ function Chat({ uid }) {
     return () => {
       unsub();
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [uid]);
+
+
 
   // const userdatafetch =async()=>{
 
   // }
+ 
   const handlesearch=(e)=>{
     e.preventDefault();
   setsearchinput(document.getElementById('searchinput').value);
@@ -193,12 +214,14 @@ function Chat({ uid }) {
       setDoc(docRef, { messages: [] });
     }
 
+    
     setshowchatdesc(true);
     setdescname(names.name);
     setbio(names.bio);
     setsendrecid(onetooneid);
-    setstatus(names.status)
+    setchatid(id);
   };
+
 
   return (
     <div
@@ -363,7 +386,7 @@ function Chat({ uid }) {
                   class="d-flex align-items-center pl-3"
                   style={{ flex: 1, fontSize: "2rem", color: "#FFFFFF" }}
                 >
-                  {searchopen !== true && <span>Aman</span>}
+                  {searchopen !== true && <span>{username}</span>}
                 </div>
 
                 {searchopen === true && (
@@ -627,13 +650,13 @@ function Chat({ uid }) {
               {arraynames.map((names, i) => (
                 <div
                   className=""
-                  tabIndex={i}
+                  tabIndex={i*19732}
                   id={names.uid}
-                  onFocus={(e) => {
-                    descriptionheader(e.target.id, names);
+                  onClick={(e) => {
+                    descriptionheader(names.uid, names);
                   }}
                   style={{ backgroundColor: "#1F2029" }}
-                  key={i}
+                  key={i*107}
                 >
                   <ChatTile name={names.name} key={i} />
                 </div>
@@ -654,12 +677,13 @@ function Chat({ uid }) {
           >
             {showchatdesc === true && (
               <ChatDescription
-              status={status}
+              
                 descname={descname}
                 bio={bio}
                 key={descname}
                 messageid={sendrecid}
                 uid={uid}
+                chatid={chatid}
                 setshowmyaccount={setshowmyaccount}
               />
             )}

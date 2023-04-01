@@ -10,6 +10,14 @@ import { FaUserFriends } from "react-icons/fa";
 
 
 function SearchList({ searchinput, uid }) {
+
+
+
+
+  const sendfriendrequest=()=>{
+    //handle friend request
+
+  }
   const [searchResults, setSearchResults] = useState(null);
 
   const handleSearchbar = (array, query) => {
@@ -40,6 +48,7 @@ function SearchList({ searchinput, uid }) {
 
     onSnapshot(doc(db, "searchList", "Users"), async (docref) => {
       const detail = docref.data();
+      let friend2=false;
       let friend1 = false;
       let blocked1 = false;
       let name1 = "";
@@ -67,6 +76,20 @@ function SearchList({ searchinput, uid }) {
             if (prof.hasOwnProperty(candidate)) {
               if (candidate !== uid) {
                 const us2 = prof[candidate];
+                const useruid=prof[uid];
+
+                const frienduid=useruid.friends;
+
+                for(let k=0;k<frienduid.length;k++){
+                  if (frienduid[k] === candidate) {
+                    friend2 = true;
+                    break;
+                  }
+
+                }
+
+
+
 
                 name1 = us2.name;
 
@@ -74,9 +97,11 @@ function SearchList({ searchinput, uid }) {
                 const friends1 = us2.friends;
                 const blocklist1 = us2.blocklist;
                 for (let i = 0; i < friends1.length; i++) {
-                  if (friends1[i] === candidate) {
+                  if (friends1[i] === uid) {
+                    if(friend2===true)
+                    {
                     friend1 = true;
-                    break;
+                    break;}
                   }
                 }
                 for (let i = 0; i < blocklist1.length; i++) {
@@ -218,7 +243,7 @@ function SearchList({ searchinput, uid }) {
                                   }}
                                 >
                                   
-                                  <div className="d-flex flex-row">
+                                  <div className="d-flex flex-row" onClick={(e)=>{sendfriendrequest()}}>
                                     <div className="mx-2">
                                       <BsPersonCheckFill
                                         style={{

@@ -5,7 +5,9 @@ import {deepPurple } from '@mui/material/colors';
 import uuid from "react-uuid";
 
 const Message = ({ message ,sender,descname}) => {
-  console.log(message)
+  console.log()
+
+  
   return (
   
 
@@ -17,7 +19,7 @@ const Message = ({ message ,sender,descname}) => {
         <div className="d-flex flex-column pt-2" style={{backgroundColor:''}} >
         <div className="d-flex row pr-3" style={{backgroundColor:'',color:'white',justifyContent:'flex-end'}}>
           <div className="d-flex flex-column pr-2"style={{color:"#B7B2DC",fontSize:'12px',justifyContent:'flex-end'}}>
-          10:45 AM
+          {new Date(message.date.toDate()).toLocaleTimeString('en-IN', {hour: 'numeric', minute: 'numeric', hour12: true})}
           </div>
           <div className="d-flex flex-column" style={{color:"#969696",fontSize:'15px',justifyContent:'flex-end'}}>
         
@@ -69,7 +71,7 @@ const Message = ({ message ,sender,descname}) => {
         {descname}
         </div>
           <div className="d-flex flex-column ml-2"style={{color:"#B7B2DC",fontSize:'12px',justifyContent:'flex-end'}}>
-          10:45 AM
+          {new Date(message.date.toDate()).toLocaleTimeString('en-IN', {hour: 'numeric', minute: 'numeric', hour12: true})}
           </div>
           </div>
       

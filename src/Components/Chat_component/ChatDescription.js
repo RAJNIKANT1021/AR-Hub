@@ -41,8 +41,10 @@ import FaceIcon from "@mui/icons-material/Face";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
 import EmojiPicker from "emoji-picker-react";
 
-function ChatDescription({ descname, bio, messageid, uid, setshowmyaccount,status}) {
+function ChatDescription({ descname, bio, messageid, uid, setshowmyaccount,chatid}) {
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const[status,setstatus]=useState('');
+  
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -51,10 +53,48 @@ function ChatDescription({ descname, bio, messageid, uid, setshowmyaccount,statu
     setAnchorEl(null);
   };
 
+  useEffect(() => {
+
+    const unsub = onSnapshot(
+      doc(db, "A2B_USERS", "Users", "usersdetails", "details"),
+      (doc) => {
+        
+        const detail = doc.data();
+      
+
+        for (const key in detail) {
+          if (detail.hasOwnProperty(key)) {
+            
+              const us = detail[key];
+              if(chatid!==null && chatid===key){
+            
+                setstatus(us.status);
+              }
+              
+        
+              
+            
+              
+            
+            
+          }
+        }
+     
+      }
+    );
+
+    return () => {
+      unsub();
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status]);
+ 
+
   const [playsent] = useSound(sentmsgsound);
   const [palyrec] = useSound(recmsgsound);
   const [showemoji, setshowemoji] = useState(false);
   const[recievesmsg,setrecievesmsg]=useState(0);
+
 
   
 
@@ -65,9 +105,29 @@ function ChatDescription({ descname, bio, messageid, uid, setshowmyaccount,statu
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
+  
   useEffect(() => {
     const unSub = onSnapshot(doc(db, "userchats", messageid), (doc) => {
-      if(doc.exists()) {setMessages(doc.data().messages);
+      if(doc.exists()) {
+
+        
+        let msg=doc.data().messages;
+        for(let i=0;i<msg.length;i++)
+{
+  let str=msg[i].inputValue;
+  let varray=[];
+
+  for(let i=0;i<str.length;i++){
+    varray.push(str.charCodeAt(i)+121312);
+    
+  }
+
+  msg[i].inputValue= String.fromCharCode(...varray);
+
+
+}      
+        
+        setMessages(msg);
         let array=doc.data().messages;
         let count=0;
         for(let i=0;i<array.length;i++){
@@ -92,7 +152,7 @@ function ChatDescription({ descname, bio, messageid, uid, setshowmyaccount,statu
     return () => {
       unSub();
     };
-  }, [messageid,recievesmsg,uid,palyrec]);
+  }, [messageid,recievesmsg,uid,palyrec,status]);
 
   useEffect(() => {
     scrollToBottom();
@@ -103,22 +163,39 @@ function ChatDescription({ descname, bio, messageid, uid, setshowmyaccount,statu
   };
   const handleSubmit = async (event) => {
     event.preventDefault();
+if(inputValue.length){
+   
     playsent();
 
 
 
     let text = inputValue;
+    let array=[];
+
+    for(let i=0;i<text.length;i++){
+      array.push(text.charCodeAt(i)-121312)
+      
+    }
+    
+ let vary= String.fromCharCode(...array)
+ console.log(vary);
+
+  
+
+
+
     setInputValue("");
+    if(vary.length){
 
     await updateDoc(doc(db, "userchats", messageid), {
       messages: arrayUnion({
         id: uuid(),
-        inputValue: text,
+        inputValue: vary,
         senderId: uid,
         date: Timestamp.now(),
       }),
-    });
-  };
+    });}
+  }};
 
   return (
     <>
@@ -392,6 +469,7 @@ function ChatDescription({ descname, bio, messageid, uid, setshowmyaccount,statu
               <form
                 style={{ flex: 1, backgroundColor: "" }}
                 onSubmit={(e) => {
+              
                   handleSubmit(e);
                 }}
               >
