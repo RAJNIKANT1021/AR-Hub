@@ -30,10 +30,13 @@ import Userinfo from "./Chat_component/Userinfo";
 import Myprofile from "./Chat_component/Myprofile";
 import FriendsList from "./Chat_component/FriendsList";
 import Myavatar from "./Myavatar";
+import { useMediaQuery } from '@material-ui/core';
 import SearchList from "./Chat_component/SearchList";
 
 function Chat({ uid }) {
+  
   const[username,setusername]=useState('');
+  const isSmallScreen = useMediaQuery('(max-width: 768px)');
   const [showfriendrequest, setshowfriendrequest] = useState(false);
   const [showsearchlist, setshowsearchlist] = useState(false);
   const [showavatar, setshowavatar] = useState(false);
@@ -69,6 +72,7 @@ function Chat({ uid }) {
       setsearchopen(true);
     }
   };
+
   const [sendrecid, setsendrecid] = useState(null);
   const [showchatdesc, setshowchatdesc] = useState(false);
   const [arraynames, setarraynames] = useState([]);
@@ -119,12 +123,28 @@ function Chat({ uid }) {
         setisloading(false);
       }
     );
+   
+    
 
     return () => {
       unsub();
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [uid]);
+  const[small,setsmall]=useState(false);
+  useEffect(()=>{
+    if(isSmallScreen){
+      if(showchatdesc===true)
+      setsmall(true);
+    }else{
+      if(showchatdesc===true)
+      setsmall(false);
+    }
+
+
+  },[isSmallScreen,showchatdesc])
+
+  
 
 
 
@@ -198,6 +218,7 @@ function Chat({ uid }) {
 
     
   }
+ 
   const descriptionheader = async (id, names) => {
     let onetooneid;
 
@@ -228,6 +249,25 @@ function Chat({ uid }) {
       className="d-flex flex-column"
       style={{ backgroundColor: "", overflow: "hidden" }}
     >
+          {isSmallScreen && showchatdesc === true &&
+                 <div
+                 className="d-md-none d-flex flex-column mostly-customized-scrollbar"
+                 style={{
+                   backgroundColor: "black",
+                   flex: 1,
+                 }}
+               >
+              <ChatDescription
+              
+                descname={descname}
+                bio={bio}
+                key={descname}
+                messageid={sendrecid}
+                uid={uid}
+                chatid={chatid}
+                setshowmyaccount={setshowmyaccount}
+              />
+             </div> }
       <div
         className="d-flex flex-row"
         style={{
@@ -237,23 +277,37 @@ function Chat({ uid }) {
           overflowX: "hidden",
         }}
       >
+        
         <div
           className="d-flex flex-row"
           style={{ backgroundColor: "#1F2029", width: "100vw" }}
         >
           {/* header */}
-
+        
+      
+             {small === false &&
           <div
             className="d-flex flex-column  bd-highlight"
             style={{
               borderWidth: "3px",
               borderColor: "#292A33",
               borderStyle: "solid",
-
-              height: "90vh",
-              overflow: "hidden",
+flex:(isSmallScreen && 1),
+              // height: "90vh",
+              // overflow: "hidden",
             }}
           >
+           
+                           
+       
+            
+            {/* header */}
+        
+         
+             
+              
+             
+        
             <div
               className="d-flex flex-column mx- position-sticky"
               style={{
@@ -264,6 +318,7 @@ function Chat({ uid }) {
                 borderBottomStyle: "solid",
               }}
             >
+              
               <div
                 className="d-flex flex-row mt-3 mb-3"
                 style={{ backgroundColor: "#1F2029" }}
@@ -521,7 +576,7 @@ function Chat({ uid }) {
                     className="d-flex"
                     style={{ flex: 1, color: "white", fontSize: "2rem" }}
                   >
-                    <div className="d-flex" style={{ width: "10rem" }}>
+                    <div className="d-flex" >
                       Message{" "}
                       {isloading && (
                         <div className="pt-4 ">
@@ -617,7 +672,7 @@ function Chat({ uid }) {
                     onFocus={(e) => {
                       descriptionheader(e.target.id, names);
                     }}
-                    style={{ backgroundColor: "#1F2029" }}
+                    style={{ backgroundColor: "#1F2029",paddingTop:(isSmallScreen && "1px"),marginBottom:(isSmallScreen && "5px"), }}
                     key={i}
                   >
                     <ChatTile name={names.name} key={i} />
@@ -655,23 +710,24 @@ function Chat({ uid }) {
                   onClick={(e) => {
                     descriptionheader(names.uid, names);
                   }}
-                  style={{ backgroundColor: "#1F2029" }}
+                  style={{ backgroundColor: "#1F2029",paddingTop:(isSmallScreen && "1px"),marginBottom:(isSmallScreen && "5px"),  }}
                   key={i*107}
                 >
                   <ChatTile name={names.name} key={i} />
                 </div>
               ))}
             </div>
+            
 }
           </div>
-                
-                   
+
+}
           <div
-            className="d-none d-sm-block mostly-customized-scrollbar"
+            className="d-none d-md-flex flex-column mostly-customized-scrollbar"
             style={{
               backgroundColor: "black",
               flex: 1,
-              height: "91vh",
+            
               contain: "strict",
             }}
           >

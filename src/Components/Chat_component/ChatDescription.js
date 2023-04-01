@@ -205,7 +205,7 @@ if(inputValue.length){
           backgroundColor: "#1F2029",
           height: "",
           zIndex: "2000",
-          overflowX: "hidden",
+          overflowX: "",
 
           borderTop: "3px",
           borderTopColor: "#292A33",
@@ -222,7 +222,7 @@ if(inputValue.length){
             // borderBottom: "2px",
             // borderBottomColor: "#292A33",
             // borderBottomStyle: "solid",
-            overflowX: "hidden",
+            
           }}
         >
         
@@ -393,11 +393,11 @@ if(inputValue.length){
         </div>
       </div>
 
-      <div class="d-flex flex-column justify-content-between mostly-customized-scrollbar">
+      <div class="d-flex flex-column justify-content-between mostly-customized-scrollbar" style={{flex:1}}>
         <div
           className="d-flex flex-column chatdata mostly-customized-scrollbar"
           style={{
-            height: "74vh",
+            flex:1,
             backgroundColor: "#17181F",
 
             overflowX: "hidden",
@@ -444,7 +444,7 @@ if(inputValue.length){
             showemoji===true &&
             <div className="animateemoji mx-4" style={{position:'absolute', bottom:'0',marginBottom:'4rem',backgroundColor:''}}>
 
-            <EmojiPicker  theme={'auto'} width={'auto'}onEmojiClick={(e)=>{setInputValue(`${inputValue}${e.emoji}`)}}/>
+            <EmojiPicker  theme={'auto'} onEmojiClick={(e)=>{setInputValue(`${inputValue}${e.emoji}`)}}/>
           </div>
           }
        

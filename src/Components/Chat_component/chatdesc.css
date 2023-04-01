@@ -29,7 +29,8 @@
 }
 .animateemoji{
   opacity: 1;
-width:25vw;
+
+
   animation: emojiopen 1s cubic-bezier(0.23, 1, 0.320, 1) 0s;
 }
 /* .message {

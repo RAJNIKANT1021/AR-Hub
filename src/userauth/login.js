@@ -71,9 +71,11 @@ function Login({checker}) {
     
        user.displayName=Name;
      
-       
+       if(localStorage.getItem('user')){
+        localStorage.removeItem('user')
+       }
         
-      
+       localStorage.setItem('user', user.uid)
  
   createChat(Name,Email,user.uid)
   checker(true,user.uid);
@@ -102,6 +104,29 @@ function Login({checker}) {
     
     //   console.log("No such document!");
     // }
+    if(localStorage.getItem('user')){
+      const Email= document.getElementById('username').value;
+   
+      const Password=document.getElementById('password').value;
+      signInWithEmailAndPassword(auth, Email, Password)
+    .then((userCredential) => {
+      navigate("/home")
+      // createChat("heyy",Email);
+      const user = userCredential.user;
+      changestatus(user.uid);
+      checker(true,user.uid);
+    
+    
+    })
+    
+      
+      // createChat("heyy",Email);
+    
+      
+      
+     
+
+    }else{
     const Email= document.getElementById('username').value;
    
     const Password=document.getElementById('password').value;
@@ -110,7 +135,7 @@ function Login({checker}) {
     navigate("/home")
     // createChat("heyy",Email);
     const user = userCredential.user;
-    
+    localStorage.setItem('user',user.uid);
     changestatus(user.uid)
     checker(true,user.uid);
 
@@ -121,7 +146,7 @@ function Login({checker}) {
     const errorMessage = error.message;
     alert(errorMessage)
   });
-
+    }
   }
   return (<div className='flex space-evenly'>
 

@@ -1,4 +1,4 @@
-import React ,{useState}from 'react'
+import React ,{useState,useEffect}from 'react'
 import './App.css'
 import Navbar from "./Components/Navbar";
 import Login from "./userauth/login";
@@ -12,9 +12,14 @@ import Books from "./Components/Books";
 
 import ToShow from './Components/ToShow';
 
-
 function App() { 
-
+ const[locuser,setlocuser]=useState( localStorage.getItem('user'))
+ useEffect(() => {
+  
+if(locuser){
+checker(true,locuser);}
+  
+ }, [locuser]);
   const location = useLocation();
   const [loggedin, setloggedin] = useState(false);
   const[uid,setuid]=useState(null);
@@ -31,7 +36,13 @@ function App() {
   return(
     
    <>
-    <Navbar loggedin={loggedin} checker={checker} uid={uid} />
+   <div className='d-flex flex-column' style={{width:'100vw',height:'100vh'}}>
+   <div>
+   <Navbar loggedin={loggedin} checker={checker} uid={uid} />
+  </div>
+   
+  <div className='d-flex' style={{flex:1,contain:'strict'}}>
+  
     <Routes>  
       <Route exact path="/" element={<Login checker={checker} key={location.key}/>}/>
       {loggedin && <Route  exact path="home" element={<Home key={location.key}/>}   />}
@@ -56,6 +67,8 @@ function App() {
      
       
     </Routes>
+    </div>
+    </div>
     </>
     
   )

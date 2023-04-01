@@ -16,6 +16,7 @@ function Navbar({loggedin,checker,uid}) {
       const updates = {};
       updates[uid + ".status"] = "offline";
       await updateDoc(userstat, updates);
+      localStorage.removeItem('user');
     
     checker(false,null);
     Navigate('/');

@@ -1,0 +1,39 @@
+[debug] [2023-04-01T16:45:04.774Z] ----------------------------------------------------------------------
+[debug] [2023-04-01T16:45:04.776Z] Command:       C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2023-04-01T16:45:04.777Z] CLI Version:   11.24.1
+[debug] [2023-04-01T16:45:04.777Z] Platform:      win32
+[debug] [2023-04-01T16:45:04.777Z] Node Version:  v16.13.2
+[debug] [2023-04-01T16:45:04.779Z] Time:          Sat Apr 01 2023 22:15:04 GMT+0530 (India Standard Time)
+[debug] [2023-04-01T16:45:04.779Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-04-01T16:45:04.894Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-04-01T16:45:04.895Z] > authorizing via signed-in user (rajnikant1021@gmail.com)
+[debug] [2023-04-01T16:45:04.895Z] [iam] checking project ar-hub-d45d1 for permissions ["datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get","firebasedatabase.instances.update","firebasehosting.sites.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]
+[debug] [2023-04-01T16:45:04.897Z] > refreshing access token with scopes: []
+[debug] [2023-04-01T16:45:04.899Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2023-04-01T16:45:04.899Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2023-04-01T16:45:07.311Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2023-04-01T16:45:07.312Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2023-04-01T16:45:07.340Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/ar-hub-d45d1:testIamPermissions [none]
+[debug] [2023-04-01T16:45:07.340Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/ar-hub-d45d1:testIamPermissions x-goog-quota-user=projects/ar-hub-d45d1
+[debug] [2023-04-01T16:45:07.340Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/ar-hub-d45d1:testIamPermissions {"permissions":["datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get","firebasedatabase.instances.update","firebasehosting.sites.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]}
+[debug] [2023-04-01T16:45:15.716Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/ar-hub-d45d1:testIamPermissions 200
+[debug] [2023-04-01T16:45:15.717Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/ar-hub-d45d1:testIamPermissions {"permissions":["datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get","firebasedatabase.instances.update","firebasehosting.sites.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]}
+[debug] [2023-04-01T16:45:15.718Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/ar-hub-d45d1 [none]
+[debug] [2023-04-01T16:45:16.611Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/ar-hub-d45d1 200
+[debug] [2023-04-01T16:45:16.611Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/ar-hub-d45d1 {"projectId":"ar-hub-d45d1","projectNumber":"275466964793","displayName":"AR-HUB","name":"projects/ar-hub-d45d1","resources":{"hostingSite":"ar-hub-d45d1","realtimeDatabaseInstance":"ar-hub-d45d1-default-rtdb","storageBucket":"ar-hub-d45d1.appspot.com","locationId":"us-central"},"state":"ACTIVE","etag":"1_31893b7f-6d96-4c89-9033-07d08d13a1f2"}
+[debug] [2023-04-01T16:45:16.611Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/ar-hub-d45d1 [none]
+[debug] [2023-04-01T16:45:18.010Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/ar-hub-d45d1 200
+[debug] [2023-04-01T16:45:18.010Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/ar-hub-d45d1 {"projectId":"ar-hub-d45d1","projectNumber":"275466964793","displayName":"AR-HUB","name":"projects/ar-hub-d45d1","resources":{"hostingSite":"ar-hub-d45d1","realtimeDatabaseInstance":"ar-hub-d45d1-default-rtdb","storageBucket":"ar-hub-d45d1.appspot.com","locationId":"us-central"},"state":"ACTIVE","etag":"1_31893b7f-6d96-4c89-9033-07d08d13a1f2"}
+[info] 
+[info] === Deploying to 'ar-hub-d45d1'...
+[info] 
+[info] i  deploying database, storage, firestore, hosting 
+[info] i  database: checking rules syntax... 
+[debug] [2023-04-01T16:45:18.021Z] >>> [apiv2][query] GET https://firebasedatabase.googleapis.com/v1beta/projects/ar-hub-d45d1/locations/-/instances/ar-hub-d45d1-default-rtdb [none]
+[debug] [2023-04-01T16:45:28.025Z] Timeout reached making request to https://firebasedatabase.googleapis.com/v1beta/projects/ar-hub-d45d1/locations/-/instances/ar-hub-d45d1-default-rtdb
+[debug] [2023-04-01T16:45:29.248Z] FirebaseError: Timeout reached making request to https://firebasedatabase.googleapis.com/v1beta/projects/ar-hub-d45d1/locations/-/instances/ar-hub-d45d1-default-rtdb
+    at RetryOperation._fn (C:\Users\rajni\AppData\Roaming\nvm\v16.13.2\node_modules\firebase-tools\lib\apiv2.js:238:35)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[error] 
+[error] Error: Failed to get instance details for instance: ar-hub-d45d1-default-rtdb. See firebase-debug.log for more details.
