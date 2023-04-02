@@ -139,7 +139,7 @@ function Login({checker}) {
     changestatus(user.uid)
     checker(true,user.uid);
 
-    
+    //ggt
     // ...
   })
   .catch((error) => {
