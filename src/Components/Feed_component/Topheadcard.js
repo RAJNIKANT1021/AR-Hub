@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import "./NewsCard.css";
+import "./Topheadcard.css";
 import { IoIosArrowDown } from "react-icons/io";
 import { SiWebmoney } from "react-icons/si";
-function NewsCard({ url1, title, source, author, date, content, website_redirect }) {
+function Topheadcard({ url1, title, source, author, date, content, website_redirect }) {
   const handleReadmore = () => {
     if (Rdm === null) {
       setRdm(true);
@@ -20,9 +20,9 @@ function NewsCard({ url1, title, source, author, date, content, website_redirect
     >
       <div style={{ padding: "30px" }}>
         <div className="d-flex flex-column">
-          <div className="flex Newsimg">
+          <div className="flex Topimg">
             <img
-              className="Newsimg Newsimg-contain"
+              className="Topimg Topimg-contain"
               src={
                 url1
                   ? url1
@@ -40,53 +40,37 @@ function NewsCard({ url1, title, source, author, date, content, website_redirect
                     backgroundColor: "#faf1f3",
                     width: "max-content",
                     borderRadius: "100px",
+                    fontSize:'1rem'
                   }}
                 >
                   {source}
                 </div>
                 <div style={{ flex: 1 }}></div>
-                <div className="px-2 py-1" style={{
+                <div className="px-1 py-1" style={{
                     color: "#28282B",
                     backgroundColor: "#E5E4E2",
                     width: "max-content",
                     borderRadius: "100px",
+                    fontSize:'0.81rem'
                   }}>{date}</div>
                   <a href={website_redirect} target="_blank">
-                <div className="d-flex ml-3 website" style={{
+                <div className="d-flex ml-2 website" style={{
                     color: "#1F51FF",
                     backgroundColor: "#87CEEB",
                     width: "max-content",
                     borderRadius: "100px",
                   }}>
                 <div>
-                <SiWebmoney className="webis ml-2 px-1" style={{fontSize:'3.6vh'}}/></div>
-                <div className="webis1 mr-3">Website</div></div></a>
+                <SiWebmoney className="webis ml-2 px-1" style={{fontSize:'1.3rem'}}/></div>
+                <div className="webis1 mr-2" style={{fontSize:'1rem'}}>Website</div></div></a>
               
             </div>
             <div style={{ fontSize: "1.5rem" }}>{title}</div>
             <div className="d-flex flex-row">
               <div>By {author}</div>
               <div style={{ flex: 1 }}></div>
-              <div
-                className="rdm px-2 py-1"
-                Tabindex={90}
-                onClick={() => {
-                  handleReadmore();
-                }}
-                style={{
-                  color: "#228B22",
-                  backgroundColor: "#C1E1C1",
-                  width: "max-content",
-                  borderRadius: "100px",
-                }}
-              >
-                Read more{" "}
-              </div>
-              <div className="rdm">
-                <IoIosArrowDown
-                  className={Rdm === true ? "my-2 upper" : "my-2 downward"}
-                />
-              </div>
+              
+              
             </div>
             {Rdm === true && (
               <div className="d-flex" style={{ backgroundColor: "" }}>
@@ -108,4 +92,4 @@ function NewsCard({ url1, title, source, author, date, content, website_redirect
   );
 }
 
-export default NewsCard;
+export default Topheadcard;
