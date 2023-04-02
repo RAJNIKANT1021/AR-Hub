@@ -31,7 +31,11 @@ function App() {
   return(
     
    <>
+   <div className="d-flex flex-column"style={{height:'100vh'}}>
+    <div>
     <Navbar loggedin={loggedin} checker={checker} />
+    </div>
+    <div className='d-flex flex-column' style={{flex:1,contain:'strict'}}>
     <Routes>  
       <Route exact path="/" element={<Login checker={checker} key={location.key}/>}/>
       {loggedin && <Route  exact path="home" element={<Home key={location.key}/>}   />}
@@ -39,7 +43,7 @@ function App() {
       {loggedin && <Route exact path="books" element={<Books key={location.key}/>} /> }
       {loggedin &&<Route exact path="books" element={<Books key={location.key}/>}/> }
       {loggedin && <Route exact path="games" element={<Games key={location.key}/>}  />}
-      {loggedin && <Route exact path="feed" element={<Feed key={location.key}/>}  />}
+      {!loggedin && <Route exact path="feed" element={<Feed key={location.key}/>}  />}
       {loggedin && <Route exact path="chat" element={<Chat uid={uid}  key={location.key}/>}/> }
       {!loggedin && <Route exact path="home" element={<Home/>} />}
       {!loggedin && <Route exact path="movies" element={<ToShow/>}/>}
@@ -56,6 +60,8 @@ function App() {
      
       
     </Routes>
+    </div>
+    </div>
     </>
     
   )

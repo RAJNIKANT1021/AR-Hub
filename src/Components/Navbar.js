@@ -1,4 +1,4 @@
-import React ,{useContext}from 'react'
+import React ,{useContext, useState}from 'react'
 import './navbar.css'
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import LoginContext from '../Context/LoginContext';
@@ -10,11 +10,14 @@ function Navbar({loggedin,checker}) {
     checker(false,null);
     Navigate('/');
   }
- 
+
+  const[searchplace,setsearchplace]=useState('');
+
 
   
   
   return (   
+    
  <nav className="flex navbar navbar-expand-lg navbar-dark navbar-default">
   <Link  className="navbar-brand" to="#">A2R HUB</Link >
   <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,7 +39,7 @@ function Navbar({loggedin,checker}) {
         <Link  className="nav-link" to="/games">Games </Link >
       </li>
       <li className="nav-item">
-        <Link  className="nav-link" to="/feed">Feed</Link >
+        <Link  className="nav-link" to="/feed">News</Link >
       </li>
       <li className="nav-item">
         <Link  className="nav-link" to="/chat">Chat</Link >
@@ -56,7 +59,7 @@ function Navbar({loggedin,checker}) {
     </ul>
     <div className="form-inline my-2 my-lg-0">
       <input className="searchbar form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"/>
-      <button className="btn btn-primary my-2 my-sm-0 " style={{color:"white"}}type="submit">Search</button>
+      <button className="btn btn-primary my-2 my-sm-0 " style={{color:"white"}}type="submit">Search {}</button>
     </div>
    {!loggedin && 
     <Link to="/" style={{

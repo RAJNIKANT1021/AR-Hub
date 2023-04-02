@@ -1,0 +1,267 @@
+
+{
+    "status": "ok",
+    "totalResults": 34,
+    "articles": [
+      {
+        "source": {
+          "id": "cnn",
+          "name": "CNN"
+        },
+        "author": "Andy Rose",
+        "title": "Texas ta    kes control of Houston Independent School District - CNN",
+        "description": "The leaders of the Houston Independent School District, the largest school district in Texas, will be replaced by a new board appointed by the state Commissioner of Education, the district said Wednesday.",
+        "url": "https://www.cnn.com/2023/03/15/us/houston-independent-school-district-texas-takeover/index.html",
+        "urlToImage": "https://media.cnn.com/api/v1/images/stellar/prod/230315171325-houston-independent-school-district-031523.jpg?c=16x9&q=w_800,c_fill",
+        "publishedAt": "2023-03-15T22:01:00Z",
+        "content": "The leaders of the Houston Independent School District, the largest school district in Texas, will be replaced by a new board appointed by the state Commissioner of Education, the district said Wedne… [+754 chars]"
+      },
+      {
+        "source": {
+          "id": null,
+          "name": "BBC News"
+        },
+        "author": "https://www.facebook.com/bbcnews",
+        "title": "Bobby Caldwell, soulful R&B singer who broke barriers, dies at 71 - BBC",
+        "description": "Questlove leads tributes to the R&B singer, who his family says died after years of battling illness.",
+        "url": "https://www.bbc.com/news/entertainment-arts-64971880",
+        "urlToImage": "https://ichef.bbci.co.uk/news/1024/branded_news/4718/production/_129000281_gettyimages-85029277.jpg",
+        "publishedAt": "2023-03-15T21:58:53Z",
+        "content": "Music legends are mourning one of their own: R&amp;B singer Bobby Caldwell died at his home on Tuesday night.\r\nCaldwell's hit single, What You Won't Do For Love, shot to the top 10 on Billboard Hot 1… [+2084 chars]"
+      },
+      {
+        "source": {
+          "id": null,
+          "name": "CBS Sports"
+        },
+        "author": "",
+        "title": "Cowboys release Ezekiel Elliott: Potential landing spots for third leading rusher in Dallas history - CBS Sports",
+        "description": "'This is one of the toughest parts of operating a team,' Jerry Jones said in a statement",
+        "url": "https://www.cbssports.com/nfl/news/cowboys-release-ezekiel-elliott-potential-landing-spots-for-third-leading-rusher-in-dallas-history/",
+        "urlToImage": "https://sportshub.cbsistatic.com/i/r/2022/11/24/da2f6a93-7b25-45e4-86a0-8a7ad638561a/thumbnail/1200x675/5d01c876aad16d9c67b9c645767f2a25/usatsi-ezekiel-elliott.jpg",
+        "publishedAt": "2023-03-15T21:51:00Z",
+        "content": "The Ezekiel Elliott era in Dallas is coming to an end as the Dallas Cowboys are releasing Elliott, who has four years remaining on a massive six-year, $90 million extension he signed in 2019, accordi… [+2881 chars]"
+      },
+      {
+        "source": {
+          "id": "usa-today",
+          "name": "USA Today"
+        },
+        "author": "Michael Middlehurst-Schwartz, USA TODAY",
+        "title": "NFL free agency news, rumors: Latest buzz on contracts for top players - USA TODAY",
+        "description": "NFL free agency officially begins on Wednesday, but many of the top players have already locked in deals with new teams.",
+        "url": "https://www.usatoday.com/story/sports/nfl/2023/03/15/nfl-free-agency-news-rumors-wednesday-live-updates-contracts/11476728002/",
+        "urlToImage": "https://www.gannett-cdn.com/presto/2023/03/15/USAT/faa2d18a-c38b-4cd5-bfbb-1bdfa239ccee-USATSI_19438026.jpg?auto=webp&crop=4623,2600,x0,y0&format=pjpg&width=1200",
+        "publishedAt": "2023-03-15T21:45:14Z",
+        "content": "NFL free agency officially begins Wednesday, but many of the most marquee names expected to be available have already reached deals.\r\nWith the league opening its \"legal tampering window\" or negotiati… [+9635 chars]"
+      },
+      {
+        "source": {
+          "id": "reuters",
+          "name": "Reuters"
+        },
+        "author": null,
+        "title": "Judge mulls banning abortion pill in US, questions regulatory approval - Reuters",
+        "description": "A U.S. judge on Wednesday questioned lawyers for President Joe Biden's administration on whether the federal regulatory approval given to the abortion pill mifepristone 22 years ago was proper as he considered a request by anti-abortion groups to ban sales of…",
+        "url": "https://www.reuters.com/legal/texas-judge-consider-banning-abortion-pill-us-2023-03-15/",
+        "urlToImage": "https://www.reuters.com/resizer/_qsfPFA1vbkDgRTgY8_lBFH8MVg=/1200x628/smart/filters:quality(80)/cloudfront-us-east-2.images.arcpublishing.com/reuters/OVIN2CARRZNLHKYLGUJYVUXAVA.jpg",
+        "publishedAt": "2023-03-15T21:30:00Z",
+        "content": "AMARILLO, Texas, March 15 (Reuters) - A U.S. judge on Wednesday questioned lawyers for President Joe Biden's administration on whether the federal regulatory approval given to the abortion pill mifep… [+5085 chars]"
+      },
+      {
+        "source": {
+          "id": null,
+          "name": "Fox Business"
+        },
+        "author": "Megan Henney",
+        "title": "Bank turmoil raises investor bets on big Fed rate cuts this year - Fox Business",
+        "description": "The odds that the Federal Reserve cuts interest rates in May by a quarter-percentage point jumped in the wake of multiple crises within the banking sector.",
+        "url": "https://www.foxbusiness.com/economy/bank-turmoil-raises-investor-bets-big-fed-rate-cuts-this-year",
+        "urlToImage": "https://a57.foxnews.com/static.foxbusiness.com/foxbusiness.com/content/uploads/2022/09/0/0/powell-9.jpg?ve=1&tl=1",
+        "publishedAt": "2023-03-15T20:50:54Z",
+        "content": "Investors have raised their bets that the Federal Reserve will deliver big interest-rate cuts this year after trouble at Credit Suisse reignited panic over a broader financial meltdown. \r\nThe probabi… [+3965 chars]"
+      },
+      {
+        "source": {
+          "id": null,
+          "name": "Kotaku"
+        },
+        "author": "Ethan Gach",
+        "title": "Buy These Excellent 3DS Games Before eShop Closes This Month - Kotaku",
+        "description": "Given Nintendo’s track record, we might never seen many of these games again",
+        "url": "https://kotaku.com/nintendo-3ds-shutdown-march-27-sales-how-to-buy-zelda-1850229912",
+        "urlToImage": "https://i.kinja-img.com/gawker-media/image/upload/c_fill,f_auto,fl_progressive,g_center,h_675,pg_1,q_80,w_1200/f97a818b88e31ec06a288da1db5de46e.jpg",
+        "publishedAt": "2023-03-15T20:49:37Z",
+        "content": "Nintendo is shutting down the 3DS and Wii U eShops at the end of the month. It feels premature and idiotic, but such is the world we live in. Nintendos 3D handheld will always live in the shadow of i… [+4265 chars]"
+      },
+      {
+        "source": {
+          "id": null,
+          "name": "Variety"
+        },
+        "author": "Matt Donnelly",
+        "title": "James Gunn to Direct ‘Superman: Legacy’ - Variety",
+        "description": "James Gunn is set to direct “Superman: Legacy.” The irreverent filmmaker, who serves as chairman and CEO of DC Studios with partner Peter Safran, revealed on Wednesday that he will helm…",
+        "url": "https://variety.com/2023/film/news/james-gunn-superman-legacy-director-1235555507/",
+        "urlToImage": "https://variety.com/wp-content/uploads/2022/12/james-gunn-1.jpg?w=1000&h=563&crop=1",
+        "publishedAt": "2023-03-15T20:13:23Z",
+        "content": "James Gunn is set to direct “Superman: Legacy.”\r\nThe irreverent filmmaker, who serves as chairman and CEO of DC Studios with partner Peter Safran, revealed on Wednesday that he will helm a previously… [+2059 chars]"
+      },
+      {
+        "source": {
+          "id": "cnn",
+          "name": "CNN"
+        },
+        "author": "Mark Thompson, Anna Cooban",
+        "title": "Swiss central bank says it is ready to provide support to Credit Suisse - CNN",
+        "description": "Switzerland's central bank said Wednesday it was ready to provide financial support to Credit Suisse, if necessary, after shares in the country's second biggest lender crashed as much as 30%.",
+        "url": "https://www.cnn.com/2023/03/15/investing/credit-suisse-shares-saudi-national-bank/index.html",
+        "urlToImage": "https://media.cnn.com/api/v1/images/stellar/prod/230315104324-credit-suisse-file-102622.jpg?c=16x9&q=w_800,c_fill",
+        "publishedAt": "2023-03-15T20:12:00Z",
+        "content": "Switzerlands central bank said Wednesday it was ready to provide financial support to Credit Suisse after shares in the countrys second biggest lender crashed as much as 30%. \r\nIn a joint statement w… [+4965 chars]"
+      },
+      {
+        "source": {
+          "id": null,
+          "name": "Patriots.com"
+        },
+        "author": "Evan Lazar",
+        "title": "Report: Patriots Make Splash By Signing Free-Agent WR JuJu Smith-Schuster - Patriots.com",
+        "description": "The Patriots add a much-needed playmaker to the offense with the addition of Smith-Schuster.",
+        "url": "https://www.patriots.com/news/report-patriots-make-splash-by-signing-free-agent-wr-juju-smith-schuster",
+        "urlToImage": "https://static.clubs.nfl.com/image/private/t_editorial_landscape_12_desktop/patriots/lp6y3ptqvcyqcb3sy9v7",
+        "publishedAt": "2023-03-15T19:04:12Z",
+        "content": "Smith-Schuster won Super Bowl LVII with Kansas City this past season in a bounce-back year. The former Steelers draft pick was second on the team behind superstar tight end Travis Kelce in targets (1… [+2165 chars]"
+      },
+      {
+        "source": {
+          "id": "associated-press",
+          "name": "Associated Press"
+        },
+        "author": "Alicia Rancilio",
+        "title": "Does 'Ted Lasso' end with season 3? What to ... believe - The Associated Press",
+        "description": "“ Ted Lasso”  returns Wednesday for its third season and while there are certainly questions about whether AFC Richmond will finally go all the way — or if Nate will receive his comeuppance — there's one big question: Is this actually the last season?",
+        "url": "https://apnews.com/article/ted-lasso-ending-c02abe70284efe943ebb140fc6bceca8",
+        "urlToImage": "https://storage.googleapis.com/afs-prod/media/7790108f934048b892a3b6b7525792ff/3000.webp",
+        "publishedAt": "2023-03-15T18:58:17Z",
+        "content": "Ted Lasso returns Wednesday for its third season and while there are certainly questions about whether AFC Richmond will finally go all the way or if Nate will receive his comeuppance theres one big … [+3886 chars]"
+      },
+      {
+        "source": {
+          "id": null,
+          "name": "Fox Business"
+        },
+        "author": "Chris Pandolfo",
+        "title": "Buttigieg acknowledges 'more mistakes than usual' with close calls at airports - Fox Business",
+        "description": "Transportation Secretary Pete Buttigieg acknowledged that \"more mistakes than usual\" are happening at airports across the country.",
+        "url": "https://www.foxbusiness.com/politics/buttigieg-acknowledges-more-mistakes-than-usual-close-calls-airports",
+        "urlToImage": "https://a57.foxnews.com/static.foxbusiness.com/foxbusiness.com/content/uploads/2023/03/0/0/transportation-secretary-pete-buttigieg-faa-safety-summit.jpg?ve=1&tl=1",
+        "publishedAt": "2023-03-15T18:47:44Z",
+        "content": "Transportation Secretary Pete Buttigieg said Wednesday that federal regulators \"take nothing for granted\" as he acknowledged an uptick in close-call incidents at airports that prompted the Federal Av… [+4549 chars]"
+      },
+      {
+        "source": {
+          "id": null,
+          "name": "New York Post"
+        },
+        "author": "Brooke Steinberg",
+        "title": "Mediterranean diet slashes risk of heart disease, early death in women: study - New York Post ",
+        "description": "Women who follow the Mediterranean diet have a nearly 25% less chance of heart disease and early death, according to a new analysis.",
+        "url": "https://nypost.com/2023/03/15/mediterranean-diet-slashes-risk-of-heart-disease-early-death-in-women/",
+        "urlToImage": "https://nypost.com/wp-content/uploads/sites/2/2023/03/NYPICHPDPICT000008283539.jpg?quality=75&strip=all&w=1024",
+        "publishedAt": "2023-03-15T18:31:00Z",
+        "content": "Women who follow the Mediterranean diet have a nearly 25% lower chance of heart disease and early death, according to a new analysis.\r\nResearch from a team at the University of Sydney published in th… [+2302 chars]"
+      },
+      {
+        "source": {
+          "id": null,
+          "name": "Science.org"
+        },
+        "author": "Science",
+        "title": "Surface changes observed on a Venusian volcano during the Magellan mission - Science",
+        "description": null,
+        "url": "https://www.science.org/doi/10.1126/science.abm7735",
+        "urlToImage": null,
+        "publishedAt": "2023-03-15T18:02:08Z",
+        "content": null
+      },
+      {
+        "source": {
+          "id": null,
+          "name": "ESPN"
+        },
+        "author": "Rich Cimini, Rob Demovsky",
+        "title": "Rodgers says he wants to play for Jets in 2023 - ESPN",
+        "description": "Aaron Rodgers told \"The Pat McAfee Show\" that he intends to play for the New York Jets in 2023.",
+        "url": "https://www.espn.com/nfl/story/_/id/35865345/aaron-rodgers-says-wants-play-jets-2023",
+        "urlToImage": "https://a4.espncdn.com/combiner/i?img=%2Fphoto%2F2022%2F1228%2Fr1111547_1296x729_16%2D9.jpg",
+        "publishedAt": "2023-03-15T17:34:56Z",
+        "content": "Quarterback Aaron Rodgers said Wednesday on \"The Pat McAfee Show\" that he intends to play for the New York Jets this season.\r\nRodgers said he made that decision Friday and is not holding up a trade, … [+6389 chars]"
+      },
+      {
+        "source": {
+          "id": "the-washington-post",
+          "name": "The Washington Post"
+        },
+        "author": "Luz Lazo",
+        "title": "Canadian Pacific, Kansas City Southern merger approved - The Washington Post",
+        "description": "The board had been pressured to defer the decision amid public outcry after a Norfolk Southern train derailment that spilled a toxic gas in northeastern Ohio.",
+        "url": "https://www.washingtonpost.com/transportation/2023/03/15/canadian-pacific-kansas-city-southern-merger/",
+        "urlToImage": "https://www.washingtonpost.com/wp-apps/imrs.php?src=https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/F7QXQSC2VOVMYGOGZ7RGAON6WU_size-normalized.JPG&w=1440",
+        "publishedAt": "2023-03-15T17:19:00Z",
+        "content": "Comment on this story\r\nA federal board on Wednesday approved a Canadian Pacific Railwaymerger with Kansas City Southern, creating a freight rail system linking North America. The deal is the nations … [+7340 chars]"
+      },
+      {
+        "source": {
+          "id": "cnn",
+          "name": "CNN"
+        },
+        "author": "Jackie Wattles, Ashley Strickland",
+        "title": "NASA and Axiom unveil spacesuits astronauts will wear on the moon - CNN",
+        "description": "NASA and Texas-based company Axiom Space have revealed a new spacesuit design — and it could be these very suits that are eventually worn by the first woman and person of color to walk on the moon.",
+        "url": "https://www.cnn.com/2023/03/15/world/nasa-spacesuits-moon-artemis-unveil-scn/index.html",
+        "urlToImage": "https://media.cnn.com/api/v1/images/stellar/prod/230315091725-03-axiom-space-suit.jpg?c=16x9&q=w_800,c_fill",
+        "publishedAt": "2023-03-15T16:52:00Z",
+        "content": "Sign up for CNNs Wonder Theory science newsletter. Explore the universe with news on fascinating discoveries, scientific advancements and more.\r\nNASA and Texas-based company Axiom Space have revealed… [+5951 chars]"
+      },
+      {
+        "source": {
+          "id": "fox-news",
+          "name": "Fox News"
+        },
+        "author": "Thomas Catenacci",
+        "title": "Biden admin buckles to environmental groups, makes sudden reversal on key land decision - Fox News",
+        "description": "The Biden administration reversed course on a land swap it has defended in court, rescinding an agreement to construct a potentially life-saving road in a remote region in Alaska.",
+        "url": "https://www.foxnews.com/politics/biden-admin-buckles-environmental-groups-makes-sudden-reversal-key-land-decision",
+        "urlToImage": "https://static.foxnews.com/foxnews.com/content/uploads/2023/03/GettyImages-1245242462.jpg",
+        "publishedAt": "2023-03-15T16:45:00Z",
+        "content": "The Biden administration announced late Tuesday that it would reverse a Trump-era land swap deal facilitating the construction, in an Alaska wilderness area, of a potentially life-saving road opposed… [+4899 chars]"
+      },
+      {
+        "source": {
+          "id": null,
+          "name": "Yahoo Entertainment"
+        },
+        "author": "A. Pawlowski",
+        "title": "Woman diagnosed with colon cancer at 24 thought her symptoms were IBS - Yahoo News",
+        "description": "What are the first signs of colon cancer? As more young people get the disease, a woman shares the symptoms that led to her colon cancer diagnosis at 24.",
+        "url": "https://news.yahoo.com/woman-diagnosed-colon-cancer-24-162503920.html",
+        "urlToImage": "https://s.yimg.com/ny/api/res/1.2/W_P9k0MGdspSmCUfoyYRLg--/YXBwaWQ9aGlnaGxhbmRlcjt3PTEyMDA7aD0xNDc1/https://media.zenfs.com/en/nbc_today_217/278d9bba5c838069541ffa9931b3a43a",
+        "publishedAt": "2023-03-15T16:25:03Z",
+        "content": "Colon cancer was not on Carly Barretts radar when she suddenly began experiencing stomach symptoms at the age of 24.\r\nShe had no family history of the disease and no other health problems.\r\nA major i… [+5396 chars]"
+      },
+      {
+        "source": {
+          "id": "techcrunch",
+          "name": "TechCrunch"
+        },
+        "author": "Ingrid Lunden",
+        "title": "LinkedIn expands its generative AI assistant to recruitment ads and writing profiles - TechCrunch",
+        "description": "Learning, job ads and profiles are the latest to get the AI push at LinkedIn",
+        "url": "https://techcrunch.com/2023/03/15/linkedin-expands-its-generative-ai-assistant-to-recruitment-ads-and-writing-profiles/",
+        "urlToImage": "https://techcrunch.com/wp-content/uploads/2019/01/linkedin-china-e1547032000499.jpg?resize=1200,636",
+        "publishedAt": "2023-03-15T16:20:54Z",
+        "content": "Earlier this month, when LinkedIn started seeding “AI-powered conversation starters” in people’s news feeds to boost engagement on its platform, the move saw more than little engagement of its own, n… [+3551 chars]"
+      }
+    ]
+  }

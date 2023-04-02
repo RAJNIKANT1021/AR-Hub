@@ -57,7 +57,7 @@ function ToShow() {
           </div>
           <div className='d-flex flex-column pt-2 mb-4'style={{justifyContent:'center',alignItems:'center'}}>
             <div>
-            <button className='btn btn-dark header btttn' style={{width:'31rem',   fontSize:'23px'}} onClick={()=>{Navigate('/')}}>Please Login To Continue  ------></button>   
+            <button className='btn btn-dark header btttn' style={{width:'31rem',   fontSize:'23px'}} onClick={()=>{Navigate('/')}}>Please Login To Continue  ------> </button>   
   
             </div>
             

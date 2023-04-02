@@ -239,7 +239,7 @@ function Chat({ uid }) {
                   }}
                   key={i}
                 >
-                  <ChatTile name={names.name} key={i} />
+                  <ChatTile name={names.name} userid={names.uid} uid={uid} key={i} />
                 </div>
               ))}
             </div>
