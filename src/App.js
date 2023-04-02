@@ -37,7 +37,7 @@ checker(true,locuser);}
     
    <>
    <div className='d-flex flex-column' style={{width:'100vw',height:'100vh'}}>
-   <div>
+   <div classNamw="d-flex flex-column mx- position-sticky">
    <Navbar loggedin={loggedin} checker={checker} uid={uid} />
   </div>
    
