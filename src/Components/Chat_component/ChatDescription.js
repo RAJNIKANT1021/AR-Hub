@@ -200,7 +200,7 @@ if(inputValue.length){
   return (
     <>
       <div
-        class="d-flex flex-row"
+        class="d-flex flex-row mx- position-sticky"
         style={{
           backgroundColor: "#1F2029",
           height: "",

@@ -9,7 +9,7 @@ export default function Home(){
       lat: 10.99835602,
       lng: 77.01502627
     },
-    zoom: 2
+    zoom: 11,
   };
   const handleApiLoaded = (map, maps) => {
     // use map and maps objects
@@ -24,7 +24,7 @@ export default function Home(){
   defaultCenter={defaultProps.center}
   defaultZoom={defaultProps.zoom}
   yesIWantToUseGoogleMapApiInternals
-  onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps)}
+  // onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps)}
 >
   <AnyReactComponent
     lat={59.955413}
