@@ -55,7 +55,7 @@ function Navbar({loggedin,checker,uid}) {
         </Link>
       </li>
       <li className="nav-item dropdown">
-        <Link className="nav-link dropdown-toggle" to="hello" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-toggle="collapse" data-target=".navbar-collapse.show">
+        <Link className="nav-link dropdown-toggle" to="hello" id="navbarDropdown" role="button" aria-haspopup="true" aria-expanded="false" data-toggle="collapse" data-target=".navbar-collapse.show">
           Dropdown
         </Link>
         <div className="dropdown-menu" aria-labelledby="navbarDropdown">
