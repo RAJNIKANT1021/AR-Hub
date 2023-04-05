@@ -40,10 +40,12 @@ import FaceIcon from "@mui/icons-material/Face";
 
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
 import EmojiPicker from "emoji-picker-react";
+import { useParams } from "react-router-dom";
 
 function ChatDescription({ descname, bio, messageid, uid, setshowmyaccount,chatid}) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const[status,setstatus]=useState('');
+
   
   const open = Boolean(anchorEl);
   const handleClick = (event) => {

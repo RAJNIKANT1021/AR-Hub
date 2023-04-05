@@ -32,23 +32,25 @@ import FriendsList from "./Chat_component/FriendsList";
 import Myavatar from "./Myavatar";
 import { useMediaQuery } from '@material-ui/core';
 import SearchList from "./Chat_component/SearchList";
+import { Link, Outlet, useParams } from 'react-router-dom';
 
-function Chat({ uid }) {
+
+function Chat({ uid,setshowmyaccount,showmyaccount,id,setid,username,setusername,showfriendrequest,setshowfriendrequest,showsearchlist,setshowsearchlist,showavatar,setshowavatar,showfriends,setshowfriends,showmyprofile,setshowmyprofile,archieveview,setarchieveview,searchopen,setsearchopen,searchinput,setsearchinput,chatid,setchatid,sendrecid,setsendrecid,showchatdesc,setshowchatdesc,arraynames,setarraynames,status,setstatus,descname,setdescname,bio,setbio,isloading,setisloading}) {
+  const { hey } = useParams();
+  console.log(hey);
+ 
   
-  const[username,setusername]=useState('');
+
+  
+  
+  
+  
+
+ 
   const isSmallScreen = useMediaQuery('(max-width: 768px)');
-  const [showfriendrequest, setshowfriendrequest] = useState(false);
-  const [showsearchlist, setshowsearchlist] = useState(false);
-  const [showavatar, setshowavatar] = useState(false);
-  const [showfriends, setshowfriends] = useState(false);
-  const[showmyprofile,setshowmyprofile]=useState(false);
-  const [isloading, setisloading] = useState(false);
+ 
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [archieveview, setarchieveview] = useState(false);
-  const [showmyaccount, setshowmyaccount] = useState(null);
-  const [searchopen, setsearchopen] = useState(null);
-  const [searchinput, setsearchinput] = useState('');
-  const [chatid, setchatid] = useState(null);
+
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -73,76 +75,29 @@ function Chat({ uid }) {
     }
   };
 
-  const [sendrecid, setsendrecid] = useState(null);
-  const [showchatdesc, setshowchatdesc] = useState(false);
-  const [arraynames, setarraynames] = useState([]);
-  const[status,setstatus]=useState('offline');
 
-  const [descname, setdescname] = useState(null);
-  const [bio, setbio] = useState(null);
-  useEffect(() => {
-    setisloading(true);
-    const unsub = onSnapshot(
-      doc(db, "A2B_USERS", "Users", "usersdetails", "details"),
-      (doc) => {
-        const arraynamed = [];
-        const detail = doc.data();
-      
-
-        for (const key in detail) {
-          if (detail.hasOwnProperty(key)) {
-
-            
-            if (key === uid) {
-              const us = detail[key];
-              setusername(us.name);
-             
-            
-              
-            
-              
-            
-            }
-            if (key !== uid) {
-              const us = detail[key];
-             
-            
-              
-            
-              
-              arraynamed.push({
-                name: us.name,
-                bio: us.Bio,
-                uid: key,
-                status:us.status
-              });
-            }
-          }
-        }
-        setarraynames(arraynamed);
-        setisloading(false);
-      }
-    );
-   
-    
-
-    return () => {
-      unsub();
-    };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [uid]);
+  
   const[small,setsmall]=useState(false);
   useEffect(()=>{
     if(isSmallScreen){
-      if(showchatdesc===true)
-      setsmall(true);
+      if(hey!==undefined){
+       setsmall(true);
+
+      }else{
+        setsmall(false);
+
+      }
+      
+    
+      
     }else{
       if(showchatdesc===true)
       setsmall(false);
+    
     }
 
 
-  },[isSmallScreen,showchatdesc])
+  },[isSmallScreen,showchatdesc,hey])
 
   
 
@@ -219,6 +174,7 @@ function Chat({ uid }) {
     
   }
  
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const descriptionheader = async (id, names) => {
     let onetooneid;
 
@@ -242,6 +198,26 @@ function Chat({ uid }) {
     setsendrecid(onetooneid);
     setchatid(id);
   };
+useEffect(()=>{
+  if(hey!==undefined){
+      
+    console.log(arraynames)
+    let names={};
+    for(let i=0;i<arraynames.length;i++){
+if(arraynames[i].uid===hey){
+names=arraynames[i];
+console.log(names);
+descriptionheader(hey,names);
+break;
+}
+    }
+   
+  }
+
+
+
+},[arraynames, descriptionheader, hey])
+
 
 
   return (
@@ -257,16 +233,7 @@ function Chat({ uid }) {
                    flex: 1,
                  }}
                >
-              <ChatDescription
-              
-                descname={descname}
-                bio={bio}
-                key={descname}
-                messageid={sendrecid}
-                uid={uid}
-                chatid={chatid}
-                setshowmyaccount={setshowmyaccount}
-              />
+          <Outlet/>
              </div> }
       <div
         className="d-flex flex-row"
@@ -713,7 +680,8 @@ flex:(isSmallScreen && 1),
                   style={{ backgroundColor: "#1F2029",paddingTop:(isSmallScreen && "1px"),marginBottom:(isSmallScreen && "5px"),  }}
                   key={i*107}
                 >
-                  <ChatTile name={names.name} key={i} />
+                  <Link to={`${names.uid}`} style={{textDecoration:'none'}}> <ChatTile name={names.name} key={i} /> </Link >
+                 
                 </div>
               ))}
             </div>
@@ -731,17 +699,11 @@ flex:(isSmallScreen && 1),
               contain: "strict",
             }}
           >
+
+
+            {/* large screen chat desc */}
             {showchatdesc === true && (
-              <ChatDescription
-              
-                descname={descname}
-                bio={bio}
-                key={descname}
-                messageid={sendrecid}
-                uid={uid}
-                chatid={chatid}
-                setshowmyaccount={setshowmyaccount}
-              />
+               <Outlet/>
             )}
             {/* header */}
           </div>
