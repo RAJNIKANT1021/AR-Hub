@@ -3,20 +3,34 @@ import React,{useState} from 'react'
 import CancelIcon from '@mui/icons-material/Cancel'
 import { deepPurple } from '@mui/material/colors'
 import{AiOutlineCheck} from "react-icons/ai";
+import { db } from '../userauth/FireAuth';
+import { doc, updateDoc } from 'firebase/firestore';
 
-function Myavatar({setshowavatar}) {
+function Myavatar({setshowavatar,loggeduser}) {
     const[edit,setedit]=useState(false)
     const [editavater, seteditavater] = useState('');
-    const handlechange=()=>{
+
+   
+    const handleupdate=async()=>{
+      console.log('okk');
+      setedit(false);
+      let uid=loggeduser.uid;
+      
+      const userstat = doc(db, "A2B_USERS", "Users", "usersdetails", "details");
+      const updates = {};
+      updates[uid + ".Avatar"] = editavater;
+      seteditavater('');
 
 
-
-
+      await updateDoc(userstat, updates);
+      document.getElementById('editurl').value="";
+     
 
     }
+ 
   return (
     <>
-    <div className='d-flex flex-column' style={{width:'100%',contain:'strict'}}>
+    <div className='d-flex flex-column' style={{width:'100%',contain:''}}>
       <div className='d-flex flex-row pl-2'>
          <div className='d-flex ml-2' style={{flex:1 ,color:'white',fontSize:'25px',alignItems:'center'}}>
                Set Avatar 
@@ -52,7 +66,7 @@ function Myavatar({setshowavatar}) {
         >
           <Avatar
             sx={{ bgcolor: deepPurple[500], width: 240, height: 240 }}
-            src="https://img.freepik.com/free-psd/3d-illustration-person-with-rainbow-sunglasses_23-2149436196.jpg?w=740&t=st=1679001679~exp=1679002279~hmac=c53ea30da094c90d0bae1bf703599d8572b711d931d2bbe519571eae87eb5a23"
+            src={loggeduser.Avatar}
             alt="hwt"
           />
            </div>
@@ -78,8 +92,8 @@ function Myavatar({setshowavatar}) {
             placeholder='Custom Avatar Url'
               type="text"
               className="pl-2"
-              onChange={()=>{setedit(true);handlechange()}}
-              onBlur={()=>{setedit(false);}}
+              onChange={(e)=>{setedit(true);seteditavater(e.target.value);console.log(e.target.value)} }
+              onBlur={()=>{}}
               defaultValue={editavater}
               style={{
                 outline: "none",
@@ -91,7 +105,7 @@ function Myavatar({setshowavatar}) {
             {
                 <div>{
                     edit===true &&
-                    <IconButton onClick={()=>{setedit(false)}}>
+                    <IconButton onClick={()=>{handleupdate()}}>
                     <AiOutlineCheck style={{ color: "#8696a0", fontSize: "1.4rem" }} />
                   </IconButton>
                      }

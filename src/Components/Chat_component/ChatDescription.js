@@ -458,9 +458,9 @@ if(inputValue.length){
           </div>
           {
             showemoji===true &&
-            <div className="animateemoji mx-4" style={{position:'absolute', bottom:'0',marginBottom:'4rem',backgroundColor:''}}>
+            <div className="animateemoji mx-1" style={{position:'absolute', bottom:'0',marginBottom:'.2rem',backgroundColor:'',height:'',width:'',contain:''}}>
 
-            <EmojiPicker  theme={'auto'} onEmojiClick={(e)=>{setInputValue(`${inputValue}${e.emoji}`)}}/>
+            <EmojiPicker  theme={'auto'} width={'40vmax'}  onEmojiClick={(e)=>{setInputValue(`${inputValue}${e.emoji}`)}}/>
           </div>
           }
        

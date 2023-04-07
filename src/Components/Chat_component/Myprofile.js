@@ -4,19 +4,33 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import { deepPurple } from "@mui/material/colors";
 import { RxPencil1 } from "react-icons/rx";
 import{AiOutlineCheck} from "react-icons/ai";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "../../userauth/FireAuth";
 
-function Myprofile({setshowmyprofile}) {
+function Myprofile({setshowmyprofile,loggeduser}) {
   const [edit, setedit] = useState(false);
   const [bioedit, setbioedit] = useState(false);
 
-  const[varusername,setvarusername]=useState('Rajnikant')
-  const[varbio,setvarbio]=useState('Aceeptance Mode on')
+  const[varusername,setvarusername]=useState(loggeduser.name)
+  const[varbio,setvarbio]=useState(loggeduser.Bio)
   const handleedit=()=>{
     document.getElementById('username').readOnly=false;
     document.getElementById('username').focus();
   }
-  const handleeditsubmit=()=>{
+  const handleeditsubmit=async()=>{
+    let usname=document.getElementById('username').value;
+    console.log(usname);
   setvarusername(document.getElementById('username').value);
+  let uid=loggeduser.uid;
+      
+  const userstat = doc(db, "A2B_USERS", "Users", "usersdetails", "details");
+  const updates = {};
+  updates[uid + ".name"] = usname;
+  
+
+
+  await updateDoc(userstat, updates);
+
   document.getElementById('username').readOnly=true;
 
   }
@@ -25,14 +39,25 @@ function Myprofile({setshowmyprofile}) {
     document.getElementById('bio').readOnly=false;
     document.getElementById('bio').focus();
   }
-  const handlebioeditsubmit=()=>{
-  setvarbio(document.getElementById('bio').value);
+  const handlebioeditsubmit=async()=>{
+    let bio=document.getElementById('bio').value
+  setvarbio(bio);
+  let uid=loggeduser.uid;
+      
+  const userstat = doc(db, "A2B_USERS", "Users", "usersdetails", "details");
+  const updates = {};
+  updates[uid + ".Bio"] = bio;
+  
+
+
+  await updateDoc(userstat, updates);
+
   document.getElementById('bio').readOnly=true;
 
   }
   return (
     <>
-      <div className="d-flex flex-column" style={{ width: "100%",contain:'strict',overflowY:'scroll' }}>
+      <div className="d-flex flex-column" style={{ width: "100%",contain:'',overflowY:'' }}>
         <div className="d-flex flex-row">
           <div
             className="d-flex ml-4"
@@ -62,7 +87,7 @@ function Myprofile({setshowmyprofile}) {
         >
           <Avatar
             sx={{ bgcolor: deepPurple[500], width: 240, height: 240 }}
-            src="https://img.freepik.com/free-psd/3d-illustration-person-with-rainbow-sunglasses_23-2149436196.jpg?w=740&t=st=1679001679~exp=1679002279~hmac=c53ea30da094c90d0bae1bf703599d8572b711d931d2bbe519571eae87eb5a23"
+            src={loggeduser.Avatar}
             alt="hwt"
           />
         </div>
