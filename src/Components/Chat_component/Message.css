@@ -5,7 +5,8 @@
     justify-content: flex-start;
 
     animation: slide-in-lastrec 0.5s ease;
-    min-width: 60px;
+    min-width: 75%;
+    margin-top:2vh;
 
 
   }
@@ -36,9 +37,10 @@
   .sender{
     display: flex;
     justify-content: flex-end;
-    margin: 2.3rem;
+    margin: 3vh;
     animation: slide-in 0.4s ease;
-    min-width: 60px;
+    min-width: 75%;
+    
    
    
 
@@ -54,14 +56,18 @@
     font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     border: 0.1pt solid #7a7b7f73;
     /* border-radius: 5px; */
-    font-size: 18px;
+  
     line-height: 1.5;
-    max-width: 27rem;
+    max-width: 60vw;
+  
+  height: auto;
+  overflow: hidden;
+  word-wrap: break-word;
     display:flex;
-    /* flex-wrap: wrap;
+    flex-wrap: wrap;
     resize: vertical;
     overflow-wrap: break-word;
-    overflow-wrap:normal; */
+    overflow-wrap:normal;
     overflow-wrap: break-word;
     word-wrap: break-word;
     hyphens: auto;
@@ -73,6 +79,10 @@
 
   }
   .text1 {
+    
+  height: auto;
+  overflow: hidden;
+  word-wrap: break-word;
     position: relative;
     background-color: #766ac8;
     color: #fff;
@@ -84,14 +94,14 @@
     font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
   
     /* border-radius: 5px; */
-    font-size: 18px;
+
     line-height: 1.5;
-    max-width: 27rem;
+    max-width: 60vw;
     display:flex;
-    /* flex-wrap: wrap;
+    flex-wrap: wrap;
     resize: vertical;
     overflow-wrap: break-word;
-    overflow-wrap:normal; */
+    overflow-wrap:normal;
     overflow-wrap: break-word;
     word-wrap: break-word;
     hyphens: auto;

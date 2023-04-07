@@ -135,7 +135,7 @@ function SearchList({ searchinput, uid }) {
       <div></div>
       <div
         className="d-flex flex-column "
-        style={{ flex: 1, backgroundColor: "", minWidth: "50vh" }}
+        style={{ flex: 1, backgroundColor: "", Width: "100%" }}
       >
         <div className="d-flex flex-row">
           <div

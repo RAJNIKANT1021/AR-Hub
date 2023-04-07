@@ -84,6 +84,7 @@ function Chat({ uid,setshowmyaccount,showmyaccount,id,setid,username,setusername
        setsmall(true);
 
       }else{
+        setshowchatdesc(false);
         setsmall(false);
 
       }
@@ -223,14 +224,18 @@ break;
   return (
     <div
       className="d-flex flex-column"
-      style={{ backgroundColor: "", overflow: "hidden" }}
+      style={{ backgroundColor: "#1F2029", overflow: "",  width:'100%' ,  height:'100%'
+    }}
     >
           {isSmallScreen && showchatdesc === true &&
                  <div
-                 className="d-md-none d-flex flex-column mostly-customized-scrollbar"
-                 style={{
+                 className="d-md-none d-flex flex-column top-sticky"
+                 style={{height:'100%',
+                 position:'',
                    backgroundColor: "black",
                    flex: 1,
+                   overflow: "",
+                   
                  }}
                >
           <Outlet/>
@@ -239,7 +244,7 @@ break;
         className="d-flex flex-row"
         style={{
           backgroundColor: "",
-
+height:showchatdesc === true && isSmallScreen ?"0":'100%',
           overflow: "hidden",
           overflowX: "hidden",
         }}
@@ -247,7 +252,7 @@ break;
         
         <div
           className="d-flex flex-row"
-          style={{ backgroundColor: "#1F2029", width: "100vw" }}
+          style={{ backgroundColor: "#1F2029", width: "100vw",height:'' }}
         >
           {/* header */}
         
@@ -255,7 +260,7 @@ break;
              {small === false &&
           <div
             className="d-flex flex-column  bd-highlight"
-            style={{
+            style={{height:'',
               borderWidth: "3px",
               borderColor: "#292A33",
               borderStyle: "solid",
@@ -507,30 +512,30 @@ flex:(isSmallScreen && 1),
                
               </div> */}
                { showsearchlist ===true &&
-              <div className="d-flex flex-column" style={{flex:1,backgroundColor:''}}>
+              <div className="d-flex flex-column" style={{flex:1,backgroundColor:'',height:'100%',}}>
 
 <SearchList searchinput={searchinput} uid={uid}/>
               </div>}
 
                { showmyprofile ===true &&
-              <div className="d-flex flex-column" style={{flex:1,backgroundColor:''}}>
+              <div className="d-flex flex-column" style={{flex:1,backgroundColor:'',height:'100%'}}>
 
 <Myprofile setshowmyprofile={setshowmyprofile}/>
               </div>}
                { showavatar ===true &&
-              <div className="d-flex flex-column" style={{flex:1,backgroundColor:''}}>
+              <div className="d-flex flex-column" style={{flex:1,backgroundColor:'',height:'100%'}}>
 
 <Myavatar setshowavatar={setshowavatar}/>
               </div>}
                { showfriends ===true &&
-              <div className="d-flex flex-column" style={{flex:1,backgroundColor:''}}>
+              <div className="d-flex flex-column" style={{flex:1,backgroundColor:'',height:'100%'}}>
 
                 <FriendsList setshowfriends={setshowfriends}/>
 
               </div>}
                
              { showfriendrequest ===true &&
-              <div className="d-flex flex-column" style={{flex:1,backgroundColor:''}}>
+              <div className="d-flex flex-column" style={{flex:1,backgroundColor:'',height:'100%'}}>
 <FriendRequest setshowfriendrequest={setshowfriendrequest}/>
 
 
@@ -629,6 +634,7 @@ flex:(isSmallScreen && 1),
                   backgroundColor: "#1f2029",
                   overflowY: "scroll",
                   overflowX: "hidden",
+                  height:'100%',
                 }}
               >
                 {arraynames.map((names, i) => (

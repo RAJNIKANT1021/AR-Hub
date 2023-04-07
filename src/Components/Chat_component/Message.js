@@ -47,13 +47,13 @@ const Message = ({ message ,sender,descname}) => {
                         alt="google"/>
       </div>
     </div>
-    </div>:    <div className="reciever mostly-customized-scrollbar" style={{backgroundColor:'',marginTop:"3.2rem"}}>
+    </div>:    <div className="reciever mostly-customized-scrollbar" style={{backgroundColor:'',marginTop:"1vh"}}>
     <div className="d-flex flex-row">
         <div className="d-flex" style={{flex:1,backgroundColor:''}}>
       
-        <div className="d-flex flex-column mx-3" style={{backgroundColor:'',justifyContent:'flex-start',marginLeft:'12px'}}>
+        <div className="d-flex flex-column" style={{backgroundColor:'',justifyContent:'flex-start',marginLeft:'2vh'}}>
           <div className="d-flex d-flex-row">
-            <div className="d-flex mr-3" style={{marginLeft:'1.2rem'}}>
+            <div className="d-flex mr-2" style={{marginLeft:'1vh'}}>
 
            
           <Avatar sx={{ bgcolor: deepPurple[500], width: 46, height: 46 }}  src="https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg?w=740&t=st=1678994453~exp=1678995053~hmac=d2710921626e1f50d2bc064ce0f480e7088c2eb7c1b9e1ad0c281abaf69fe49d"
@@ -63,14 +63,14 @@ const Message = ({ message ,sender,descname}) => {
     
      
           
-        <div className="d-flex flex-column pr-3" style={{backgroundColor:'',color:'white',justifyContent:''}}>
+        <div className="d-flex flex-column pb-3" style={{backgroundColor:'',color:'white',justifyContent:''}}>
           
-          <div className="d-flex flex-row mr-3">
-          <div className="d-flex flex-column" style={{color:"#969696",fontSize:'15px',justifyContent:'flex-end'}}>
+          <div className="d-flex flex-row ml">
+          <div className="d-flex flex-column mr-2" style={{color:"#969696",fontSize:'15px',justifyContent:''}}>
         
         {descname}
         </div>
-          <div className="d-flex flex-column ml-2"style={{color:"#B7B2DC",fontSize:'12px',justifyContent:'flex-end'}}>
+          <div className="d-flex flex-column "style={{color:"#B7B2DC",fontSize:'12px',justifyContent:'flex-end'}}>
           {new Date(message.date.toDate()).toLocaleTimeString('en-IN', {hour: 'numeric', minute: 'numeric', hour12: true})}
           </div>
           </div>

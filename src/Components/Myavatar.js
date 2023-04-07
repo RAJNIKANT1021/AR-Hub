@@ -16,7 +16,7 @@ function Myavatar({setshowavatar}) {
     }
   return (
     <>
-    <div className='d-flex flex-column' style={{width:'50vh'}}>
+    <div className='d-flex flex-column' style={{width:'100%',contain:'strict'}}>
       <div className='d-flex flex-row pl-2'>
          <div className='d-flex ml-2' style={{flex:1 ,color:'white',fontSize:'25px',alignItems:'center'}}>
                Set Avatar 
@@ -79,6 +79,7 @@ function Myavatar({setshowavatar}) {
               type="text"
               className="pl-2"
               onChange={()=>{setedit(true);handlechange()}}
+              onBlur={()=>{setedit(false);}}
               defaultValue={editavater}
               style={{
                 outline: "none",

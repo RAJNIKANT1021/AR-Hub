@@ -5,7 +5,7 @@ import { deepPurple } from '@mui/material/colors'
 function FriendsList({setshowfriends}) {
   return (
     <>
-    <div className='d-flex flex-column' style={{width:'50vh'}}>
+    <div className='d-flex flex-column' style={{width:'100%'}}>
       <div className='d-flex flex-row'>
          <div className='d-flex ml-2 pl-2' style={{flex:1 ,color:'white',fontSize:'25px',alignItems:'center'}}>
                Friends 

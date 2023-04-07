@@ -76,7 +76,7 @@ export default function Home(){
   center={{ lat, lng }}
   
       options={{
-         mapTypeId: "roadmap",
+         mapTypeId: "satellite",
       styles:[
         
   {

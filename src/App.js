@@ -40,6 +40,20 @@ function App() {
   const [descname, setdescname] = useState(null);
   const [bio, setbio] = useState(null);
   const[uid,setuid]=useState(null);
+  const [containerHeight, setContainerHeight] = useState(window.innerHeight);
+
+
+
+  useEffect(() => {
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const handleResize = () => {
+    setContainerHeight(window.innerHeight);
+  };
+
+  
   useEffect(() => {
     setisloading(true);
     const unsub = onSnapshot(
@@ -83,8 +97,7 @@ function App() {
         setisloading(false);
       }
     );
-   
-    
+ 
 
     return () => {
       unsub();
@@ -109,13 +122,33 @@ checker(true,locuser);}
 
 
   }
+     const [keyboardHeight, setKeyboardHeight] = useState(0);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const heightDifference = window.innerHeight - document.documentElement.clientHeight;
+      setKeyboardHeight(heightDifference > 0 ? heightDifference : 0);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+    
 
 
   return(
     
-   <>
-   <div className='d-flex flex-column' style={{width:'100vw',height:'100vh'}}>
-   <div classNamw="d-flex flex-column mx- position-sticky">
+      <>
+    <div
+        className="d-flex flex-column"
+        style={{
+          flex: 1,
+          overflow: keyboardHeight > 0 ? 'auto' : 'hidden',
+          height: `calc(100vh - ${keyboardHeight}px)`,
+        }}
+      >
+   <div className='d-flex flex-column' style={{width:'100vw',height:'100vh',contain:'strict'}}>
+   <div classNamw="d-flex flex-column mx- position-sticky" style={{position:'sticky'}}>
    <Navbar loggedin={loggedin} checker={checker} uid={uid} />
   </div>
    
@@ -169,9 +202,17 @@ checker(true,locuser);}
      
       
     </Routes>
+   
     </div>
+   
     </div>
+    
+   
+    </div>
+  
+   
     </>
+    
     
   )
 }

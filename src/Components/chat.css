@@ -12,7 +12,7 @@
     }
   
     
-    .chatdata{
+    .chatdata{contain:strict;
         overflow-y: scroll;
      background-color: "#17181F";
     }
@@ -89,9 +89,11 @@
     
     }
     .chat-box {
+      overflow-y: scroll;
         display: flex;
         flex-direction: column;
-        height: 50vh;
+        
+        flex:1;
       }
 .message {
     display: flex;
@@ -369,7 +371,7 @@
         @keyframes openeer {
           from {
             /* pushes the sun down past the viewport */
-            width:0;
+            width:0vh;
             border-radius:0px 0px 0px 0px;
             background-color:#1F2029;
             border-color:#1F2029;
@@ -378,7 +380,7 @@
           }
           to {
             /* returns the sun to its default position */
-            width: 29vh;
+            width: 12rem;
             border-radius:25px 0 0 25px;
             background-color:#1F2029;
             border-color:#1a1a1b;
@@ -394,7 +396,7 @@
   border-radius:25px 0 0 25px;
   background-color:#1F2029;
   border-color:#1a1a1b;
-  width: 29vh;
+  width: 12rem;
   animation: 1s cubic-bezier(0.23, 1, 0.320, 1) 0s openeer;
 }
 input{

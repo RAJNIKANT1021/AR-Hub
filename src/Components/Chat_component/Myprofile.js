@@ -32,7 +32,7 @@ function Myprofile({setshowmyprofile}) {
   }
   return (
     <>
-      <div className="d-flex flex-column" style={{ width: "50vh" }}>
+      <div className="d-flex flex-column" style={{ width: "100%",contain:'strict',overflowY:'scroll' }}>
         <div className="d-flex flex-row">
           <div
             className="d-flex ml-4"

@@ -7,10 +7,8 @@ import {MdDelete} from 'react-icons/md'
 function FriendRequest({setshowfriendrequest}) {
     return (
     <>
-            <div>
-
-            </div>
-            <div className='d-flex flex-column ' style={{ flex: 1, backgroundColor: '',width:'50vh' }}>
+            
+            <div className='d-flex flex-column ' style={{ flex: 1, backgroundColor: '',width:'100%' }}>
                 <div className='d-flex flex-row'>
                     <div className='ml-4 pt-2' style={{ fontSize: '1.6rem', color: 'whitesmoke', alignItems: 'center', justifyContent: 'center' ,flex:1}}>
 

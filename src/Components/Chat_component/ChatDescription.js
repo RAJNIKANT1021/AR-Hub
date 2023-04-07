@@ -163,8 +163,9 @@ function ChatDescription({ descname, bio, messageid, uid, setshowmyaccount,chati
   const handleInputChange = (event) => {
     setInputValue(event);
   };
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleSubmit = async (event,check) => {
+    if(check==='no'){
+    event.preventDefault();}
 if(inputValue.length){
    
     playsent();
@@ -180,13 +181,14 @@ if(inputValue.length){
     }
     
  let vary= String.fromCharCode(...array)
- console.log(vary);
+ 
 
   
 
 
 
     setInputValue("");
+    document.getElementById('focus').focus();
     if(vary.length){
 
     await updateDoc(doc(db, "userchats", messageid), {
@@ -199,10 +201,14 @@ if(inputValue.length){
     });}
   }};
 
+  const handlefocus=()=>{
+    document.getElementById('focus').focus();
+
+  }
   return (
     <>
       <div
-        class="d-flex flex-row mx- position-sticky"
+        class="d-flex flex-row"
         style={{
           backgroundColor: "#1F2029",
           height: "",
@@ -219,8 +225,9 @@ if(inputValue.length){
         }}
       >
         <div
-          className="d-flex flex-row pt-2 mb-1"
-          style={{
+          className="d-flex flex-row pt-1 mt-1"
+          style={{width:'100%',
+          contain:'',
             // borderBottom: "2px",
             // borderBottomColor: "#292A33",
             // borderBottomStyle: "solid",
@@ -228,29 +235,29 @@ if(inputValue.length){
           }}
         >
         
-          <div className="d-flex mr-4  ml-4 pl-2">
+          <div className="d-flex mx-2  ml-4 pl-2 pb-1" style={{contain:''}}>
             <Avatar
-              sx={{ bgcolor: deepPurple[500], width: 56, height: 56 }}
+              sx={{ bgcolor: deepPurple[500], width: 50, height: 50 }}
               src="https://img.freepik.com/free-psd/3d-illustration-person-with-rainbow-sunglasses_23-2149436196.jpg?w=740&t=st=1679001679~exp=1679002279~hmac=c53ea30da094c90d0bae1bf703599d8572b711d931d2bbe519571eae87eb5a23"
               alt="hwt"
             />
           </div>
           <div
             className="d-flex flex-column "
-            style={{ flex: 1, backgroundColor: "#1F2029", overflowX: "hidden" }}
+            style={{  backgroundColor: "#1F2029", overflowX: "hidden" }}
           >
             <div
-              className="mt-1"
+              className="ml-3"
               style={{
                 backgroundColor: "#1F2029",
-                fontSize: "23px",
+                fontSize: "13px",
 
                 color: "white",
               }}
             >
-              {descname}
-            </div>
-            {
+              <blockquote class="blockquote" style={{marign:"0 0 0rem"}}>
+   {descname}
+   {
               status==="offline"&&   <div
               className="pl-1"
               style={{
@@ -276,33 +283,40 @@ if(inputValue.length){
             </div>
 
             }
+</blockquote>
+            
+            </div>
+           
           
           </div>
           
         </div>
-        <div className="d-flex flex-row " style={{justifyContent:'flex-end',alignItems:'center',flex:1}}>
+        <div className="d-flex flex-row" style={{flex:1}}>
+          </div>
+        <div className="d-flex flex-row " style={{justifyContent:'flex-end',alignItems:'center'}}>
+
         <div
-            className="d-flex  mx-3"
-            style={{ color: "#a8a8a8", fontSize: "20px" , }}
+            className="d-flex "
+            style={{ color: "#a8a8a8", fontSize: "20px" ,marginRight:'3vw' }}
           >
           <BsSearch/>
           </div>
           
         <div
-            className="d-flex  mx-3"
-            style={{ color: "#a8a8a8", fontSize: "33px" }}
+            className="d-flex"
+            style={{ color: "#a8a8a8", fontSize: "33px",marginRight:'3vw' }}
           >
           <CallIcon fontSize="medium"/>
           </div>
           <div
-            className="d-flex  mx-3"
-            style={{ color: "#a8a8a8", fontSize: "35px" }}
+            className="d-flex "
+            style={{ color: "#a8a8a8", fontSize: "35px" ,marginRight:'3vw'}}
           >
           <IoIosVideocam/>
           </div>
         <div
-            className="d-flex  mx-3"
-            style={{ color: "#a8a8a8", fontSize: "30px" }}
+            className="d-flex"
+            style={{ color: "#a8a8a8", fontSize: "30px", marginRight:'1vw' }}
           >
              <Box>
                   <Tooltip title="Account settings">
@@ -395,7 +409,7 @@ if(inputValue.length){
         </div>
       </div>
 
-      <div class="d-flex flex-column justify-content-between mostly-customized-scrollbar" style={{flex:1}}>
+      <div class="d-flex flex-column justify-content-between mostly-customized-scrollbar" style={{flex:1,width:'100%'}}>
         <div
           className="d-flex flex-column chatdata mostly-customized-scrollbar"
           style={{
@@ -418,7 +432,7 @@ if(inputValue.length){
         >
           
           <div className="chat-box mostly-customized-scrollbar">
-            <div className="messsage1 mostly-customized-scrollbar">
+            
           
               {messages.map((m) =>
                 m.senderId === uid ? (
@@ -437,7 +451,7 @@ if(inputValue.length){
                   />
                 )
               )}
-            </div>
+        
             <div ref={messagesEndRef} />
 
             {/* <img src="https://4kwallpapers.com/images/walls/thumbs_3t/10307.jpg"/> */}
@@ -451,9 +465,9 @@ if(inputValue.length){
           }
        
         </div>
-        <div
+        <div  
           className="d-flex flex-row mostly-customized-scrollbar"
-          style={{
+          style={{width:'100%',
             height: "",
             backgroundColor: "#1F2029",
           }}
@@ -463,8 +477,8 @@ if(inputValue.length){
             style={{
               backgroundColor: "#1F2029",
               flex: 1,
-              paddingLeft: "10vw",
-              paddingRight: "10vw",
+              paddingLeft: "1rem",
+              paddingRight: "1rem",
             }}
           >
             <div class="d-flex flex-row" style={{ flex: 1 }}>
@@ -472,12 +486,12 @@ if(inputValue.length){
                 style={{ flex: 1, backgroundColor: "" }}
                 onSubmit={(e) => {
               
-                  handleSubmit(e);
+                  handleSubmit(e,'no');
                 }}
               >
                 <div
                   class="d-flex flex-row inputter mostly-customized-scrollbar mt-2 mb-2"
-                  style={{ flex: 1, width: "" }}
+                  style={{ flex: 1, width: "100%" }}
                 >
                   <div tabIndex={100} class="iemoji handy">
                  
@@ -486,7 +500,8 @@ if(inputValue.length){
                   </div>
 
                   <input
-                    style={{ flex: 1 }}
+                  id="focus"
+                    style={{ flex: 1,width:'70%' }}
                     class="pl-4 search_input blinking-cursor"
                     type="text"
                     name=""
@@ -499,11 +514,9 @@ if(inputValue.length){
 
                   <div
                     className="p-1"
-                    onSubmit={() => {
-                      handleSubmit();
-                    }}
+                  
                   >
-                    <div class="imoji">
+                    <div class="imoji" onClick={(e)=>{handleSubmit(e,'clicked');handlefocus()}}>
                       <SendRoundedIcon />
                     </div>
                   </div>
