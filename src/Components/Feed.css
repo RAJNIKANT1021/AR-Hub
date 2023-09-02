@@ -41,19 +41,21 @@ border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 4vh;
 }
 .handy:hover{
+	padding: 3px;
 	cursor:pointer;
 	color:black;
-	background-color: azure;
+	background-color: rgb(107, 149, 201);
+	border-radius: 8px;
 
 }
 .handy:focus{
 	color:black;
-	background-color: azure;
+	background-color: rgb(87, 114, 114);
 }
 input::placeholder{
-	color:black;
+	color:rgb(61, 57, 57);
 }
-.hey1::after{
+.hey2::after{
 	line-height: 1vh;
-	border-color:rgb(239, 240, 240) ;
+	border-color:rgb(121, 193, 193) ;
 }

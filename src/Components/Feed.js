@@ -153,7 +153,7 @@ function Feed() {
                     <div className="d-flex flex-row">
                       <div className="d-flex flex-row" style={{ flex: 1 }}>
                         <input
-                          className="hey1 d-flex py-2 px-2"
+                          className="hey2 d-flex py-2 px-2"
                           value={searchCat}
                           onChange={(e) => {
                             setsearchCat(e.target.value);

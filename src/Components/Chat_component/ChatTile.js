@@ -5,7 +5,7 @@ import './chattile.css'
 import {  Chip } from '@mui/material';
 
 
-function ChatTile({name}) {
+function ChatTile({name,avatar}) {
    
   
    
@@ -53,7 +53,7 @@ borderBottomStyle:'solid',
                         //   backgroundColor:'#212121',
                         
                     }}>
-                    <Avatar sx={{ bgcolor: deepPurple[500], width: 56, height: 56  }} src="https://img.freepik.com/free-psd/3d-illustration-person-with-rainbow-sunglasses_23-2149436196.jpg?w=740&t=st=1679001679~exp=1679002279~hmac=c53ea30da094c90d0bae1bf703599d8572b711d931d2bbe519571eae87eb5a23" alt="hwt"/>
+                    <Avatar sx={{ bgcolor: deepPurple[500], width: 56, height: 56  }} src={avatar} alt="hwt"/>
                     </div>
                     <div className='d-flex flex-column' style={{
                         // backgroundColor:'#212121',

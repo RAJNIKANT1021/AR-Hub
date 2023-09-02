@@ -46,7 +46,7 @@ function App() {
   const [uid, setuid] = useState(null);
   const[loggeduser,setloggeduser]=useState({});
   const [containerHeight, setContainerHeight] = useState(window.innerHeight);
-
+const[avtrurl,setavtrurl]=useState('');
   useEffect(() => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -73,12 +73,13 @@ function App() {
             }
             if (key !== uid) {
               const us = detail[key];
-
+      console.log(us.Avatar);
               arraynamed.push({
                 name: us.name,
                 bio: us.Bio,
                 uid: key,
                 status: us.status,
+                avatar:us.Avatar,
               });
             }
           }
@@ -103,8 +104,32 @@ function App() {
   const [loggedin, setloggedin] = useState(false);
 
   function checker(id, uid) {
-    setloggedin(id);
-    setuid(uid);
+   
+    const unsub = onSnapshot(
+      doc(db, "A2B_USERS", "Users", "usersdetails", "details"),
+      (doc) => {
+        
+        const detail = doc.data();
+let checks=true;
+        for (const key in detail) {
+          if (detail.hasOwnProperty(key)) {
+            if (key === uid) {
+              const us = detail[key];
+               setloggedin(id);
+              setuid(uid);
+checks=false;
+            }
+
+            
+          }}
+          if(checks===true){
+            localStorage.removeItem('user');
+            setloggedin(false);
+
+          }
+        
+        })
+          
   }
   const [keyboardHeight, setKeyboardHeight] = useState(0);
 
@@ -235,7 +260,8 @@ function App() {
                           setbio,
                           isloading,
                           setisloading,
-                          loggeduser
+                          loggeduser,
+                          setavtrurl
                         }}
                       />
                     }
@@ -252,6 +278,8 @@ function App() {
                             uid={uid}
                             chatid={chatid}
                             setshowmyaccount={setshowmyaccount}
+                            avtrurl={avtrurl}
+                            
                           />
                         }
                       />

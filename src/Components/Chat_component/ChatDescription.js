@@ -42,7 +42,7 @@ import SendRoundedIcon from "@mui/icons-material/SendRounded";
 import EmojiPicker from "emoji-picker-react";
 import { useParams } from "react-router-dom";
 
-function ChatDescription({ descname, bio, messageid, uid, setshowmyaccount,chatid}) {
+function ChatDescription({ descname, bio, messageid, uid, setshowmyaccount,chatid,avtrurl}) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const[status,setstatus]=useState('');
 
@@ -238,7 +238,7 @@ if(inputValue.length){
           <div className="d-flex mx-2  ml-4 pl-2 pb-1" style={{contain:''}}>
             <Avatar
               sx={{ bgcolor: deepPurple[500], width: 50, height: 50 }}
-              src="https://img.freepik.com/free-psd/3d-illustration-person-with-rainbow-sunglasses_23-2149436196.jpg?w=740&t=st=1679001679~exp=1679002279~hmac=c53ea30da094c90d0bae1bf703599d8572b711d931d2bbe519571eae87eb5a23"
+              src={avtrurl}
               alt="hwt"
             />
           </div>

@@ -81,7 +81,8 @@ function Chat({
   setbio,
   isloading,
   setisloading,
-  loggeduser
+  loggeduser,
+  setavtrurl,
 }) {
   const isSmallScreen = useMediaQuery("(max-width: 768px)");
   let { hey } = useParams();
@@ -139,8 +140,6 @@ function Chat({
       }
     }
   }, [location, isSmallScreen]);
-
-
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -265,6 +264,7 @@ function Chat({
     setbio(names.bio);
     setsendrecid(onetooneid);
     setchatid(id);
+    setavtrurl(names.avatar);
   };
   useEffect(() => {
     if (hey !== undefined) {
@@ -329,8 +329,8 @@ function Chat({
                 borderColor: "#292A33",
                 borderStyle: "solid",
                 flex: isSmallScreen && 1,
-                maxWidth:!isSmallScreen && '30vw',
-                minWidth:!isSmallScreen&&'25rem',
+                maxWidth: !isSmallScreen && "30vw",
+                minWidth: !isSmallScreen && "25rem",
                 // height: "90vh",
                 // overflow: "hidden",
               }}
@@ -493,17 +493,16 @@ function Chat({
                             />
                           </Badge>
                         </ListItemIcon>
-{
-  isSmallScreen &&  <Link
-  to="friendrequests"
-  style={{ textDecoration: "none" }}
->
-  {" "}
-  Friend Requests{" "}
-</Link>
-}
-{!isSmallScreen && "Friend Requests" }
-                       
+                        {isSmallScreen && (
+                          <Link
+                            to="friendrequests"
+                            style={{ textDecoration: "none" }}
+                          >
+                            {" "}
+                            Friend Requests{" "}
+                          </Link>
+                        )}
+                        {!isSmallScreen && "Friend Requests"}
                       </MenuItem>
                     </Menu>
                   </Box>
@@ -540,9 +539,8 @@ function Chat({
                         className="d-flex justify-content-center align-items-center animato"
                         style={{}}
                       >
-                       
-                          {isSmallScreen && (
-                             <Tooltip title="Cancel  ">
+                        {isSmallScreen && (
+                          <Tooltip title="Cancel  ">
                             <Link
                               to="search"
                               style={{ textDecoration: "none" }}
@@ -558,10 +556,10 @@ function Chat({
                                 />
                               </IconButton>{" "}
                             </Link>
-                            </Tooltip>
-                          )}
-                          {!isSmallScreen && (
-                            <Tooltip title="cancel">
+                          </Tooltip>
+                        )}
+                        {!isSmallScreen && (
+                          <Tooltip title="cancel">
                             <IconButton
                               onClick={() => {
                                 handlesearchclose();
@@ -571,9 +569,9 @@ function Chat({
                                 style={{ color: "#ABABAE", fontSize: "2rem" }}
                               />
                             </IconButton>
-                            </Tooltip>
-                          )}
-                        
+                          </Tooltip>
+                        )}
+
                         {/* {isloading===true &&<CircularProgress color="primary" size={22}  />} */}
                       </div>
                     </div>
@@ -640,7 +638,13 @@ function Chat({
                   style={{ flex: 1, backgroundColor: "", height: "100%" }}
                 >
                   {isSmallScreen && <Outlet />}
-                  {!isSmallScreen && <SearchList searchinput={searchinput} uid={uid} loggeduser={loggeduser}/>}
+                  {!isSmallScreen && (
+                    <SearchList
+                      searchinput={searchinput}
+                      uid={uid}
+                      loggeduser={loggeduser}
+                    />
+                  )}
                 </div>
               )}
 
@@ -651,7 +655,10 @@ function Chat({
                 >
                   {isSmallScreen && <Outlet />}
                   {!isSmallScreen && (
-                    <Myprofile setshowmyprofile={setshowmyprofile} loggeduser={loggeduser} />
+                    <Myprofile
+                      setshowmyprofile={setshowmyprofile}
+                      loggeduser={loggeduser}
+                    />
                   )}
                 </div>
               )}
@@ -662,7 +669,10 @@ function Chat({
                 >
                   {isSmallScreen && <Outlet />}
                   {!isSmallScreen && (
-                   <Myavatar setshowavatar={setshowavatar} loggeduser={loggeduser}/>
+                    <Myavatar
+                      setshowavatar={setshowavatar}
+                      loggeduser={loggeduser}
+                    />
                   )}
                 </div>
               )}
@@ -673,7 +683,10 @@ function Chat({
                 >
                   {isSmallScreen && <Outlet />}{" "}
                   {!isSmallScreen && (
-                   <FriendsList setshowfriends={setshowfriends} loggeduser={loggeduser}/>
+                    <FriendsList
+                      setshowfriends={setshowfriends}
+                      loggeduser={loggeduser}
+                    />
                   )}
                 </div>
               )}
@@ -685,7 +698,10 @@ function Chat({
                 >
                   {isSmallScreen && <Outlet />}{" "}
                   {!isSmallScreen && (
-                    <FriendRequest setshowfriendrequest={setshowfriendrequest}/>                  )}
+                    <FriendRequest
+                      setshowfriendrequest={setshowfriendrequest}
+                    />
+                  )}
                 </div>
               )}
               {showfriendrequest === false &&
@@ -812,7 +828,11 @@ function Chat({
                       }}
                       key={i}
                     >
-                      <ChatTile name={names.name} key={i} />
+                      <ChatTile
+                        name={names.name}
+                        key={i}
+                        Avatar={names.avatar}
+                      />
                     </div>
                   ))}
                 </div>
@@ -862,7 +882,11 @@ function Chat({
                           style={{ textDecoration: "none" }}
                         >
                           {" "}
-                          <ChatTile name={names.name} key={i} />{" "}
+                          <ChatTile
+                            name={names.name}
+                            key={i}
+                            avatar={names.avatar}
+                          />{" "}
                         </Link>
                       </div>
                     ))}
