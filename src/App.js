@@ -19,6 +19,7 @@ import Myavatar from "./Components/Myavatar";
 import FriendsList from "./Components/Chat_component/FriendsList";
 import FriendRequest from "./Components/FriendRequest";
 import SearchList from "./Components/Chat_component/SearchList";
+import Main from "./Components/Chat_component/Weather_component/main_weather";
 
 function App() {
   const [showmyaccount, setshowmyaccount] = useState(null);
@@ -165,7 +166,8 @@ checks=false;
             <Navbar loggedin={loggedin} checker={checker} uid={uid} />
           </div>
 
-          <div className="d-flex" style={{ flex: 1, contain: "strict" }}>
+          <div className="d-flex" style={{ flex: 1, contain: "strict" ,
+          width:"100vw",justifyContent:''}}>
             <Routes>
               <Route
                 exact
@@ -200,14 +202,14 @@ checks=false;
                   element={<Books key={location.key} />}
                 />
               )} */}
-              {loggedin && (
+              {true && (
                 <Route
                   exact
                   path="weather"
-                  element={<Games key={location.key} />}
+                  element={<Main key={location.key} />}
                 />
               )}
-              {loggedin && (
+              {true && (
                 <Route
                   exact
                   path="feed"
@@ -308,8 +310,7 @@ checks=false;
               {/* {!loggedin && <Route exact path="movies" element={<ToShow />} />}
               {!loggedin && <Route exact path="books" element={<ToShow />} />}
               {!loggedin && <Route exact path="books" element={<ToShow />} />} */}
-              {!loggedin && <Route exact path="weather" element={<ToShow />} />}
-              {!loggedin && <Route exact path="feed" element={<ToShow />} />}
+             
               {!loggedin && <Route exact path="chat" element={<ToShow />} />}
             </Routes>
           </div>

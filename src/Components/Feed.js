@@ -45,7 +45,7 @@ function Feed() {
   };
 
   return (
-    <div>
+    <div style={{display:'fixed',maxWidth:'100vw'}}>
       <div
         className="d-flex flex-column"
         style={{backgroundColor: "#fdfefe" }}
