@@ -27,14 +27,14 @@ function Navbar({loggedin,checker,uid}) {
   
   return (   
 <nav className="flex navbar navbar-expand-lg navbar-dark navbar-default" style={{position:'sticky'}}>
-  <Link className="navbar-brand" to="#">A2R HUB</Link>
+  <div className="navbar-brand">A2R HUB</div>
   <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span className="navbar-toggler-icon"></span>
   </button>
 
   <div className="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul className="navbar-nav mr-auto">
-      <li className="nav-item">
+    <ul className="navbar-nav" style={{display:"d-flex flex-row",flex:'1',justifyContent:'center',alignItems:'center'}}>
+      {/* <li className="nav-item">
         <Link className="nav-link" to="/home" data-toggle="collapse" data-target=".navbar-collapse.show">Home</Link>
       </li>
       <li className="nav-item">
@@ -42,19 +42,19 @@ function Navbar({loggedin,checker,uid}) {
       </li>
       <li className="nav-item">
         <Link className="nav-link" to="/books" data-toggle="collapse" data-target=".navbar-collapse.show">Books</Link>
+      </li> */}
+      <li className="nav-item" style={{marginRight:'15px'}}>
+        <Link className="nav-link" to="/weather" data-toggle="collapse" data-target=".navbar-collapse.show">Weather</Link>
       </li>
-      <li className="nav-item">
-        <Link className="nav-link" to="/games" data-toggle="collapse" data-target=".navbar-collapse.show">Games</Link>
-      </li>
-      <li className="nav-item">
+      <li className="nav-item" style={{marginRight:'15px'}}>
         <Link className="nav-link" to="/feed" data-toggle="collapse" data-target=".navbar-collapse.show">Feed</Link>
       </li>
-      <li className="nav-item">
+      <li className="nav-item" style={{marginRight:'15px'}}>
         <Link className="nav-link" to="/chat" data-toggle="collapse" data-target=".navbar-collapse.show">
-          <Badge badgeContent={4} color="secondary">Chat</Badge>
+          Chat
         </Link>
       </li>
-      <li className="nav-item dropdown">
+      {/* <li className="nav-item dropdown">
         <Link className="nav-link dropdown-toggle" to="hello" id="navbarDropdown" role="button" aria-haspopup="true" aria-expanded="false" data-toggle="collapse" data-target=".navbar-collapse.show">
           Dropdown
         </Link>
@@ -64,12 +64,12 @@ function Navbar({loggedin,checker,uid}) {
           <div className="dropdown-divider"></div>
           <Link className="dropdown-item" to="#">Something else here</Link>
         </div>
-      </li>
+      </li> */}
     </ul>
-    <div className="form-inline my-2 my-lg-0">
+    {/* <div className="form-inline my-2 my-lg-0">
       <input className="searchbar form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"/>
       <button className="btn btn-primary my-2 my-sm-0" style={{color:"white"}} type="submit">Search</button>
-    </div>
+    </div> */}
     {!loggedin && 
       <Link to="/" style={{textDecoration:'none', color:'white'}}>
         <button className="btn btn-primary my-2 my-sm-0 mx-2" style={{color:"white"}} type="submit" data-toggle="collapse" data-target=".navbar-collapse.show">Login</button>

@@ -32,7 +32,7 @@
 .form_login{
     height: 520px;
     width: 400px;
-    background-color: rgba(255,255,255,0.13);
+    background-color: rgba(162, 150, 210, 0.13);
     position: absolute;
     transform: translate(-50%,-50%);
     top: 50%;
@@ -40,8 +40,8 @@
     border-radius: 10px;
     backdrop-filter: blur(10px);
     border: 2px solid rgba(255,255,255,0.1);
-    box-shadow: 0 0 40px rgba(8,7,16,0.6);
-    padding: 50px 35px;
+    box-shadow: 0 0 40px rgba(182, 178, 212, 0.6);
+    padding: 0px 35px;
 }
 .form_login *{
     font-family: 'Poppins',sans-serif;
@@ -67,25 +67,40 @@ label{
     display: block;
     height: 50px;
     width: 100%;
-    background-color: rgba(255,255,255,0.07);
+    background-color:rgb(215, 235, 235);
     border-radius: 3px;
     padding: 0 10px;
     margin-top: 8px;
     font-size: 14px;
-    font-weight: 300;
+    font-weight: 800;
+    color:rgb(99, 97, 97);
+    font-weight: 400;
 }
 ::placeholder{
-    color: #e5e5e5;
+    color: #d75e5e;
+}
+.form_login>input{
+    color:black;
+    border-radius: 1em;
+    font-weight: 800;
+    padding-right: 10px;
+}
+.form_login>div>input{
+    color:black;
+    border-radius: 1em;
+    font-weight: 800;
+    padding-right: 10px;
 }
 .buttonlogin{
-    margin-top: 20px;
+    margin-top: 2em;
+    margin-right: 12px;
     width: 100%;
     background-color: #ffffff;
     color: #080710;
-    padding: 12px 0;
+    padding: 8px 0;
     font-size: 23px;
     font-weight: 600;
-    border-radius: 5px;
+    border-radius: 9px;
     cursor: pointer;
 }
 .social{
@@ -113,7 +128,7 @@ label{
 .icon:hover{
    
    
-    color: #cff;
+    color: rgb(15, 27, 27);
   
     
     cursor: pointer;

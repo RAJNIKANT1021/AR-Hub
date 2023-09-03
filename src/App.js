@@ -172,38 +172,38 @@ checks=false;
                 path="/"
                 element={<Login checker={checker} key={location.key} />}
               />
-              {loggedin && (
+              {/* {loggedin && (
                 <Route
                   exact
                   path="home"
                   element={<Home key={location.key} />}
                 />
-              )}
-              {loggedin && (
+              )} */}
+              {/* {loggedin && (
                 <Route
                   exact
                   path="movies"
                   element={<Movies key={location.key} />}
                 />
-              )}
-              {loggedin && (
+              )} */}
+              {/* {loggedin && (
                 <Route
                   exact
                   path="books"
                   element={<Books key={location.key} />}
                 />
-              )}
-              {loggedin && (
+              )} */}
+              {/* {loggedin && (
                 <Route
                   exact
                   path="books"
                   element={<Books key={location.key} />}
                 />
-              )}
+              )} */}
               {loggedin && (
                 <Route
                   exact
-                  path="games"
+                  path="weather"
                   element={<Games key={location.key} />}
                 />
               )}
@@ -304,11 +304,11 @@ checks=false;
                   </Route>
                 </Route>
               )}
-              {!loggedin && <Route exact path="home" element={<Home />} />}
-              {!loggedin && <Route exact path="movies" element={<ToShow />} />}
+              {/* {!loggedin && <Route exact path="home" element={<Home />} />} */}
+              {/* {!loggedin && <Route exact path="movies" element={<ToShow />} />}
               {!loggedin && <Route exact path="books" element={<ToShow />} />}
-              {!loggedin && <Route exact path="books" element={<ToShow />} />}
-              {!loggedin && <Route exact path="games" element={<ToShow />} />}
+              {!loggedin && <Route exact path="books" element={<ToShow />} />} */}
+              {!loggedin && <Route exact path="weather" element={<ToShow />} />}
               {!loggedin && <Route exact path="feed" element={<ToShow />} />}
               {!loggedin && <Route exact path="chat" element={<ToShow />} />}
             </Routes>

@@ -6,6 +6,10 @@ import { createUserWithEmailAndPassword,signInWithEmailAndPassword } from 'fireb
 import {auth,db} from './FireAuth';
 import {useNavigate } from "react-router-dom";
 import {doc, setDoc,getDoc,updateDoc} from "firebase/firestore";
+
+import { FcBusinessman } from 'react-icons/fc';
+import { FiAtSign } from 'react-icons/fi'
+
 function Login({checker}) {
   const navigate = useNavigate();
   
@@ -57,14 +61,20 @@ function Login({checker}) {
 
  }
   const  handleclick=async()=>{
-    const Email= document.getElementById('username').value;
-    const Name= document.getElementById('name').value;
+    const Email= document.getElementById('email').value;
+   
+    
     const Password=document.getElementById('password').value;
-    console.log({Email,Password})
+    const Name= document.getElementById('name').value;
+    if(Name.length===0){
+      alert("Please Enter Username!")
+      return
+    }
+    // console.log({Email,Password})
    
 
     createUserWithEmailAndPassword(auth,Email,Password).then((userCredential)=>{
-    navigate("/home")
+    navigate("/chat")
     const user = userCredential.user;
  
 
@@ -105,13 +115,18 @@ function Login({checker}) {
     
     //   console.log("No such document!");
     // }
+    const Name= document.getElementById('name').value;
+    if(Name.length===0){
+      alert("Please Enter Username!")
+      return
+    }
     if(localStorage.getItem('user')){
-      const Email= document.getElementById('username').value;
+      const Email= document.getElementById('email').value;
    
       const Password=document.getElementById('password').value;
       signInWithEmailAndPassword(auth, Email, Password)
     .then((userCredential) => {
-      navigate("/home")
+      navigate("/chat")
       // createChat("heyy",Email);
       const user = userCredential.user;
       changestatus(user.uid);
@@ -128,12 +143,12 @@ function Login({checker}) {
      
 
     }else{
-    const Email= document.getElementById('username').value;
+    const Email= document.getElementById('email').value;
    
     const Password=document.getElementById('password').value;
     signInWithEmailAndPassword(auth, Email, Password)
   .then((userCredential) => {
-    navigate("/home")
+    navigate("/chat")
     // createChat("heyy",Email);
     const user = userCredential.user;
     localStorage.setItem('user',user.uid);
@@ -158,12 +173,35 @@ function Login({checker}) {
 
  
 <div className='form_login'>
-  <label htmlFor="username" style={{color:'white'}}>Username</label>
+  <label htmlFor="username" style={{color:'black'}}>Username</label>
+  <div className='d-flex'>
   <input className='input_login' type="text" placeholder="Display Name" id="name"  />
-  <label htmlFor="username" style={{color:'white'}}>Email</label>
-  <input className='input_login' type="text" placeholder="Email or Phone" id="username"  />
+  <FcBusinessman  className="icon"   style={{
+    position:'absolute',
+    right:0,
+    fontSize:27,
+    marginRight:'46px',
+    marginTop:'18px'
+    
+ }}/>
 
-  <label htmlFor="password"  style={{color:'white'}}> Password</label>
+ </div>
+  <label htmlFor="username" style={{color:'black'}}>Email</label>
+  <div className='d-flex'>
+  <input className='input_login' type="text" placeholder="Email" id="email"  />
+  <FiAtSign  className="icon"   style={{
+    color:'blue',
+    position:'absolute',
+    right:0,
+    fontSize:27,
+    marginRight:'46px',
+    marginTop:'18px'
+    
+ }}/>
+
+ </div>
+
+  <label htmlFor="password"  style={{color:'black'}}> Password</label>
   <div className='d-flex'>
   <input className='input_login'type="password" placeholder="Password" id="password" />
   <RiEyeCloseFill  className="icon" id="close" onClick={()=>{
@@ -199,7 +237,7 @@ function Login({checker}) {
 
 
   </div>
-<div className="flex my-3">
+<div className="d-flex flex-row">
 <button className='btn btn-primary buttonlogin' onClick={()=>{handlelogin()}}>Log In</button>   
   <button className='btn btn-primary  buttonlogin' onClick={()=>{handleclick()}}>Sign Up</button> 
 </div>

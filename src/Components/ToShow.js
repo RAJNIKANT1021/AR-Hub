@@ -7,18 +7,20 @@ function ToShow() {
     return (
         <>
         
-      <div className="d-flex flex-row  notloggedin " style={{
+      <div className="d-flex flex-row  " style={{
        height:'40rem',
        justifyContent:'center',
        alignItems:'center',
+       width:'100vw'
       }}>
         
 
-        <div className="logcontent"style={{height:'32rem',width:'40rem'}}>
+        <div className="logcontent"style={{height:'32em',minWidth:'23em', width:'65%'}}>
         <img className='image1 image1-contain' src="https://images.unsplash.com/photo-1580234811497-9df7fd2f357e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2067&q=80" alt =""/>
           <div className='d-flex flex-column'>
-          <div className='d-flex flex-row headeer'style={{ justifyContent:'center',alignItems:'center'}}>
-            <div  style={{paddingLeft:'5rem',color:'#007bfe',fontSize:'30px'}}>
+          <div className='d-flex flex-row headeer'style={{ justifyContent:'space-evenly',alignItems:'center'}}>
+            <div className='d-flex flex-row'style={{ justifyContent:'space-evenly',alignItems:'center'}}>
+            <div  style={{paddingLeft:'2px',color:'#007bfe',fontSize:'30px'}}>
               Ahoy!
               </div>
               <div className='pl-1' style={{color:'green',fontSize:'30px'}}>
@@ -27,11 +29,12 @@ function ToShow() {
                 </div>
                 </div>
   
-              <div className='px-3' style={{flex:1,color:'white',fontSize:'30px'}}>
+              <div className='px-3' style={{color:'white',fontSize:'1.2em'}}>
    
               Welcome to A2R HUB
               </div>
              
+          </div>
           </div>
           <div className='d-flex flex-row' style={{height:'23rem' }}>
           {/* <a href="https://www.mythrillfiction.com/the-dark-rider" alt="Mythrill" target="_blank">
@@ -57,7 +60,7 @@ function ToShow() {
           </div>
           <div className='d-flex flex-column pt-2 mb-4'style={{justifyContent:'center',alignItems:'center'}}>
             <div>
-            <button className='btn btn-dark header btttn' style={{width:'31rem',   fontSize:'23px'}} onClick={()=>{Navigate('/')}}>Please Login To Continue  ------</button>   
+            <button className='btn btn-dark header btttn' style={{width:'max-content',   fontSize:'1.2em'}} onClick={()=>{Navigate('/')}}>Please Login To Continue  ----></button>   
   
             </div>
             
