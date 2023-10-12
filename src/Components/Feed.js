@@ -7,12 +7,14 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 
 function Feed() {
+  
   const[loading,setloading]=useState(false);
   const [searchCat, setsearchCat] = useState("");
   const [category, setCategory] = useState("Sports");
-  const [country, setCountry] = useState("us");
+  const [country, setCountry] = useState("IN");
   const [news, setnews] = useState(null);
   const[countrynews,setcountrynews]=useState(null)
+  console.log(category);  
   const fetcher = async () => {
     setloading(true);
     await fetch(
@@ -35,9 +37,17 @@ function Feed() {
 
   useEffect(() => {
     fetcher();
+    return (()=>{
+      fetcher();
+    })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category]);
   useEffect(()=>{
     fetcher2();
+    return(()=>{
+      fetcher2();
+    })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[country]);
   var requestOptions = {
     method: "GET",
@@ -45,27 +55,27 @@ function Feed() {
   };
 
   return (
-    <div style={{display:'fixed',maxWidth:'100vw'}}>
+    <div style={{display:'fixed',maxWidth:'100vw',width:'100vw'}}>
       <div
         className="d-flex flex-column"
         style={{backgroundColor: "#fdfefe" }}
       >
         <div>
-          <div className="d-flex flex-row mx-3 news-header">
+          <div className="d-flex flex-row mx-3 news-header" style={{justifyContent:"space-between"}}>
             <div
               style={{ fontSize: "2.5rem", color: "black", fontWeight: "750" }}
             >
               News
             </div>
-            <div style={{flex:1 }}></div>
-            <div
-              style={{ fontSize: "2rem", fontWeight: "650", color: "black" }}
+            
+            <div className="d-flex flex-row mx-3 my-1" style={{flex:1,fontSize: "2rem", fontWeight: "650", color: "black",alignItems:'center',justifyContent:'center'}}
+         
             >
               Top headlines
             </div>
-            <div><div>
-  
-  <select onChange={(e)=>{setCountry(e.target.value)}}>
+            <div className="d-flex flex-rcol mx-3 my-1" style={{alignItems:'center',justifyContent:'center'}}> <label className="d-flex flex-col mx-1 my-1" style={{alignItems:'center',justifyContent:'center',fontSize: "1.2rem", fontWeight: "650", color: "black"}}>Country:</label><div className="search_cont">
+ 
+  <select onChange={(e)=>{setCountry(e.target.value)}} >
   
   <option  value="ae">United Arab Emirates</option>
 <option  value="ar">Argentina</option>
@@ -90,7 +100,7 @@ function Feed() {
 <option  value="id">Indonesia</option>
 <option  value="ie">Ireland</option>
 <option  value="il">Israel</option>
-<option  value="in">India</option>
+<option  value="in" selected>India</option>
 <option  value="it">Italy</option>
 <option  value="jp">Japan</option>
 <option  value="kr">South Korea</option>
@@ -161,7 +171,8 @@ function Feed() {
                           type="text"
                           placeholder="Search category"
                           style={{
-                            width: "9vw",
+                            padding:'5px',
+                            width: "10em",
                             borderRadius: "12px",
                             borderColor: "black",
                             borderWidth: "1px",
@@ -182,7 +193,7 @@ function Feed() {
                     </div>
                     <div
                       onFocus={() => {
-                        setCategory("Entertainment");
+                        setCategory(()=>{"Entertainment"});
                       }}
                       Tabindex={12222}
                       className="handy my-2"
@@ -258,7 +269,7 @@ function Feed() {
             </div>
             <div className="" style={{position:'relative', flex: 1, backgroundColor: "#f7f8f9",}}>
               
-              {loading===true && <div className="d-flex loaderr"style={{alignItems:'center',justifyContent:'center',height:'90vh',color:'black',backgroundColor:'',width:'100ch',position:'absolute',zIndex:1000}}>
+              {loading===true && <div className="d-flex loaderr"style={{alignItems:'center',justifyContent:'center',height:'90vh',color:'black',backgroundColor:'',width:'100%',position:'absolute',zIndex:1000}}>
               <CircularProgress size={60} />
               </div>}
               <div

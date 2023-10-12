@@ -89,7 +89,7 @@ function Chat({
   let { det } = useParams();
   const [shownavi, setshownavi] = useState(null);
   const location = useLocation();
-  console.log(location);
+  // console.log(location);
 
   useEffect(() => {
     if (isSmallScreen) {
@@ -139,6 +139,7 @@ function Chat({
         setshownavi(false);
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location, isSmallScreen]);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -178,6 +179,7 @@ function Chat({
     } else {
       if (showchatdesc === true) setsmall(false);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSmallScreen, showchatdesc, hey]);
 
   // const userdatafetch =async()=>{
@@ -241,6 +243,7 @@ function Chat({
     setarchieveview(false);
     setshowfriends(true);
   };
+  const[userfriendprof,setuserfriendprof]=useState({})
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const descriptionheader = async (id, names) => {
@@ -258,7 +261,11 @@ function Chat({
     } else {
       setDoc(docRef, { messages: [] });
     }
-
+    setuserfriendprof({
+      "name":names.name,
+      "bio":names.bio,
+      "url":names.avatar
+    })
     setshowchatdesc(true);
     setdescname(names.name);
     setbio(names.bio);
@@ -266,9 +273,11 @@ function Chat({
     setchatid(id);
     setavtrurl(names.avatar);
   };
+
   useEffect(() => {
+    function solve(){
     if (hey !== undefined) {
-      console.log(arraynames);
+      // console.log(arraynames);
       let names = {};
       for (let i = 0; i < arraynames.length; i++) {
         if (arraynames[i].uid === hey) {
@@ -278,8 +287,13 @@ function Chat({
           break;
         }
       }
-    }
-  }, [arraynames, descriptionheader, hey]);
+  }
+}
+solve();
+return(()=>{solve()});
+  
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [arraynames, hey]);
 
   return (
     <div
@@ -920,7 +934,7 @@ function Chat({
                 className="d-flex flex-column scale"
                 style={{ backgroundColor: "#1F2029", overflow: "hidden" }}
               >
-                <Userinfo setshowmyaccount={setshowmyaccount} />
+                <Userinfo setshowmyaccount={setshowmyaccount} userfriendprof={userfriendprof} />
               </div>
             </div>
           ) : (
@@ -933,7 +947,7 @@ function Chat({
                   className="d-flex flex-column closscale"
                   style={{ backgroundColor: "#1F2029", contain: "strict" }}
                 >
-                  <Userinfo setshowmyaccount={setshowmyaccount} />
+                  <Userinfo setshowmyaccount={setshowmyaccount} userfriendprof={userfriendprof} />
                 </div>
               </div>
             )

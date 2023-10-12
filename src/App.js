@@ -74,7 +74,7 @@ const[avtrurl,setavtrurl]=useState('');
             }
             if (key !== uid) {
               const us = detail[key];
-      console.log(us.Avatar);
+      // console.log(us.Avatar);
               arraynamed.push({
                 name: us.name,
                 bio: us.Bio,

@@ -3,13 +3,36 @@
   color: rgb(34, 31, 31);
 }
 .loaderr{
+	position: absolute;
     /* From https://css.glass */
 background: rgba(255, 255, 255, 0.2);
-border-radius: 16px;
+/* border-radius: 16px; */
 box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 backdrop-filter: blur(5px);
 -webkit-backdrop-filter: blur(5px);
 border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.search_cont select{
+	padding: 3px;
+	padding-left: 2px;
+	border-radius: 10px;
+
+
+}
+.search_cont select option{
+	padding: 3px;
+	padding-left: 2px;
+	border-radius: 10px;
+
+
+}
+.search_cont select::-webkit-scrollbar-thumb
+{
+width:2px;
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	background-color: #584949;
+  border-radius: 4vh;
 }
 .main-news {
   overflow-y: scroll;
@@ -49,13 +72,21 @@ border: 1px solid rgba(255, 255, 255, 0.3);
 
 }
 .handy:focus{
+	padding: 3px;
+	background-color: rgb(107, 149, 201);
+	border-radius: 8px;
 	color:black;
-	background-color: rgb(87, 114, 114);
+	box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 }
 input::placeholder{
+
 	color:rgb(61, 57, 57);
 }
 .hey2::after{
 	line-height: 1vh;
 	border-color:rgb(121, 193, 193) ;
+}
+.hey2{
+	color:black;
+	width:2em;
 }

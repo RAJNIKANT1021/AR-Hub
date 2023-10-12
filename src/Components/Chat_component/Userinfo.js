@@ -8,7 +8,7 @@ import {IoMdCall} from 'react-icons/io';
 import{ImBlocked}  from 'react-icons/im';
 import{AiTwotoneDislike}  from 'react-icons/ai';
 import{MdDelete}  from 'react-icons/md';
-function Userinfo({setshowmyaccount}) {
+function Userinfo({setshowmyaccount,userfriendprof}) {
   return (<>
     <div className='d-flex flex-row py-2' style={{  backgroundColor: "#1F2029",
     borderBottom: "3px",
@@ -40,14 +40,14 @@ function Userinfo({setshowmyaccount}) {
 }}>
     <Avatar
               sx={{ bgcolor: deepPurple[500], width: 200, height: 200}}
-              src="https://img.freepik.com/free-psd/3d-illustration-person-with-rainbow-sunglasses_23-2149436196.jpg?w=740&t=st=1679001679~exp=1679002279~hmac=c53ea30da094c90d0bae1bf703599d8572b711d931d2bbe519571eae87eb5a23"
+              src={userfriendprof.url}
               alt="hwt"
             />
 
 
     </div>
     <div  className="d-flex flex-row" style={{color:'#fffffa',justifyContent:'center',alignItems:'center',fontSize:'2rem'}}>
-        Tannmoy Jha
+       {userfriendprof.name}
     </div>
     <div className="d-flex flex-row pb-3"style={{color:'#fffffa',justifyContent:'center',alignItems:'center',   borderBottom: "4px",
     borderBottomColor: "#292A33",
@@ -93,7 +93,7 @@ function Userinfo({setshowmyaccount}) {
  <div className='px-3 mt-1 pb-3'style={{color:'whitesmoke',fontSize:'1.1rem', borderBottom: "4px",
     borderBottomColor: "#292A33",
     borderBottomStyle: "solid",}} >
- Everything shall work out someday
+{userfriendprof.bio}
  </div>
 
  <div className="d-flex flex-row mt-1 handy" style={{color:'#b74b59'}}>
@@ -101,7 +101,7 @@ function Userinfo({setshowmyaccount}) {
     <ImBlocked/>
     </div>
     <div classname="pr-4">
-    Block Tanmmay Jha
+    Block {" "}{userfriendprof.name}
     </div>
 
  </div>
@@ -111,7 +111,7 @@ function Userinfo({setshowmyaccount}) {
 
     </div>
     <div classname="pr-4" style={{color:'#b74b59'}}>
-    Report Tanmmay Jha
+    Report{" "} {userfriendprof.name}
     </div>
 
  </div>

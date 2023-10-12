@@ -61,15 +61,18 @@ function Login({checker}) {
 
  }
   const  handleclick=async()=>{
+    
     const Email= document.getElementById('email').value;
    
     
     const Password=document.getElementById('password').value;
-    const Name= document.getElementById('name').value;
+    let Name= document.getElementById('name').value;
+    
     if(Name.length===0){
       alert("Please Enter Username!")
       return
     }
+   Name=Name[0].toUpperCase()+Name.slice(1);
     // console.log({Email,Password})
    
 
@@ -81,12 +84,13 @@ function Login({checker}) {
   
     
        user.displayName=Name;
-     
        if(localStorage.getItem('user')){
         localStorage.removeItem('user')
        }
         
        localStorage.setItem('user', user.uid)
+     
+  
  
   createChat(Name,Email,user.uid)
   checker(true,user.uid);
