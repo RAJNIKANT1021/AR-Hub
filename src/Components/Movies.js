@@ -1,5 +1,5 @@
 import React from "react";
-import "./Movies.css";
+import "./movies.css";
 import { useState } from "react";
 import Box from "@mui/material/Box";
 import Rating from "@mui/material/Rating";
