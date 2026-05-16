@@ -1,7 +1,7 @@
 import React from 'react'
 import Avatar from '@mui/material/Avatar';
 import {  deepPurple } from '@mui/material/colors';
-import './chattile.css'
+import './chattile1.css'
 
 
 function ArchieveChat({name}) {

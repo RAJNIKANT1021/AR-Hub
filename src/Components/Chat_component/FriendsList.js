@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { subscribeAllUsers, unfriend } from "../../lib/db";
-import "./friends.css";
+import "./friends1.css";
 
 function FriendsList({ uid, onStartChat }) {
   const [friends, setFriends] = useState([]);

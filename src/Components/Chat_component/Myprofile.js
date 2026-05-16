@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { updateUserField } from "../../lib/db";
 import { RxPencil1 } from "react-icons/rx";
 import { AiOutlineCheck } from "react-icons/ai";
-import "./friends.css";
+import "./friends1.css";
 
 function Myprofile({ uid, me }) {
   const [editName, setEditName] = useState(false);

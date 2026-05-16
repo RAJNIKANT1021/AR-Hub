@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./topheadcard.css";
+import "./topheadcard1.css";
 import { IoIosArrowDown } from "react-icons/io";
 import { SiWebmoney } from "react-icons/si";
 function Topheadcard({ url1, title, source, author, date, content, website_redirect }) {

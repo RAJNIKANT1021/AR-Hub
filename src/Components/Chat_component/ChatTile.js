@@ -1,5 +1,5 @@
 import React from 'react';
-import './chattile.css';
+import './chattile1.css';
 
 function ChatTile({ name, avatar, lastMessage, time, unread, online, isGroup }) {
   const initials = name ? name.slice(0, 2).toUpperCase() : '?';

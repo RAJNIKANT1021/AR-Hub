@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./newscard.css";
+import "./newscard1.css";
 import { IoIosArrowDown } from "react-icons/io";
 import { SiWebmoney } from "react-icons/si";
 function NewsCard({ url1, title, source, author, date, content, website_redirect }) {

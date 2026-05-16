@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { subscribeAllUsers, sendFriendRequest, cancelFriendRequest } from "../../lib/db";
 import Fuse from "fuse.js";
 import { IoPersonAddOutline, IoCheckmarkCircle, IoCopyOutline, IoCloseCircle } from "react-icons/io5";
-import "./friends.css";
+import "./friends1.css";
 
 function SearchList({ uid, onStartChat }) {
   const [allUsers, setAllUsers] = useState([]);

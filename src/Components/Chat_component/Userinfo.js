@@ -4,7 +4,7 @@ import { chatId } from '../../lib/db';
 import { IoClose, IoCallOutline, IoVideocamOutline } from 'react-icons/io5';
 import { MdBlock, MdOutlineReport, MdPersonRemove } from 'react-icons/md';
 import { FiVolume2, FiVolumeX } from 'react-icons/fi';
-import './userinfo.css';
+import './userinfo1.css';
 
 function Userinfo({ partner, me, uid, onClose, onDeleteChat }) {
   const [confirming, setConfirming] = useState(null); // 'unfriend' | 'block'

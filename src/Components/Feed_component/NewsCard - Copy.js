@@ -1,5 +1,5 @@
 import * as React from 'react';
-import './newscard.css';
+import './newscard1.css';
 import { LazyLoadImage } from "react-lazy-load-image-component";
 function NewsCard() {
   return (

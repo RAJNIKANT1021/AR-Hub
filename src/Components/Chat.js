@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import "./chat.css";
+import "./chat1.css";
 import ChatDescription from "./Chat_component/ChatDescription";
 import Myprofile from "./Chat_component/Myprofile";
 import Myavatar from "./Myavatar";

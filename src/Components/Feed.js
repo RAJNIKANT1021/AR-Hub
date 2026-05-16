@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./feed.css";
+import "./feed1.css";
 import { IoSearchOutline } from "react-icons/io5";
 
 const IS_PROD = process.env.NODE_ENV === 'production';

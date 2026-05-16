@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { subscribeAllUsers, acceptFriendRequest, declineFriendRequest } from "../lib/db";
 import { IoCheckmarkCircle, IoCloseCircle } from "react-icons/io5";
-import "./Chat_component/friends.css";
+import "./Chat_component/friends1.css";
 
 function FriendRequest({ uid }) {
   const [requests, setRequests] = useState([]);

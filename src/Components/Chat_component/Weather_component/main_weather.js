@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import './weather.css';
+import './weather1.css';
 import { IoSearchOutline, IoLocationOutline } from 'react-icons/io5';
 import { WiHumidity, WiStrongWind, WiBarometer, WiSunrise, WiSunset } from 'react-icons/wi';
 

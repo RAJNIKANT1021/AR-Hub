@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { updateUserField } from '../lib/db';
 import { IoImageOutline } from 'react-icons/io5';
-import './Chat_component/friends.css';
+import './Chat_component/friends1.css';
 
 function Myavatar({ uid, me }) {
   const [url, setUrl] = useState('');

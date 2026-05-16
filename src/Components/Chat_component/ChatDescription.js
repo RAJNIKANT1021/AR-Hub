@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import "./chatdesc.css";
+import "./chatdesc1.css";
 import Message from "./Message";
 import Userinfo from "./Userinfo";
 import EmojiPicker from "emoji-picker-react";
