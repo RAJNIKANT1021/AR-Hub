@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import "./Message.css";
+import "./message.css";
 import { addReaction, deleteMessage, deleteMessageForEveryone, editMessage, votePoll } from "../../lib/db";
 
 // ── WhatsApp-style read ticks ──────────────────────────────────
