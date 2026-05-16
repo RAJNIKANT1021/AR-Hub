@@ -6,7 +6,6 @@ import { setPresence } from '../lib/db';
 import { IoChatbubblesOutline, IoCloudyOutline, IoNewspaperOutline } from 'react-icons/io5';
 import { MdOutlineLightMode, MdOutlineDarkMode } from 'react-icons/md';
 import './navbar.css';
-
 function Navbar({ loggedin, checker, uid }) {
   const navigate = useNavigate();
   const location = useLocation();
