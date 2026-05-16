@@ -1,321 +1,222 @@
 import React, { useEffect, useState } from "react";
 import "./Feed.css";
-import { MdYoutubeSearchedFor } from "react-icons/md";
-import NewsCard from "./Feed_component/NewsCard";
-import Topheadcard from "./Feed_component/Topheadcard";
-import CircularProgress from '@mui/material/CircularProgress';
+import { IoSearchOutline } from "react-icons/io5";
 
+const IS_PROD = process.env.NODE_ENV === 'production';
+const NEWS_API_KEY = "3d032423eddf4fceb282e7c7e72dfce1";
 
-function Feed() {
-  
-  const[loading,setloading]=useState(false);
-  const [searchCat, setsearchCat] = useState("");
-  const [category, setCategory] = useState("Sports");
-  const [country, setCountry] = useState("IN");
-  const [news, setnews] = useState(null);
-  const[countrynews,setcountrynews]=useState(null)
-  console.log(category);  
-  const fetcher = async () => {
-    setloading(true);
-    await fetch(
-      `https://newsapi.org/v2/everything?q=${category}&apiKey=3d032423eddf4fceb282e7c7e72dfce1`,
-      requestOptions
-    )
-      .then((response) => response.json())
-      .then((result) => setnews(result.articles))
-      .catch((error) => console.log("error", error));
-      setloading(false)};
-    const fetcher2 = async()=>{
-    await fetch(
-      `https://newsapi.org/v2/top-headlines?country=${country}&apiKey=3d032423eddf4fceb282e7c7e72dfce1`,
-      requestOptions
-    )
-      .then((response) => response.json())
-      .then((result) => setcountrynews(result.articles))
-      .catch((error) => console.log("error", error));
-  };
+const CATEGORIES = [
+  { key: 'Sports',          icon: '⚽', label: 'Sports' },
+  { key: 'Technology',      icon: '💻', label: 'Technology' },
+  { key: 'Entertainment',   icon: '🎬', label: 'Entertainment' },
+  { key: 'Business',        icon: '💼', label: 'Business' },
+  { key: 'Health',          icon: '🏥', label: 'Health' },
+  { key: 'Politics',        icon: '🏛️', label: 'Politics' },
+  { key: 'Science',         icon: '🔬', label: 'Science' },
+  { key: 'Bitcoin',         icon: '₿', label: 'Crypto' },
+];
 
-  useEffect(() => {
-    fetcher();
-    return (()=>{
-      fetcher();
-    })
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [category]);
-  useEffect(()=>{
-    fetcher2();
-    return(()=>{
-      fetcher2();
-    })
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[country]);
-  var requestOptions = {
-    method: "GET",
-    redirect: "follow",
+const COUNTRIES = [
+  { code: 'in', name: 'India' },
+  { code: 'us', name: 'United States' },
+  { code: 'gb', name: 'United Kingdom' },
+  { code: 'au', name: 'Australia' },
+  { code: 'ca', name: 'Canada' },
+  { code: 'jp', name: 'Japan' },
+  { code: 'de', name: 'Germany' },
+  { code: 'fr', name: 'France' },
+  { code: 'cn', name: 'China' },
+  { code: 'br', name: 'Brazil' },
+  { code: 'ae', name: 'UAE' },
+  { code: 'ru', name: 'Russia' },
+  { code: 'sa', name: 'Saudi Arabia' },
+];
+
+const SAMPLE_ARTICLES = [
+  {
+    source: { name: 'AR Hub News' },
+    title: 'Welcome to AR Hub — Your Professional News Feed',
+    description: 'Configure your NewsAPI key to see live articles here. This is a placeholder showing how the news feed will look.',
+    urlToImage: null,
+    publishedAt: new Date().toISOString(),
+    url: '#',
+    author: 'AR Hub'
+  },
+  {
+    source: { name: 'Demo Source' },
+    title: 'News Feed Ready — Add Your API Key for Live Articles',
+    description: 'Once a valid NewsAPI key is configured, this feed will show real articles filtered by category and country in real time.',
+    urlToImage: null,
+    publishedAt: new Date().toISOString(),
+    url: '#',
+    author: 'System'
+  }
+];
+
+function NewsCard({ article }) {
+  const fmtDate = (d) => {
+    if (!d) return '';
+    return new Date(d).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' });
   };
 
   return (
-    <div style={{display:'fixed',maxWidth:'100vw',width:'100vw'}}>
-      <div
-        className="d-flex flex-column"
-        style={{backgroundColor: "#fdfefe" }}
-      >
-        <div>
-          <div className="d-flex flex-row mx-3 news-header" style={{justifyContent:"space-between"}}>
-            <div
-              style={{ fontSize: "2.5rem", color: "black", fontWeight: "750" }}
-            >
-              News
-            </div>
-            
-            <div className="d-flex flex-row mx-3 my-1" style={{flex:1,fontSize: "2rem", fontWeight: "650", color: "black",alignItems:'center',justifyContent:'center'}}
-         
-            >
-              Top headlines
-            </div>
-            <div className="d-flex flex-rcol mx-3 my-1" style={{alignItems:'center',justifyContent:'center'}}> <label className="d-flex flex-col mx-1 my-1" style={{alignItems:'center',justifyContent:'center',fontSize: "1.2rem", fontWeight: "650", color: "black"}}>Country:</label><div className="search_cont">
- 
-  <select onChange={(e)=>{setCountry(e.target.value)}} >
-  
-  <option  value="ae">United Arab Emirates</option>
-<option  value="ar">Argentina</option>
-<option  value="at">Austria</option>
-<option  value="au">Australia</option>
-<option  value="be">Belgium</option>
-<option  value="bg">Bulgaria</option>
-<option  value="br">Brazil</option>
-<option  value="ca">Canada</option>
-<option  value="ch">Switzerland</option>
-<option  value="cn">China</option>
-<option  value="co">Colombia</option>
-<option  value="cu">Cuba</option>
-<option  value="cz">Czech Republic</option>
-<option  value="de">Germany</option>
-<option  value="eg">Egypt</option>
-<option  value="fr">France</option>
-<option  value="gb">United Kingdom (Great Britain)</option>
-<option  value="gr">Greece</option>
-<option  value="hk">Hong Kong</option>
-<option  value="hu">Hungary</option>
-<option  value="id">Indonesia</option>
-<option  value="ie">Ireland</option>
-<option  value="il">Israel</option>
-<option  value="in" selected>India</option>
-<option  value="it">Italy</option>
-<option  value="jp">Japan</option>
-<option  value="kr">South Korea</option>
-<option  value="lt">Lithuania</option>
-<option  value="lv">Latvia</option>
-<option  value="ma">Morocco</option>
-<option  value="mx">Mexico</option>
-<option  value="my">Malaysia</option>
-<option  value="ng">Nigeria</option>
-<option  value="nl">Netherlands (Holland)</option>
-<option  value="no">Norway</option>
-<option  value="nz">New Zealand</option>
-<option  value="ph">Philippines</option>
-<option  value="pl">Poland</option>
-<option  value="pt">Portugal</option>
-<option  value="ro">Romania</option>
-<option  value="rs">Serbia</option>
-<option  value="ru">Russia</option>
-<option  value="sa">Saudi Arabia</option>
-<option  value="se">Sweden</option>
-<option  value="sg">Singapore</option>
-<option  value="si">Slovenia</option>
-<option  value="sk">Slovakia</option>
-<option  value="th">Thailand</option>
-<option  value="tr">Turkey</option>
-<option  value="tw">Taiwan</option>
-<option  value="ua">Ukraine</option>
-  </select>
-</div></div>
-            <div>
-              
-            </div>
-          </div>
+    <a
+      href={article.url !== '#' ? article.url : undefined}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="news-card-pro"
+      style={{ cursor: article.url === '#' ? 'default' : 'pointer' }}
+    >
+      {article.urlToImage
+        ? <img className="news-card-img" src={article.urlToImage} alt="" onError={e => e.target.style.display='none'} />
+        : <div className="news-card-img-placeholder">📰</div>
+      }
+      <div className="news-card-body">
+        <div className="news-card-source">{article.source?.name}</div>
+        <div className="news-card-title">{article.title}</div>
+        {article.description && <div className="news-card-desc">{article.description}</div>}
+        <div className="news-card-meta">
+          <span className="news-card-date">{fmtDate(article.publishedAt)}</span>
+          {article.url && article.url !== '#' && (
+            <span className="news-card-link">Read more →</span>
+          )}
         </div>
-        <div style={{ flex: 1, backgroundColor: "white" }}>
-          <div
-            className="d-flex flex-row news-header"
-            style={{}}
-          >
-            <div style={{ backgroundColor: "#f7f8f9" }}>
-              <div className="d-flex flex-column">
-                <div
-                  className="d-flex flex-column mx-2 my-3 pr-2"
-                  style={{ backgroundColor: "white", borderRadius: "10px" }}
-                >
-                  <div
-                    className="ml-3 mr-4"
-                    style={{
-                      fontSize: "2.1rem",
-                      fontFamily: "Quicksand variant0",
-                      fontWeight: "650",
-                    }}
-                  >
-                    Category
-                  </div>
-                  <div
-                    className="my-2 ml-3 mr-4 d-flex flex-column"
-                    style={{ color: "#a2a2a2 ", flex: 1, fontWeight: "600" }}
-                  >
-                    <div className="d-flex flex-row">
-                      <div className="d-flex flex-row" style={{ flex: 1 }}>
-                        <input
-                          className="hey2 d-flex py-2 px-2"
-                          value={searchCat}
-                          onChange={(e) => {
-                            setsearchCat(e.target.value);
-                          }}
-                          type="text"
-                          placeholder="Search category"
-                          style={{
-                            padding:'5px',
-                            width: "10em",
-                            borderRadius: "12px",
-                            borderColor: "black",
-                            borderWidth: "1px",
-                            height: "4vh",
-                          }}
-                        />
-                      </div>
+      </div>
+    </a>
+  );
+}
 
-                      <div className="ml-1">
-                        <MdYoutubeSearchedFor
-                          className="handy"
-                          onClick={() => {
-                            setCategory(searchCat);
-                          }}
-                          style={{ fontSize: "30px", color: "black" }}
-                        />
-                      </div>
-                    </div>
-                    <div
-                      onFocus={() => {
-                        setCategory(()=>{"Entertainment"});
-                      }}
-                      Tabindex={12222}
-                      className="handy my-2"
-                    >
-                      Entertainment
-                    </div>
-                    <div
-                      onFocus={() => {
-                        setCategory("Sports");
-                      }}
-                      Tabindex={2}
-                      className="handy my-2"
-                    >
-                      Sports
-                    </div>
-                    <div
-                      onFocus={() => {
-                        setCategory("Tech");
-                      }}
-                      Tabindex={3}
-                      className="handy my-2"
-                    >
-                      Tech
-                    </div>
-                    <div
-                      onFocus={() => {
-                        setCategory("Politics");
-                      }}
-                      Tabindex={4}
-                      className="handy my-2"
-                    >
-                      Politics
-                    </div>
-                    <div
-                      onFocus={() => {
-                        setCategory("Bitcoin");
-                      }}
-                      Tabindex={5}
-                      className="handy my-2"
-                    >
-                      Bitcoin
-                    </div>
-                    <div
-                      onFocus={() => {
-                        setCategory("Health");
-                      }}
-                      Tabindex={6}
-                      className="handy my-2"
-                    >
-                      Health
-                    </div>
-                    <div
-                      onFocus={() => {
-                        setCategory("Food");
-                      }}
-                      Tabindex={7}
-                      className="handy my-2"
-                    >
-                      Food
-                    </div>
-                    <div
-                      onFocus={() => {
-                        setCategory("Business");
-                      }}
-                      Tabindex={8}
-                      className="handy my-2"
-                    >
-                      Business
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="" style={{position:'relative', flex: 1, backgroundColor: "#f7f8f9",}}>
-              
-              {loading===true && <div className="d-flex loaderr"style={{alignItems:'center',justifyContent:'center',height:'90vh',color:'black',backgroundColor:'',width:'100%',position:'absolute',zIndex:1000}}>
-              <CircularProgress size={60} />
-              </div>}
-              <div
-                className=" px-4 main-news mostly-customized-scrollbar"
-                style={{position:'relative', backgroundColor: "",height:'150vh',zIndex:10}}
-              >
-                {news !== null &&
-                  news.map((articles) => (
-                    <div className="my-3" key={19111}>
-                      <NewsCard
-                        url1={articles.urlToImage}
-                        title={articles.title}
-                        source={articles.source.name}
-                        author={articles.author}
-                        date={articles.publishedAt}
-                        content={articles.description}
-                        website_redirect={articles.url}
-                      />
-                    </div>
-                  ))}
-              </div>
-            </div>
-            <div
-              className="top-headlines mostly-customized-scrollbar"
-              style={{ fontSize: "1.2rem", backgroundColor: "#f7f8f9" ,height:'150vh'}}
-            >
-              <div style={{overflowX:'hidden'}}>
-                <div style={{}}>
-                  {countrynews !== null &&
-                    countrynews.map((articles) => (
-                      <div className="my-3" key={112121}>
-                        <Topheadcard
-                          url1={articles.urlToImage}
-                          title={articles.title}
-                          source={articles.source.name}
-                          author={articles.author}
-                          date={articles.publishedAt}
-                          content={articles.description}
-                          website_redirect={articles.url}
-                        />
-                      </div>
-                    ))}
-                </div>
-              </div>
+function Feed() {
+  const [category, setCategory] = useState('Sports');
+  const [country, setCountry] = useState('in');
+  const [catSearch, setCatSearch] = useState('');
+  const [articles, setArticles] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [apiError, setApiError] = useState(false);
+
+  const fetchNews = async () => {
+    if (IS_PROD) {
+      setArticles(SAMPLE_ARTICLES);
+      setApiError(true);
+      return;
+    }
+    setLoading(true);
+    setApiError(false);
+    try {
+      // /everything doesn't support country; use top-headlines for country filter
+      const res = await fetch(
+        `https://newsapi.org/v2/top-headlines?country=${country}&category=${category.toLowerCase()}&apiKey=${NEWS_API_KEY}&pageSize=20`
+      );
+      const data = await res.json();
+      if (data.status === 'error' || !data.articles?.length) {
+        // Fallback: everything endpoint with keyword
+        const res2 = await fetch(
+          `https://newsapi.org/v2/everything?q=${category}&sortBy=publishedAt&apiKey=${NEWS_API_KEY}&pageSize=20`
+        );
+        const data2 = await res2.json();
+        if (data2.status === 'error') { setApiError(true); setArticles(SAMPLE_ARTICLES); }
+        else setArticles(data2.articles || SAMPLE_ARTICLES);
+      } else {
+        setArticles(data.articles);
+      }
+    } catch {
+      setApiError(true);
+      setArticles(SAMPLE_ARTICLES);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { fetchNews(); }, [category, country]);
+
+  const filteredCats = CATEGORIES.filter(c =>
+    c.label.toLowerCase().includes(catSearch.toLowerCase())
+  );
+
+  return (
+    <div className="feed-page">
+      <div className="feed-inner">
+        <div className="feed-header">
+          <div className="feed-title">News Feed</div>
+          <div className="feed-subtitle">Stay informed with the latest headlines</div>
+        </div>
+
+        {/* Production / API key notice */}
+        {(IS_PROD || apiError) && (
+          <div className="feed-api-notice" style={{ marginBottom: '1.25rem' }}>
+            <div className="feed-api-notice-icon">🔑</div>
+            <div className="feed-api-notice-text">
+              <h3>NewsAPI Key Required for Live Articles</h3>
+              <p>
+                NewsAPI restricts browser requests in production. To enable live news, you need a server-side
+                proxy or a paid plan. Get your key at <code>newsapi.org</code> and set{' '}
+                <code>REACT_APP_NEWS_KEY</code> in your environment. Showing sample articles for now.
+              </p>
             </div>
           </div>
+        )}
+
+        <div className="feed-layout">
+          {/* Sidebar */}
+          <aside className="feed-categories">
+            <div className="feed-cat-title">Category</div>
+            <div className="feed-cat-search">
+              <IoSearchOutline style={{ color: 'var(--text-tertiary)', fontSize: '.9rem' }} />
+              <input
+                placeholder="Search…"
+                value={catSearch}
+                onChange={e => setCatSearch(e.target.value)}
+              />
+            </div>
+            {filteredCats.map(c => (
+              <button
+                key={c.key}
+                className={`feed-cat-btn ${category === c.key ? 'active' : ''}`}
+                onClick={() => setCategory(c.key)}
+              >
+                <span className="feed-cat-icon">{c.icon}</span>
+                {c.label}
+              </button>
+            ))}
+            <div className="feed-cat-title" style={{ marginTop: '.85rem' }}>Country</div>
+            <select
+              className="feed-country-select"
+              value={country}
+              onChange={e => setCountry(e.target.value)}
+            >
+              {COUNTRIES.map(c => (
+                <option key={c.code} value={c.code}>{c.name}</option>
+              ))}
+            </select>
+          </aside>
+
+          {/* Articles */}
+          <main className="feed-main">
+            <div className="feed-section-header">
+              <span className="feed-section-title">
+                {CATEGORIES.find(c => c.key === category)?.icon}{' '}
+                {category}
+              </span>
+              {articles.length > 0 && (
+                <span className="feed-section-badge">{articles.length} articles</span>
+              )}
+            </div>
+
+            {loading ? (
+              <div className="feed-loading"><div className="feed-spinner" /></div>
+            ) : (
+              <div className="feed-articles">
+                {articles.map((article, i) => (
+                  <NewsCard key={i} article={article} />
+                ))}
+                {articles.length === 0 && (
+                  <div style={{ textAlign: 'center', color: 'var(--text-tertiary)', padding: '3rem', fontSize: '.9rem' }}>
+                    No articles found. Try a different category.
+                  </div>
+                )}
+              </div>
+            )}
+          </main>
         </div>
       </div>
     </div>

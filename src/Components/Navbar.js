@@ -1,87 +1,76 @@
-import React from 'react'
-import './navbar.css'
-import { Link, useNavigate } from 'react-router-dom';
-import { Badge } from '@mui/material';
-import NotificationsActiveOutlinedIcon from '@mui/icons-material/NotificationsActiveOutlined';
-import { doc, updateDoc } from 'firebase/firestore';
-import { db } from '../userauth/FireAuth';
+import React from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useTheme } from '../Context/ThemeContext';
+import { useChatContext } from '../Context/ChatContext';
+import { setPresence } from '../lib/db';
+import { IoChatbubblesOutline, IoCloudyOutline, IoNewspaperOutline } from 'react-icons/io5';
+import { MdOutlineLightMode, MdOutlineDarkMode } from 'react-icons/md';
+import './Navbar.css';
 
-function Navbar({loggedin,checker,uid}) {
-  const Navigate=useNavigate();
+function Navbar({ loggedin, checker, uid }) {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { theme, toggleTheme } = useTheme();
+  const ctx = useChatContext?.() || {};
+  const { totalUnread = 0 } = ctx;
 
-  const logout =async()=>{
+  const logout = async () => {
+    if (uid) await setPresence(uid, false);
+    localStorage.removeItem('user');
+    checker(false, null);
+    navigate('/');
+  };
 
+  const navItems = [
+    { path: '/weather', icon: <IoCloudyOutline />, label: 'Weather' },
+    { path: '/feed',    icon: <IoNewspaperOutline />, label: 'News' },
+    {
+      path: '/chat',
+      icon: (
+        <span style={{ position: 'relative', display: 'inline-flex' }}>
+          <IoChatbubblesOutline />
+          {totalUnread > 0 && (
+            <span className="nav-badge">{totalUnread > 99 ? '99+' : totalUnread}</span>
+          )}
+        </span>
+      ),
+      label: 'Chat'
+    },
+  ];
 
-      const userstat = doc(db, "A2B_USERS", "Users", "usersdetails", "details");
-      const updates = {};
-      updates[uid + ".status"] = "offline";
-      await updateDoc(userstat, updates);
-      localStorage.removeItem('user');
-    
-    checker(false,null);
-    Navigate('/');
-  }
- 
+  return (
+    <nav className="navbar-pro">
+      <div className="navbar-brand-pro">
+        <span className="brand-dot" />
+        <span className="brand-name">AR Hub</span>
+      </div>
 
-  
-  
-  return (   
-<nav className="flex navbar navbar-expand-lg navbar-dark navbar-default" style={{position:'sticky'}}>
-  <div className="navbar-brand">A2R HUB</div>
-  <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span className="navbar-toggler-icon"></span>
-  </button>
+      <div className="navbar-links-pro">
+        {navItems.map(item => (
+          <Link
+            key={item.path}
+            to={item.path}
+            className={`nav-link-pro ${location.pathname.startsWith(item.path) ? 'active' : ''}`}
+          >
+            <span className="nav-icon">{item.icon}</span>
+            <span className="nav-label">{item.label}</span>
+          </Link>
+        ))}
+      </div>
 
-  <div className="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul className="navbar-nav" style={{display:"d-flex flex-row",flex:'1',justifyContent:'center',alignItems:'center'}}>
-      {/* <li className="nav-item">
-        <Link className="nav-link" to="/home" data-toggle="collapse" data-target=".navbar-collapse.show">Home</Link>
-      </li>
-      <li className="nav-item">
-        <Link className="nav-link" to="/movies" data-toggle="collapse" data-target=".navbar-collapse.show">Movies</Link>
-      </li>
-      <li className="nav-item">
-        <Link className="nav-link" to="/books" data-toggle="collapse" data-target=".navbar-collapse.show">Books</Link>
-      </li> */}
-      <li className="nav-item" style={{marginRight:'15px'}}>
-        <Link className="nav-link" to="/weather" data-toggle="collapse" data-target=".navbar-collapse.show">Weather</Link>
-      </li>
-      <li className="nav-item" style={{marginRight:'15px'}}>
-        <Link className="nav-link" to="/feed" data-toggle="collapse" data-target=".navbar-collapse.show">Feed</Link>
-      </li>
-      <li className="nav-item" style={{marginRight:'15px'}}>
-        <Link className="nav-link" to="/chat" data-toggle="collapse" data-target=".navbar-collapse.show">
-          Chat
-        </Link>
-      </li>
-      {/* <li className="nav-item dropdown">
-        <Link className="nav-link dropdown-toggle" to="hello" id="navbarDropdown" role="button" aria-haspopup="true" aria-expanded="false" data-toggle="collapse" data-target=".navbar-collapse.show">
-          Dropdown
-        </Link>
-        <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-          <Link className="dropdown-item" to="/">Login</Link>
-          <Link className="dropdown-item" to="#">Another action</Link>
-          <div className="dropdown-divider"></div>
-          <Link className="dropdown-item" to="#">Something else here</Link>
-        </div>
-      </li> */}
-    </ul>
-    {/* <div className="form-inline my-2 my-lg-0">
-      <input className="searchbar form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"/>
-      <button className="btn btn-primary my-2 my-sm-0" style={{color:"white"}} type="submit">Search</button>
-    </div> */}
-    {!loggedin && 
-      <Link to="/" style={{textDecoration:'none', color:'white'}}>
-        <button className="btn btn-primary my-2 my-sm-0 mx-2" style={{color:"white"}} type="submit" data-toggle="collapse" data-target=".navbar-collapse.show">Login</button>
-      </Link>
-    } 
-    {loggedin && 
-      <button className="btn btn-primary my-2 my-sm-0 mx-2" style={{color:"white"}} type="submit" onClick={()=>{logout()}} data-toggle="collapse" data-target=".navbar-collapse.show">Logout</button>
-    }
-  </div>
-</nav>
-    
-  )
+      <div className="navbar-actions-pro">
+        <button className="theme-toggle" onClick={toggleTheme} title="Toggle theme">
+          {theme === 'dark' ? <MdOutlineLightMode /> : <MdOutlineDarkMode />}
+        </button>
+        {!loggedin && (
+          <Link to="/" className="btn-nav-auth">Log In</Link>
+        )}
+        {loggedin && (
+          <button className="btn-nav-auth btn-logout" onClick={logout}>Log Out</button>
+        )}
+      </div>
+    </nav>
+  );
 }
 
 export default Navbar;

@@ -1,136 +1,91 @@
-import { Avatar, IconButton } from '@mui/material'
-import React,{useState} from 'react'
-import CancelIcon from '@mui/icons-material/Cancel'
-import { deepPurple } from '@mui/material/colors'
-import{AiOutlineCheck} from "react-icons/ai";
-import { db } from '../userauth/FireAuth';
-import { doc, updateDoc } from 'firebase/firestore';
+import React, { useState } from 'react';
+import { updateUserField } from '../lib/db';
+import { IoImageOutline } from 'react-icons/io5';
+import './Chat_component/friends.css';
 
-function Myavatar({setshowavatar,loggeduser}) {
-    const[edit,setedit]=useState(false)
-    const [editavater, seteditavater] = useState('');
+function Myavatar({ uid, me }) {
+  const [url, setUrl] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
 
-   
-    const handleupdate=async()=>{
-      console.log('okk');
-      setedit(false);
-      let uid=loggeduser.uid;
-      
-      const userstat = doc(db, "A2B_USERS", "Users", "usersdetails", "details");
-      const updates = {};
-      updates[uid + ".Avatar"] = editavater;
-      seteditavater('');
+  const handleUpdate = async () => {
+    if (!url.trim() || !uid) return;
+    setSaving(true);
+    await updateUserField(uid, { avatar: url.trim() });
+    setSaving(false);
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2000);
+  };
 
-
-      await updateDoc(userstat, updates);
-      document.getElementById('editurl').value="";
-     
-
-    }
- 
   return (
-    <>
-    <div className='d-flex flex-column' style={{width:'100%',contain:''}}>
-      <div className='d-flex flex-row pl-2'>
-         <div className='d-flex ml-2' style={{flex:1 ,color:'white',fontSize:'25px',alignItems:'center'}}>
-               Set Avatar 
-         </div>
-         <div className='d-flex'>
-          <div className='d-flex'>
-          <IconButton style={{ color: '#ababae' }} onClick={()=>{setshowavatar(false)}}>
-                            <CancelIcon sx={{ fontSize: 40 }} />
-                        </IconButton>
-
-          </div>
-        
-
-         </div>
-
+    <div className="friends-panel">
+      <div className="friends-panel-header">
+        <div className="friends-panel-title">Set Avatar</div>
       </div>
 
-      <div>
+      <div style={{ flex: 1, overflowY: 'auto', padding: '1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem' }}>
+        <div>
+          {(url || me?.avatar)
+            ? <img
+                src={url || me?.avatar}
+                alt="avatar preview"
+                style={{ width: 140, height: 140, borderRadius: '50%', objectFit: 'cover', border: '3px solid var(--accent)' }}
+                onError={e => { e.target.style.display = 'none'; }}
+              />
+            : <div style={{
+                width: 140, height: 140, borderRadius: '50%',
+                background: 'linear-gradient(135deg, var(--accent), #3498db)',
+                color: '#fff', fontSize: '3rem',
+                display: 'flex', alignItems: 'center', justifyContent: 'center'
+              }}>
+                <IoImageOutline />
+              </div>
+          }
+        </div>
 
-      </div>
-
-
-
-    </div>
-    <div className='d-flex flex-column' style={{flex:1,backgroundColor:''}}>
-      <div
-        className="d-flex flex-column mt"
-        style={{ flex: 1, backgroundColor: "" }}
-      >
-        <div
-          className="d-flex flex-row pt-3 mt-1"
-          style={{ alignItems: "center", justifyContent: "center" }}
-        >
-          <Avatar
-            sx={{ bgcolor: deepPurple[500], width: 240, height: 240 }}
-            src={loggeduser.Avatar}
-            alt="hwt"
-          />
-           </div>
-           <div
-          className="d-flex flex-column mx-3 pt-1 mt-4"
-          style={{
-            borderRadius: "",
-            backgroundColor: "",
-            borderBottom: "3px",
-            borderBottomColor: "#292A33",
-            borderBottomStyle: "solid",
-          }}
-        >
-          <div
-            className="d-flex flex-row pl-2 "
-            style={{ color: "#007f68", fontSize: ".8rem"}}
-          >
-            Avatar Custom Url
+        <div style={{ width: '100%' }}>
+          <div style={{ fontSize: '.75rem', fontWeight: 700, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '.4px', marginBottom: '.5rem' }}>
+            Avatar Image URL
           </div>
-          <div className="d-flex flex-row mt-1 mb-2 pb-1" style={{ flex: 1 }}>
+          <div style={{ display: 'flex', gap: '.5rem' }}>
             <input
-            id="editurl"
-            placeholder='Custom Avatar Url'
-              type="text"
-              className="pl-2"
-              onChange={(e)=>{setedit(true);seteditavater(e.target.value);console.log(e.target.value)} }
-              onBlur={()=>{}}
-              defaultValue={editavater}
               style={{
-                outline: "none",
-                flex: 1,
-                backgroundColor: "transparent",
-                border: "none",
+                flex: 1, background: 'var(--bg-input)', border: '1.5px solid var(--border)',
+                borderRadius: 10, padding: '.6rem .85rem', color: 'var(--text-primary)',
+                fontFamily: 'inherit', fontSize: '.875rem', outline: 'none', transition: 'border-color .2s'
               }}
+              placeholder="Paste image URL here…"
+              value={url}
+              onChange={e => setUrl(e.target.value)}
+              onFocus={e => e.target.style.borderColor = 'var(--accent)'}
+              onBlur={e => e.target.style.borderColor = 'var(--border)'}
+              onKeyDown={e => e.key === 'Enter' && handleUpdate()}
             />
-            {
-                <div>{
-                    edit===true &&
-                    <IconButton onClick={()=>{handleupdate()}}>
-                    <AiOutlineCheck style={{ color: "#8696a0", fontSize: "1.4rem" }} />
-                  </IconButton>
-                     }
-                     
-           
-                    </div>
-            }
-           
+            <button
+              onClick={handleUpdate}
+              disabled={!url.trim() || saving}
+              style={{
+                background: saved ? 'var(--online)' : 'var(--accent)',
+                border: 'none', borderRadius: 10, color: '#fff',
+                padding: '.6rem 1rem', fontFamily: 'inherit', fontSize: '.875rem',
+                fontWeight: 600, cursor: 'pointer', transition: 'background .2s', whiteSpace: 'nowrap'
+              }}
+            >
+              {saving ? '…' : saved ? '✓ Saved!' : 'Save'}
+            </button>
           </div>
         </div>
-        <div className='d-flex flex-column pt-3 pr-3' style={{alignItems:'center',justifyContent:'center'}}>
-            <p style={{color:'grey',fontSize:'1rem'}}> Add your custom Avatar URL. 
-            Visit <a style={{color:'green'}}href='https://www.freepik.com/vectors/avatar' target='_blank' rel='norefferer'>Flaticon</a> <br></br>
-             open Avatar in new Page, copy Url and <br></br>paste in Avatar Custom Url.
-                
-                </p >
-            
-            
-        </div>
-        </div>
-       
 
+        <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border)', borderRadius: 12, padding: '1rem', width: '100%' }}>
+          <div style={{ fontSize: '.82rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+            💡 <strong style={{ color: 'var(--text-primary)' }}>Tip:</strong> You can use any direct image URL. Try{' '}
+            <a href="https://pravatar.cc" target="_blank" rel="noreferrer" style={{ color: 'var(--accent)', textDecoration: 'none' }}>Pravatar</a>
+            {' '}for quick avatars.
+          </div>
+        </div>
       </div>
-      </>
-  )
+    </div>
+  );
 }
 
-export default Myavatar
+export default Myavatar;

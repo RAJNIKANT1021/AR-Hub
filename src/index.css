@@ -1,50 +1,173 @@
-/* *{
-  margin:0;
-  padding:0;
-  box-sizing: border-box;
-} */
-body {
-  
-   
- 
-  margin: 0;
-  font-family: "Inter var",ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI,Roboto",Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ── Theme variables ─────────────────────────────────────────── */
+:root[data-theme="dark"] {
+  --bg-primary:    #111b21;
+  --bg-secondary:  #202c33;
+  --bg-tertiary:   #2a3942;
+  --bg-hover:      #2a3942;
+  --bg-input:      #2a3942;
+  --bg-message-out:#005c4b;
+  --bg-message-in: #202c33;
+  --bg-card:       #1f2c34;
+  --bg-panel:      #111b21;
+
+  --text-primary:  #e9edef;
+  --text-secondary:#8696a0;
+  --text-tertiary: #667781;
+  --text-link:     #53bdeb;
+
+  --accent:        #00a884;
+  --accent-hover:  #06cf9c;
+  --accent-light:  #0d3b2e;
+
+  --border:        #2a3942;
+  --border-light:  #1f2c34;
+
+  --shadow:        0 4px 24px rgba(0,0,0,.5);
+  --shadow-sm:     0 1px 6px rgba(0,0,0,.3);
+
+  --scrollbar-thumb: #374045;
+  --online:        #06cf9c;
+  --offline:       #8696a0;
+  --bg-active:     #2a3942;
+}
+
+:root[data-theme="light"] {
+  --bg-primary:    #f0f2f5;
+  --bg-secondary:  #ffffff;
+  --bg-tertiary:   #f0f2f5;
+  --bg-hover:      #f5f6f6;
+  --bg-input:      #ffffff;
+  --bg-message-out:#d9fdd3;
+  --bg-message-in: #ffffff;
+  --bg-card:       #ffffff;
+  --bg-panel:      #f0f2f5;
+
+  --text-primary:  #111b21;
+  --text-secondary:#667781;
+  --text-tertiary: #8696a0;
+  --text-link:     #027eb5;
+
+  --accent:        #00a884;
+  --accent-hover:  #008f72;
+  --accent-light:  #e7f8f0;
+
+  --border:        #e9edef;
+  --border-light:  #f0f2f5;
+
+  --shadow:        0 4px 24px rgba(0,0,0,.12);
+  --shadow-sm:     0 1px 6px rgba(0,0,0,.08);
+
+  --scrollbar-thumb: #c4ccd2;
+  --online:        #00a884;
+  --offline:       #8696a0;
+  --bg-active:     #e7f8f0;
+}
+
+/* ── Reset & base ────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: #0f172a;
-}
-input {-webkit-appearance: none; box-shadow: none !important; }
-:-webkit-autofill { color: #fff !important; }
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
-body::-webkit-scrollbar-track
-{
-	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-	background-color: #F5F5F5;
+  transition: background .25s, color .25s;
 }
 
-body::-webkit-scrollbar
-{
-	width: 10px;
-	background-color: #F5F5F5;
+/* ── Scrollbars ──────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }
+
+/* ── Animations ──────────────────────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: .5; }
+}
+@keyframes typingDot {
+  0%, 60%, 100% { transform: translateY(0); }
+  30%            { transform: translateY(-6px); }
+}
+@keyframes shimmer {
+  from { background-position: -200% 0; }
+  to   { background-position:  200% 0; }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes bounceIn {
+  0%   { transform: scale(0.3); opacity: 0; }
+  50%  { transform: scale(1.05); }
+  70%  { transform: scale(0.9); }
+  100% { transform: scale(1); opacity: 1; }
 }
 
-body::-webkit-scrollbar-thumb
-{
-	background-color: #000000;
-	border: 2px solid #555555;
+/* ── Utility ─────────────────────────────────────────────────── */
+.fade-in      { animation: fadeIn .3s ease forwards; }
+.slide-left   { animation: slideInLeft .25s ease forwards; }
+.slide-right  { animation: slideInRight .25s ease forwards; }
+.scale-in     { animation: scaleIn .25s ease forwards; }
+
+.handy { cursor: pointer; }
+
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
 }
-html,
-body {
 
-
-
-
+.app-body {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
 }
 
+/* ── Typing indicator ────────────────────────────────────────── */
+.typing-dot {
+  display: inline-block;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--text-secondary);
+  animation: typingDot 1.2s infinite;
+}
+.typing-dot:nth-child(2) { animation-delay: .2s; }
+.typing-dot:nth-child(3) { animation-delay: .4s; }
+
+/* ── Skeleton loader ─────────────────────────────────────────── */
+.skeleton {
+  background: linear-gradient(90deg,
+    var(--bg-tertiary) 25%,
+    var(--bg-hover) 50%,
+    var(--bg-tertiary) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+}
+
+.btn { font-family: inherit; }
+a { color: inherit; }

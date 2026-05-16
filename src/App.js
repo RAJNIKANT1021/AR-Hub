@@ -2,321 +2,137 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 import Navbar from "./Components/Navbar";
 import Login from "./userauth/login";
-import { Routes, Route, useLocation } from "react-router-dom";
-import Movies from "./Components/Movies";
-import Home from "./Components/Home";
-import Games from "./Components/Games";
+import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import Feed from "./Components/Feed";
 import Chat from "./Components/Chat";
-import Books from "./Components/Books";
-
-import ToShow from "./Components/ToShow";
-import ChatDescription from "./Components/Chat_component/ChatDescription";
-import { doc, onSnapshot } from "firebase/firestore";
-import { db } from "./userauth/FireAuth";
-import Myprofile from "./Components/Chat_component/Myprofile";
-import Myavatar from "./Components/Myavatar";
-import FriendsList from "./Components/Chat_component/FriendsList";
-import FriendRequest from "./Components/FriendRequest";
-import SearchList from "./Components/Chat_component/SearchList";
 import Main from "./Components/Chat_component/Weather_component/main_weather";
+import { ChatProvider, useChatContext } from "./Context/ChatContext";
+import { CallProvider } from "./Components/Call/CallManager";
+import { getUser, setPresence } from "./lib/db";
 
-function App() {
-  const [showmyaccount, setshowmyaccount] = useState(null);
-  const [id, setid] = useState("");
-
-  const [username, setusername] = useState("");
-
-  const [showfriendrequest, setshowfriendrequest] = useState(false);
-  const [showsearchlist, setshowsearchlist] = useState(false);
-  const [showavatar, setshowavatar] = useState(false);
-  const [showfriends, setshowfriends] = useState(false);
-  const [showmyprofile, setshowmyprofile] = useState(false);
-
-  const [archieveview, setarchieveview] = useState(false);
-  const [searchopen, setsearchopen] = useState(null);
-  const [searchinput, setsearchinput] = useState("");
-  const [chatid, setchatid] = useState(null);
-  const [isloading, setisloading] = useState(false);
-  const [sendrecid, setsendrecid] = useState(null);
-  const [showchatdesc, setshowchatdesc] = useState(false);
-  const [arraynames, setarraynames] = useState([]);
-  const [status, setstatus] = useState("offline");
-  const [descname, setdescname] = useState(null);
-  const [bio, setbio] = useState(null);
-  const [uid, setuid] = useState(null);
-  const[loggeduser,setloggeduser]=useState({});
-  const [containerHeight, setContainerHeight] = useState(window.innerHeight);
-const[avtrurl,setavtrurl]=useState('');
-  useEffect(() => {
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const handleResize = () => {
-    setContainerHeight(window.innerHeight);
-  };
-
-  useEffect(() => {
-    setisloading(true);
-    const unsub = onSnapshot(
-      doc(db, "A2B_USERS", "Users", "usersdetails", "details"),
-      (doc) => {
-        const arraynamed = [];
-        const detail = doc.data();
-
-        for (const key in detail) {
-          if (detail.hasOwnProperty(key)) {
-            if (key === uid) {
-              const us = detail[key];
-              setloggeduser(us);
-              setusername(us.name);
-            }
-            if (key !== uid) {
-              const us = detail[key];
-      // console.log(us.Avatar);
-              arraynamed.push({
-                name: us.name,
-                bio: us.Bio,
-                uid: key,
-                status: us.status,
-                avatar:us.Avatar,
-              });
-            }
-          }
-        }
-        setarraynames(arraynamed);
-        setisloading(false);
-      }
-    );
-
-    return () => {
-      unsub();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [uid]);
-  const [locuser, setlocuser] = useState(localStorage.getItem("user"));
-  useEffect(() => {
-    if (locuser) {
-      checker(true, locuser);
-    }
-  }, [locuser]);
-  const location = useLocation();
-  const [loggedin, setloggedin] = useState(false);
-
-  function checker(id, uid) {
-   
-    const unsub = onSnapshot(
-      doc(db, "A2B_USERS", "Users", "usersdetails", "details"),
-      (doc) => {
-        
-        const detail = doc.data();
-let checks=true;
-        for (const key in detail) {
-          if (detail.hasOwnProperty(key)) {
-            if (key === uid) {
-              const us = detail[key];
-               setloggedin(id);
-              setuid(uid);
-checks=false;
-            }
-
-            
-          }}
-          if(checks===true){
-            localStorage.removeItem('user');
-            setloggedin(false);
-
-          }
-        
-        })
-          
-  }
-  const [keyboardHeight, setKeyboardHeight] = useState(0);
-
-  useEffect(() => {
-    const handleResize = () => {
-      const heightDifference =
-        window.innerHeight - document.documentElement.clientHeight;
-      setKeyboardHeight(heightDifference > 0 ? heightDifference : 0);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
+/* ── Full-screen skeleton loader ─────────────────────────────── */
+function AppLoader() {
   return (
-    <>
-      <div
-        className="d-flex flex-column"
-        style={{
-          flex: 1,
-          overflow: keyboardHeight > 0 ? "auto" : "hidden",
-          height: `calc(100vh - ${keyboardHeight}px)`,
-        }}
-      >
-        <div
-          className="d-flex flex-column"
-          style={{ width: "100vw", height: "100vh", contain: "strict" }}
-        >
-          <div
-            classNamw="d-flex flex-column mx- position-sticky"
-            style={{ position: "sticky" }}
-          >
-            <Navbar loggedin={loggedin} checker={checker} uid={uid} />
-          </div>
-
-          <div className="d-flex" style={{ flex: 1, contain: "strict" ,
-          width:"100vw",justifyContent:''}}>
-            <Routes>
-              <Route
-                exact
-                path="/"
-                element={<Login checker={checker} key={location.key} />}
-              />
-              {/* {loggedin && (
-                <Route
-                  exact
-                  path="home"
-                  element={<Home key={location.key} />}
-                />
-              )} */}
-              {/* {loggedin && (
-                <Route
-                  exact
-                  path="movies"
-                  element={<Movies key={location.key} />}
-                />
-              )} */}
-              {/* {loggedin && (
-                <Route
-                  exact
-                  path="books"
-                  element={<Books key={location.key} />}
-                />
-              )} */}
-              {/* {loggedin && (
-                <Route
-                  exact
-                  path="books"
-                  element={<Books key={location.key} />}
-                />
-              )} */}
-              {true && (
-                <Route
-                  exact
-                  path="weather"
-                  element={<Main key={location.key} />}
-                />
-              )}
-              {true && (
-                <Route
-                  exact
-                  path="feed"
-                  element={<Feed key={location.key} />}
-                />
-              )}
-              {loggedin && arraynames.length && (
-                <Route path="chat">
-                  <Route
-                    path=""
-                    element={
-                      <Chat
-                        {...{
-                          uid,
-                          setshowmyaccount,
-                          showmyaccount,
-                          id,
-                          setid,
-                          username,
-                          setusername,
-                          showfriendrequest,
-                          setshowfriendrequest,
-                          showsearchlist,
-                          setshowsearchlist,
-                          showavatar,
-                          setshowavatar,
-                          showfriends,
-                          setshowfriends,
-                          showmyprofile,
-                          setshowmyprofile,
-                          archieveview,
-                          setarchieveview,
-                          searchopen,
-                          setsearchopen,
-                          searchinput,
-                          setsearchinput,
-                          chatid,
-                          setchatid,
-                          sendrecid,
-                          setsendrecid,
-                          showchatdesc,
-                          setshowchatdesc,
-                          arraynames,
-                          setarraynames,
-                          status,
-                          setstatus,
-                          descname,
-                          setdescname,
-                          bio,
-                          setbio,
-                          isloading,
-                          setisloading,
-                          loggeduser,
-                          setavtrurl
-                        }}
-                      />
-                    }
-                  >
-                    <Route path=":hey">
-                      <Route
-                        path=""
-                        element={
-                          <ChatDescription
-                            descname={descname}
-                            bio={bio}
-                            key={descname}
-                            messageid={sendrecid}
-                            uid={uid}
-                            chatid={chatid}
-                            setshowmyaccount={setshowmyaccount}
-                            avtrurl={avtrurl}
-                            
-                          />
-                        }
-                      />
-                    </Route>
-                    <Route path="userprofile">
-                      <Route path="" element={<Myprofile setshowmyprofile={setshowmyprofile } loggeduser={loggeduser}/>}/>
-                    
-
-                    </Route>
-                    <Route path="setavatar">
-                    <Route path="" element={<Myavatar setshowavatar={setshowavatar} loggeduser={loggeduser}/>}/>
-                    </Route>
-                    <Route path="myfriends">
-                    <Route path="" element={ <FriendsList setshowfriends={setshowfriends}/>} loggeduser={loggeduser}/>
-                    </Route>
-                    <Route path="friendrequests">
-                    <Route path="" element={<FriendRequest setshowfriendrequest={setshowfriendrequest} loggeduser={loggeduser}/>}/>
-                    </Route>
-                    <Route path="search">
-                    <Route path="" element={<SearchList searchinput={searchinput} uid={uid} loggeduser={loggeduser}/>}/>
-                    </Route>
-                  </Route>
-                </Route>
-              )}
-              {/* {!loggedin && <Route exact path="home" element={<Home />} />} */}
-              {/* {!loggedin && <Route exact path="movies" element={<ToShow />} />}
-              {!loggedin && <Route exact path="books" element={<ToShow />} />}
-              {!loggedin && <Route exact path="books" element={<ToShow />} />} */}
-             
-              {!loggedin && <Route exact path="chat" element={<ToShow />} />}
-            </Routes>
-          </div>
+    <div style={{
+      width: '100vw', height: '100vh',
+      display: 'flex', flexDirection: 'column',
+      background: 'var(--bg-primary)', overflow: 'hidden'
+    }}>
+      <div style={{
+        height: 56, background: 'var(--bg-secondary)',
+        borderBottom: '1px solid var(--border)',
+        display: 'flex', alignItems: 'center', padding: '0 1.25rem', gap: '1rem'
+      }}>
+        <div className="skeleton" style={{ width: 90, height: 20 }} />
+        <div style={{ flex: 1, display: 'flex', justifyContent: 'center', gap: '.5rem' }}>
+          {[70, 70, 70].map((w, i) => <div key={i} className="skeleton" style={{ width: w, height: 32, borderRadius: 8 }} />)}
+        </div>
+        <div className="skeleton" style={{ width: 36, height: 36, borderRadius: '50%' }} />
+      </div>
+      <div style={{ flex: 1, display: 'flex' }}>
+        <div style={{
+          width: 380, background: 'var(--bg-secondary)',
+          borderRight: '1px solid var(--border)', padding: '.75rem',
+          display: 'flex', flexDirection: 'column', gap: '.75rem'
+        }}>
+          <div className="skeleton" style={{ height: 36, borderRadius: 10 }} />
+          {Array(6).fill(0).map((_, i) => (
+            <div key={i} style={{ display: 'flex', gap: '.75rem', alignItems: 'center' }}>
+              <div className="skeleton" style={{ width: 48, height: 48, borderRadius: '50%', flexShrink: 0 }} />
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '.35rem' }}>
+                <div className="skeleton" style={{ height: 14, width: `${50 + (i * 7) % 30}%` }} />
+                <div className="skeleton" style={{ height: 12, width: `${65 + (i * 5) % 25}%` }} />
+              </div>
+            </div>
+          ))}
+        </div>
+        <div style={{ flex: 1, background: 'var(--bg-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ opacity: .12, fontSize: '5rem' }}>💬</div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
+
+function App() {
+  const [uid, setUid] = useState(null);
+  const [loggedin, setLoggedin] = useState(false);
+  const [appReady, setAppReady] = useState(false);
+  const location = useLocation();
+
+  /* ── Auth gate: verify stored uid against new schema ── */
+  useEffect(() => {
+    const storedUid = localStorage.getItem('user');
+    if (!storedUid) { setAppReady(true); return; }
+
+    getUser(storedUid).then(user => {
+      if (user) {
+        setUid(storedUid);
+        setLoggedin(true);
+        setPresence(storedUid, true);
+      } else {
+        localStorage.removeItem('user');
+      }
+      setAppReady(true);
+    }).catch(() => {
+      setAppReady(true);
+    });
+  }, []);
+
+  const checker = (isLoggedIn, newUid) => {
+    setLoggedin(isLoggedIn);
+    setUid(isLoggedIn ? newUid : null);
+  };
+
+  if (!appReady) return <AppLoader />;
+
+  return (
+    <div className="app-layout">
+      {/* ChatProvider only active when logged in */}
+      {loggedin && uid
+        ? (
+          <ChatProvider uid={uid}>
+            <AppWithCall uid={uid} loggedin={loggedin} checker={checker} />
+          </ChatProvider>
+        )
+        : (
+          <>
+            <Navbar loggedin={loggedin} checker={checker} uid={uid} />
+            <div className="app-body">
+              <Routes>
+                <Route
+                  path="/"
+                  element={<Login checker={checker} key={location.key} />}
+                />
+                <Route path="/weather" element={<Main />} />
+                <Route path="/feed" element={<Feed />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </div>
+          </>
+        )
+      }
+    </div>
+  );
+}
+
+// Inner component: reads me from ChatContext to pass name/avatar to CallProvider
+function AppWithCall({ uid, loggedin, checker }) {
+  const { me } = useChatContext() || {};
+  return (
+    <CallProvider uid={uid} myName={me?.name || ""} myAvatar={me?.avatar || null} getUser={getUser}>
+      <Navbar loggedin={loggedin} checker={checker} uid={uid} />
+      <div className="app-body">
+        <Routes>
+          <Route path="/" element={<Navigate to="/chat" replace />} />
+          <Route path="/weather" element={<Main />} />
+          <Route path="/feed" element={<Feed />} />
+          <Route path="/chat/*" element={<Chat uid={uid} />} />
+          <Route path="*" element={<Navigate to="/chat" replace />} />
+        </Routes>
+      </div>
+    </CallProvider>
+  );
+}
+
 export default App;

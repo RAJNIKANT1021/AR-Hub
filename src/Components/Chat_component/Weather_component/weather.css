@@ -1,0 +1,287 @@
+.wx-page {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  background: var(--bg-primary);
+}
+
+/* Full-bleed gradient container */
+.wx-container {
+  min-height: 100%;
+  width: 100%;
+  padding: 1.5rem 1rem 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #fff;
+  transition: background 1.2s ease;
+  position: relative;
+}
+
+/* Decorative blobs */
+.wx-container::before,
+.wx-container::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: .18;
+  pointer-events: none;
+  z-index: 0;
+}
+.wx-container::before {
+  width: 400px; height: 400px;
+  background: rgba(255,255,255,.4);
+  top: -60px; right: -80px;
+}
+.wx-container::after {
+  width: 300px; height: 300px;
+  background: rgba(0,0,0,.3);
+  bottom: 80px; left: -60px;
+}
+
+.wx-container > * { position: relative; z-index: 1; }
+
+/* ── Search ─────────────────────────────────────────────────── */
+.wx-search-form { width: 100%; max-width: 500px; margin-bottom: 1.5rem; }
+
+.wx-search-wrap {
+  display: flex;
+  align-items: center;
+  background: rgba(255,255,255,.18);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,.3);
+  border-radius: 50px;
+  padding: .55rem .55rem .55rem 1.1rem;
+  gap: .5rem;
+  transition: box-shadow .2s, background .2s;
+}
+.wx-search-wrap:focus-within {
+  background: rgba(255,255,255,.25);
+  box-shadow: 0 0 0 3px rgba(255,255,255,.18), 0 8px 32px rgba(0,0,0,.2);
+}
+
+.wx-search-loc { font-size: 1.15rem; opacity: .75; flex-shrink: 0; }
+
+.wx-search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: inherit;
+  font-size: .95rem;
+  color: #fff;
+  font-weight: 500;
+}
+.wx-search-input::placeholder { color: rgba(255,255,255,.55); font-weight: 400; }
+
+.wx-search-btn {
+  background: rgba(255,255,255,.28);
+  border: none;
+  border-radius: 50%;
+  width: 38px; height: 38px;
+  color: #fff;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s, transform .1s;
+  flex-shrink: 0;
+}
+.wx-search-btn:hover { background: rgba(255,255,255,.4); transform: scale(1.05); }
+
+/* ── Loading ─────────────────────────────────────────────────── */
+.wx-loading {
+  display: flex; align-items: center; justify-content: center;
+  padding: 5rem; flex-direction: column; gap: 1rem;
+}
+.wx-spinner {
+  width: 48px; height: 48px;
+  border: 4px solid rgba(255,255,255,.25);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+}
+
+/* ── Error ───────────────────────────────────────────────────── */
+.wx-error {
+  text-align: center; padding: 3rem 1rem; opacity: .85;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 20px; max-width: 380px;
+}
+.wx-error-icon { font-size: 3.5rem; margin-bottom: .6rem; }
+.wx-error p { font-size: .9rem; opacity: .8; }
+
+/* ── Content wrapper ─────────────────────────────────────────── */
+.wx-content {
+  width: 100%; max-width: 640px;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 1.25rem;
+  animation: fadeIn .4s ease;
+}
+
+/* City name */
+.wx-city {
+  display: flex; align-items: center; gap: .4rem;
+  font-size: 1rem; font-weight: 600;
+  opacity: .85; letter-spacing: .2px;
+}
+
+/* ── Hero temperature ────────────────────────────────────────── */
+.wx-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: .5rem 0;
+  gap: .1rem;
+}
+
+.wx-hero-icon {
+  filter: drop-shadow(0 6px 18px rgba(0,0,0,.3));
+  margin-bottom: -.5rem;
+}
+
+.wx-temp {
+  font-size: 7rem;
+  font-weight: 200;
+  line-height: 1;
+  letter-spacing: -5px;
+  text-shadow: 0 4px 24px rgba(0,0,0,.2);
+}
+
+.wx-desc {
+  font-size: 1.2rem;
+  opacity: .88;
+  text-transform: capitalize;
+  font-weight: 500;
+  margin-top: .2rem;
+}
+
+.wx-feels {
+  font-size: .82rem;
+  opacity: .6;
+  margin-top: .15rem;
+}
+
+.wx-minmax {
+  display: flex; gap: 1.25rem;
+  margin-top: .4rem;
+  font-size: .9rem; font-weight: 600;
+}
+.wx-max { opacity: .95; }
+.wx-min { opacity: .55; }
+
+/* ── Stat pills row ──────────────────────────────────────────── */
+.wx-pills {
+  display: flex;
+  gap: .65rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+}
+
+.wx-pill {
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+  background: rgba(255,255,255,.14);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 50px;
+  padding: .45rem .9rem;
+  font-size: .8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background .18s, transform .15s;
+}
+.wx-pill:hover { background: rgba(255,255,255,.22); transform: translateY(-2px); }
+.wx-pill-icon { font-size: 1.1rem; opacity: .85; }
+
+/* ── Sun times ───────────────────────────────────────────────── */
+.wx-sun-row {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+}
+
+.wx-sun-card {
+  flex: 1;
+  background: rgba(255,255,255,.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 16px;
+  padding: .85rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+}
+
+.wx-sun-icon { font-size: 2rem; opacity: .85; }
+
+.wx-sun-label { font-size: .68rem; opacity: .6; text-transform: uppercase; letter-spacing: .6px; font-weight: 600; }
+.wx-sun-time  { font-size: 1.15rem; font-weight: 700; margin-top: .1rem; }
+
+/* ── 5-day forecast ──────────────────────────────────────────── */
+.wx-section-title {
+  align-self: flex-start;
+  font-size: .72rem;
+  font-weight: 700;
+  opacity: .55;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  padding-left: .25rem;
+}
+
+.wx-forecast-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: .65rem;
+  width: 100%;
+}
+
+.wx-forecast-card {
+  background: rgba(255,255,255,.1);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 16px;
+  padding: .9rem .5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .3rem;
+  text-align: center;
+  transition: background .18s, transform .18s, box-shadow .18s;
+  cursor: default;
+}
+.wx-forecast-card:hover {
+  background: rgba(255,255,255,.2);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,.2);
+}
+.wx-forecast-card.today {
+  background: rgba(255,255,255,.22);
+  border-color: rgba(255,255,255,.35);
+}
+
+.wx-forecast-day  { font-size: .72rem; font-weight: 700; opacity: .7; }
+.wx-forecast-icon { margin: .15rem 0; }
+.wx-forecast-temp { font-size: 1.05rem; font-weight: 700; }
+.wx-forecast-desc { font-size: .62rem; opacity: .55; text-transform: capitalize; }
+
+/* ── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 520px) {
+  .wx-temp { font-size: 5.5rem; letter-spacing: -3px; }
+  .wx-forecast-grid { grid-template-columns: repeat(5, 1fr); gap: .4rem; }
+  .wx-forecast-card { padding: .65rem .3rem; border-radius: 12px; }
+  .wx-forecast-day { font-size: .65rem; }
+  .wx-forecast-temp { font-size: .9rem; }
+  .wx-pills { gap: .45rem; }
+  .wx-pill { padding: .38rem .7rem; font-size: .75rem; }
+}
+
+@media (max-width: 380px) {
+  .wx-temp { font-size: 4.5rem; }
+  .wx-forecast-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .25rem; }
+}

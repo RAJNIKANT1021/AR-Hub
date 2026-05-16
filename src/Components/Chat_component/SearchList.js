@@ -1,333 +1,153 @@
-import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { db } from "../../userauth/FireAuth";
-import { Avatar } from "@mui/material";
-import { deepPurple } from "@mui/material/colors";
+import { subscribeAllUsers, sendFriendRequest, cancelFriendRequest } from "../../lib/db";
 import Fuse from "fuse.js";
+import { IoPersonAddOutline, IoCheckmarkCircle, IoCopyOutline, IoCloseCircle } from "react-icons/io5";
+import "./friends.css";
 
-import { BsPersonCheckFill } from "react-icons/bs";
-import { FaUserFriends } from "react-icons/fa";
+function SearchList({ uid, onStartChat }) {
+  const [allUsers, setAllUsers] = useState([]);
+  const [results, setResults] = useState([]);
+  const [localQuery, setLocalQuery] = useState("");
+  const [copiedLink, setCopiedLink] = useState(null);
+  const [acting, setActing] = useState({});
 
-
-function SearchList({ searchinput, uid }) {
-
-
-
-
-  const sendfriendrequest=()=>{
-    //handle friend request
-
-  }
-  const [searchResults, setSearchResults] = useState(null);
-
-  const handleSearchbar = (array, query) => {
-    console.log(array.length);
-    console.log(query);
-    const fuse = new Fuse(array, {
-      keys: ["name"],
-      threshold: 0.3,
-      distance: 100,
-      shouldSort: true,
-      tokenize: true,
-      matchAllTokens: true,
-      includeScore: true,
-      findAllMatches: true,
-      minMatchCharLength: 2,
-      random: 0.5,
-    });
-
-    const results = fuse.search(query);
-    console.log(results);
-    setSearchResults(results);
-  };
-
-  // Call handleSearchbar somewhere with the query parameter
-
-  const handlesearch = async () => {
-    let searchres = [];
-
-    onSnapshot(doc(db, "searchList", "Users"), async (docref) => {
-      const detail = docref.data();
-      let friend2=false;
-      let friend1 = false;
-      let blocked1 = false;
-      let name1 = "";
-      let searchuid1 = "";
-
-      for (const key in detail) {
-        if (detail.hasOwnProperty(key)) {
-          const main = detail[key];
-
-          const candidate = main.uid;
-          if (candidate !== uid) {
-            const docref = doc(
-              db,
-              "A2B_USERS",
-              "Users",
-              "usersdetails",
-              "details"
-            );
-            const docSnap = await getDoc(docref);
-
-            // eslint-disable-next-line no-loop-func
-
-            const prof = docSnap.data();
-
-            if (prof.hasOwnProperty(candidate)) {
-              if (candidate !== uid) {
-                const us2 = prof[candidate];
-                const useruid=prof[uid];
-
-                const frienduid=useruid.friends;
-
-                for(let k=0;k<frienduid.length;k++){
-                  if (frienduid[k] === candidate) {
-                    friend2 = true;
-                    break;
-                  }
-
-                }
-
-
-
-
-                name1 = us2.name;
-
-                searchuid1 = us2.uid;
-                const friends1 = us2.friends;
-                const blocklist1 = us2.blocklist;
-                for (let i = 0; i < friends1.length; i++) {
-                  if (friends1[i] === uid) {
-                    if(friend2===true)
-                    {
-                    friend1 = true;
-                    break;}
-                  }
-                }
-                for (let i = 0; i < blocklist1.length; i++) {
-                  if (blocklist1[i] === candidate) {
-                    blocked1 = true;
-                    break;
-                  }
-                }
-              }
-            }
-            searchres.push({
-              name: name1,
-              searchuid: searchuid1,
-              friend: friend1,
-              blocked: blocked1,
-            });
-          }
-        }
-      }
-      handleSearchbar(searchres, searchinput);
-    });
-  };
   useEffect(() => {
-    handlesearch();
+    if (!uid) return;
+    return subscribeAllUsers((list) => {
+      const me = list.find(u => u.uid === uid) || {};
+      const myFriends = me.friends || [];
+      const mySent = me.sentRequests || [];
+      const myIncoming = me.friendRequests || [];
 
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchinput]);
+      const others = list
+        .filter(u => u.uid !== uid)
+        .map(u => ({
+          ...u,
+          isFriend: myFriends.includes(u.uid),
+          requestSent: mySent.includes(u.uid),
+          requestReceived: myIncoming.includes(u.uid),
+        }));
+      setAllUsers(others);
+    });
+  }, [uid]);
+
+  useEffect(() => {
+    const q = localQuery.trim();
+    if (!q) { setResults(allUsers.slice(0, 20)); return; }
+    const fuse = new Fuse(allUsers, {
+      keys: ['name'],
+      threshold: 0.4,
+      includeScore: true,
+      minMatchCharLength: 1,
+    });
+    setResults(fuse.search(q).map(r => r.item).slice(0, 20));
+  }, [localQuery, allUsers]);
+
+  const sendReq = async (targetUid) => {
+    if (!uid || acting[targetUid]) return;
+    setActing(a => ({ ...a, [targetUid]: true }));
+    try {
+      await sendFriendRequest(uid, targetUid);
+    } finally {
+      setActing(a => ({ ...a, [targetUid]: false }));
+    }
+  };
+
+  const cancelReq = async (targetUid) => {
+    if (!uid || acting[targetUid]) return;
+    setActing(a => ({ ...a, [targetUid]: true }));
+    try {
+      await cancelFriendRequest(uid, targetUid);
+    } finally {
+      setActing(a => ({ ...a, [targetUid]: false }));
+    }
+  };
+
+  const copyInvite = (targetUid) => {
+    const link = `${window.location.origin}/?invite=${targetUid}`;
+    navigator.clipboard.writeText(link).then(() => {
+      setCopiedLink(targetUid);
+      setTimeout(() => setCopiedLink(null), 2000);
+    });
+  };
 
   return (
-    <>
-      <div></div>
-      <div
-        className="d-flex flex-column "
-        style={{ flex: 1, backgroundColor: "", Width: "100%" }}
-      >
-        <div className="d-flex flex-row">
-          <div
-            className="ml-4 pt-2"
-            style={{
-              fontSize: "1.6rem",
-              color: "whitesmoke",
-              alignItems: "center",
-              justifyContent: "center",
-              flex: 1,
-            }}
-          >
-            Searches{" "}
-          </div>
-
-          <div></div>
-        </div>
-
-        <div className="d-flex flex-column mt-3">
-          {searchResults !== null &&
-            searchResults.map(
-              (data, index) =>
-                data.item.blocked === false && (
-                  <div className="tilehover mt-md-3 handy" key={index}>
-                    {
-                      <div
-                        className="d-flex flex-row px-2"
-                        style={{
-                          height: "4.4rem",
-                        }}
-                      >
-                        <div
-                          className="d-flex flex-row"
-                          style={{
-                            height: "4.4rem",
-                            borderBottomColor: "#292A33",
-                            borderWidth: "3px",
-                            borderBottomStyle: "solid",
-                          }}
-                        >
-                          <div
-                            className="flex pt-1 px-2"
-                            style={
-                              {
-                                // alignItems:'center',
-                                // justifyContent:'center',
-                                //   backgroundColor:'#212121',
-                              }
-                            }
-                          >
-                            <Avatar
-                              sx={{
-                                bgcolor: deepPurple[500],
-                                width: 56,
-                                height: 56,
-                              }}
-                              src="https://img.freepik.com/free-psd/3d-illustration-person-with-rainbow-sunglasses_23-2149436196.jpg?w=740&t=st=1679001679~exp=1679002279~hmac=c53ea30da094c90d0bae1bf703599d8572b711d931d2bbe519571eae87eb5a23"
-                              alt="hwt"
-                            />
-                          </div>
-                          <div
-                            className="d-flex flex-column"
-                            style={{
-                              // backgroundColor:'#212121',
-                              paddingTop: "9px",
-                              color: "#ffffff",
-
-                              flex: 1,
-                            }}
-                          >
-                            <div className="d-flex flex-row pl-2" style={{}}>
-                              <div
-                                className="d-flex flex-column"
-                                style={{ flex: 1 }}
-                              >
-                                <div className="d-flex flex-column">
-                                  <div
-                                    style={{
-                                      flex: 1,
-                                      fontWeight: 600,
-
-                                      color: "#ffffff",
-                                    }}
-                                  >
-                                    {data.item.name}
-                                  </div>
-                                  <div
-                                    style={{
-                                      flex: 1,
-                                      fontWeight: 100,
-
-                                      color: "grey",
-                                    }}
-                                  >
-                                    Working on it
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="ml-4 pl-2" style={{}}>
-                               {data.item.friend===false && <div
-                                  className="d-flex flex-row py-1"
-                                  style={{
-                                    backgroundColor: "#0A1B3E",
-                                    borderRadius: "14px",
-                                  }}
-                                >
-                                  
-                                  <div className="d-flex flex-row" onClick={(e)=>{sendfriendrequest()}}>
-                                    <div className="mx-2">
-                                      <BsPersonCheckFill
-                                        style={{
-                                          color: "green",
-                                          fontSize: "1.3rem",
-                                          backgroundColor: "",
-                                        }}
-                                      />
-                                    </div>
-
-                                    <div
-                                      className="pr-3"
-                                      style={{
-                                        backgroundColor: "",
-                                        fontSize: ".9rem",
-                                      }}
-                                    >
-                                        Add Friend
-                                    </div>
-                                  </div>
-                                </div>}
-
-                                {data.item.friend===true && <div
-                                  className="d-flex flex-row py-1"
-                                  style={{
-                                    backgroundColor: "#0A1B3E",
-                                    borderRadius: "14px",
-                                  }}
-                                >
-                                  
-                                  <div className="d-flex flex-row">
-                                    <div className="mx-2">
-                                      <FaUserFriends
-                                        style={{
-                                          color: "green",
-                                          fontSize: "1.3rem",
-                                          backgroundColor: "",
-                                        }}
-                                      />
-                                    </div>
-
-                                    <div
-                                      className="pr-3"
-                                      style={{
-                                        backgroundColor: "",
-                                        fontSize: ".9rem",
-                                      }}
-                                    >
-                                        Friends
-                                    </div>
-                                  </div>
-                                </div>}
-                              </div>
-                            </div>
-
-                            <div
-                              className="d-flex flex-row pl-3"
-                              style={
-                                {
-                                  //  backgroundColor:'#212121',
-                                }
-                              }
-                            >
-                              {/* <div className=''>
-
-                </div> */}
-                              {/* <div style={{
-                    paddingLeft:'3px',
-                    color:'#aaaaaa',
-                    overflow:'hidden',
-                }}>
-
-                </div> */}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    }
-                  </div>
-                )
-            )}
+    <div className="friends-panel">
+      <div className="friends-panel-header">
+        <div className="friends-search">
+          <input
+            className="friends-search-input"
+            placeholder="Search by name…"
+            value={localQuery}
+            onChange={e => setLocalQuery(e.target.value)}
+            autoFocus
+          />
         </div>
       </div>
-    </>
+
+      <div className="friends-list">
+        {results.length === 0 && (
+          <div className="friends-empty">
+            <div className="friends-empty-icon">🔍</div>
+            <p>{localQuery ? `No users found for "${localQuery}"` : 'Start typing to search'}</p>
+          </div>
+        )}
+
+        {results.map(user => (
+          <div key={user.uid} className="friend-row">
+            <div className="friend-row-avatar-wrap">
+              {user.avatar
+                ? <img className="friend-row-avatar" src={user.avatar} alt={user.name} />
+                : <div className="friend-row-avatar-ph">{(user.name || '?').slice(0, 2).toUpperCase()}</div>
+              }
+              {user.status === 'online' && <span className="friend-online-dot" />}
+            </div>
+            <div className="friend-row-info">
+              <div className="friend-row-name">{user.name}</div>
+              <div className="friend-row-bio">{user.bio || 'AR Hub user'}</div>
+            </div>
+            <div className="friend-row-actions">
+              <button
+                className="friend-row-invite-btn"
+                onClick={() => copyInvite(user.uid)}
+                title="Copy invite link"
+              >
+                {copiedLink === user.uid ? <IoCheckmarkCircle style={{ color: 'var(--accent)' }} /> : <IoCopyOutline />}
+              </button>
+              {user.isFriend ? (
+                <button
+                  className="friend-chat-btn"
+                  onClick={() => onStartChat?.(user)}
+                  title="Open chat"
+                >
+                  Message
+                </button>
+              ) : user.requestSent ? (
+                <button
+                  className="friend-cancel-btn"
+                  onClick={() => cancelReq(user.uid)}
+                  disabled={acting[user.uid]}
+                  title="Cancel request"
+                >
+                  {acting[user.uid] ? '…' : <><IoCloseCircle /> Cancel</>}
+                </button>
+              ) : user.requestReceived ? (
+                <div className="friend-status-badge incoming">Wants to connect</div>
+              ) : (
+                <button
+                  className="friend-add-btn"
+                  onClick={() => sendReq(user.uid)}
+                  disabled={acting[user.uid]}
+                >
+                  <IoPersonAddOutline />
+                  {acting[user.uid] ? 'Sending…' : 'Add'}
+                </button>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 

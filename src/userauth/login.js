@@ -1,255 +1,157 @@
-import React, { useId } from 'react'
-import './login.css' 
-import {RiEyeFill} from 'react-icons/ri'
-import {RiEyeCloseFill} from 'react-icons/ri'
-import { createUserWithEmailAndPassword,signInWithEmailAndPassword } from 'firebase/auth'
-import {auth,db} from './FireAuth';
-import {useNavigate } from "react-router-dom";
-import {doc, setDoc,getDoc,updateDoc} from "firebase/firestore";
-
+import React, { useState } from 'react';
+import './login.css';
+import { RiEyeFill, RiEyeCloseFill } from 'react-icons/ri';
 import { FcBusinessman } from 'react-icons/fc';
-import { FiAtSign } from 'react-icons/fi'
+import { FiAtSign } from 'react-icons/fi';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from './FireAuth';
+import { useNavigate } from 'react-router-dom';
+import { createUser, getUser, setPresence } from '../lib/db';
 
-function Login({checker}) {
+function Login({ checker }) {
   const navigate = useNavigate();
-  
-  
+  const [tab, setTab] = useState('login');
+  const [showPass, setShowPass] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const createChat=async(Name,Email,uid)=>{
-    const docRef = doc(db, "A2B_USERS",'Users')
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-     var myObject=docSnap.data()
-     var count = Object.keys(myObject).length+1;
-     console.log(count)
-    } else {
-      // doc.data() will be undefined in this case
-    count=1;
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSignup = async () => {
+    setError('');
+    if (!name.trim()) { setError('Please enter a display name.'); return; }
+    if (!email.trim()) { setError('Please enter your email.'); return; }
+    if (password.length < 6) { setError('Password must be at least 6 characters.'); return; }
+
+    setLoading(true);
+    try {
+      const cred = await createUserWithEmailAndPassword(auth, email, password);
+      const uid = cred.user.uid;
+      const formattedName = name[0].toUpperCase() + name.slice(1);
+      await createUser(uid, { name: formattedName, email });
+      localStorage.setItem('user', uid);
+      checker(true, uid);
+      navigate('/chat');
+    } catch (e) {
+      setError(e.message.replace('Firebase: ', '').replace(/\(auth.*\)\.?/, ''));
+    } finally {
+      setLoading(false);
     }
-    await setDoc(doc(db, "A2B_USERS","Users") ,{
-     [count]:uid
-    }, { merge: true });
+  };
 
-    await setDoc(doc(db, "searchList","Users") ,{
-      [count]:{
-      'uid':uid,
-      name:Name,
-      
+  const handleLogin = async () => {
+    setError('');
+    if (!email.trim()) { setError('Please enter your email.'); return; }
+    if (!password) { setError('Please enter your password.'); return; }
+
+    setLoading(true);
+    try {
+      const cred = await signInWithEmailAndPassword(auth, email, password);
+      const uid = cred.user.uid;
+      // Ensure user doc exists (legacy accounts)
+      const existing = await getUser(uid);
+      if (!existing) {
+        await createUser(uid, { name: email.split('@')[0], email });
       }
-     }, { merge: true });
-
- 
-   
-    await setDoc(doc(db, "A2B_USERS","Users",'usersdetails',"details"),{
-   
-    [uid]:{
-    name:Name,
-    email: Email,
-      Bio: "hey i am using A2b",
-      uid:uid,
-      status:'online',
-      friends:[],
-      blocklist:[],
-      Avatar:"https://img.freepik.com/free-psd/3d-illustration-person-with-rainbow-sunglasses_23-2149436196.jpg?w=740&t=st=1679001679~exp=1679002279~hmac=c53ea30da094c90d0bae1bf703599d8572b711d931d2bbe519571eae87eb5a23"
-    
-
+      await setPresence(uid, true);
+      localStorage.setItem('user', uid);
+      checker(true, uid);
+      navigate('/chat');
+    } catch (e) {
+      setError(e.message.replace('Firebase: ', '').replace(/\(auth.*\)\.?/, ''));
+    } finally {
+      setLoading(false);
     }
+  };
 
-   }, { merge: true })
+  const handleKey = (e) => {
+    if (e.key === 'Enter') tab === 'login' ? handleLogin() : handleSignup();
+  };
 
+  return (
+    <div className="login-page">
+      <div className="login-blob login-blob-1" />
+      <div className="login-blob login-blob-2" />
+      <div className="login-blob login-blob-3" />
 
+      <div className="login-card">
+        <div className="login-logo">
+          <div className="login-logo-dot" />
+          <span className="login-logo-text">AR Hub</span>
+        </div>
 
- }
-  const  handleclick=async()=>{
-    
-    const Email= document.getElementById('email').value;
-   
-    
-    const Password=document.getElementById('password').value;
-    let Name= document.getElementById('name').value;
-    
-    if(Name.length===0){
-      alert("Please Enter Username!")
-      return
-    }
-   Name=Name[0].toUpperCase()+Name.slice(1);
-    // console.log({Email,Password})
-   
+        <div className="login-tabs">
+          <button className={`login-tab ${tab === 'login' ? 'active' : ''}`} onClick={() => { setTab('login'); setError(''); }}>
+            Log In
+          </button>
+          <button className={`login-tab ${tab === 'signup' ? 'active' : ''}`} onClick={() => { setTab('signup'); setError(''); }}>
+            Sign Up
+          </button>
+        </div>
 
-    createUserWithEmailAndPassword(auth,Email,Password).then((userCredential)=>{
-    navigate("/chat")
-    const user = userCredential.user;
- 
+        {error && <div className="login-error">{error}</div>}
 
-  
-    
-       user.displayName=Name;
-       if(localStorage.getItem('user')){
-        localStorage.removeItem('user')
-       }
-        
-       localStorage.setItem('user', user.uid)
-     
-  
- 
-  createChat(Name,Email,user.uid)
-  checker(true,user.uid);
-    }
-    
-    ).catch((error)=>{
-     
-      alert(error)
-    })
-  }
-  const changestatus = async (uid) => {
-    const userstat = doc(db, "A2B_USERS", "Users", "usersdetails", "details");
-    const updates = {};
-    updates[uid + ".status"] = "online";
-    await updateDoc(userstat, updates);
-  }
-  const handlelogin =async()=>{
-    // const docRef = doc(db, "A2B_USERS",'Users')
-    // const docSnap = await getDoc(docRef);
-    // if (docSnap.exists()) {
-    //  var myObject=docSnap.data()
-    //  var count = Object.keys(myObject).length+1;
-    //  console.log(count)
-    // } else {
-    //   // doc.data() will be undefined in this case
-    
-    //   console.log("No such document!");
-    // }
-    const Name= document.getElementById('name').value;
-    if(Name.length===0){
-      alert("Please Enter Username!")
-      return
-    }
-    if(localStorage.getItem('user')){
-      const Email= document.getElementById('email').value;
-   
-      const Password=document.getElementById('password').value;
-      signInWithEmailAndPassword(auth, Email, Password)
-    .then((userCredential) => {
-      navigate("/chat")
-      // createChat("heyy",Email);
-      const user = userCredential.user;
-      changestatus(user.uid);
-      checker(true,user.uid);
-    
-    
-    })
-    
-      
-      // createChat("heyy",Email);
-    
-      
-      
-     
+        {tab === 'signup' && (
+          <div className="login-field">
+            <label className="login-label">Display Name</label>
+            <div className="login-input-wrap">
+              <input
+                className="login-input"
+                type="text"
+                placeholder="Your name"
+                value={name}
+                onChange={e => setName(e.target.value)}
+                onKeyDown={handleKey}
+              />
+              <span className="login-input-icon"><FcBusinessman /></span>
+            </div>
+          </div>
+        )}
 
-    }else{
-    const Email= document.getElementById('email').value;
-   
-    const Password=document.getElementById('password').value;
-    signInWithEmailAndPassword(auth, Email, Password)
-  .then((userCredential) => {
-    navigate("/chat")
-    // createChat("heyy",Email);
-    const user = userCredential.user;
-    localStorage.setItem('user',user.uid);
-    changestatus(user.uid)
-    checker(true,user.uid);
+        <div className="login-field">
+          <label className="login-label">Email</label>
+          <div className="login-input-wrap">
+            <input
+              className="login-input"
+              type="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              onKeyDown={handleKey}
+            />
+            <span className="login-input-icon"><FiAtSign /></span>
+          </div>
+        </div>
 
-    //ggt
-    // ...
-  })
-  .catch((error) => {
-    const errorMessage = error.message;
-    alert(errorMessage)
-  });
-    }
-  }
-  return (<div className='flex space-evenly'>
+        <div className="login-field">
+          <label className="login-label">Password</label>
+          <div className="login-input-wrap">
+            <input
+              className="login-input"
+              type={showPass ? 'text' : 'password'}
+              placeholder={tab === 'signup' ? 'Min 6 characters' : 'Enter password'}
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              onKeyDown={handleKey}
+            />
+            <span className="login-input-icon" onClick={() => setShowPass(s => !s)}>
+              {showPass ? <RiEyeFill /> : <RiEyeCloseFill />}
+            </span>
+          </div>
+        </div>
 
-  <div className="background">
-  <div className="shape"></div>
-  <div className="shape"></div>
-</div>
-
- 
-<div className='form_login'>
-  <label htmlFor="username" style={{color:'black'}}>Username</label>
-  <div className='d-flex'>
-  <input className='input_login' type="text" placeholder="Display Name" id="name"  />
-  <FcBusinessman  className="icon"   style={{
-    position:'absolute',
-    right:0,
-    fontSize:27,
-    marginRight:'46px',
-    marginTop:'18px'
-    
- }}/>
-
- </div>
-  <label htmlFor="username" style={{color:'black'}}>Email</label>
-  <div className='d-flex'>
-  <input className='input_login' type="text" placeholder="Email" id="email"  />
-  <FiAtSign  className="icon"   style={{
-    color:'blue',
-    position:'absolute',
-    right:0,
-    fontSize:27,
-    marginRight:'46px',
-    marginTop:'18px'
-    
- }}/>
-
- </div>
-
-  <label htmlFor="password"  style={{color:'black'}}> Password</label>
-  <div className='d-flex'>
-  <input className='input_login'type="password" placeholder="Password" id="password" />
-  <RiEyeCloseFill  className="icon" id="close" onClick={()=>{
-    document.getElementById('close').style.display = "none";
-    document.getElementById('open').style.display="flex";
-    document.getElementById('password').type = "";
-
-
-  }} style={{
-    position:'absolute',
-    right:0,
-    fontSize:27,
-    marginRight:'46px',
-    marginTop:'18px'
-    
- }}/>
-    <RiEyeFill  className="icon" id="open" onClick={()=>{
-    document.getElementById('close').style.display = "flex";
-    document.getElementById('open').style.display="none";
-    document.getElementById('password').type = "password";
-
-
-  }}  style={{
-         display:"none",
-    position:'absolute',
-    right:0,
-    fontSize:27,
-    marginRight:'46px',
-    marginTop:'18px',
-   
-    
- }}/>
-
-
-  </div>
-<div className="d-flex flex-row">
-<button className='btn btn-primary buttonlogin' onClick={()=>{handlelogin()}}>Log In</button>   
-  <button className='btn btn-primary  buttonlogin' onClick={()=>{handleclick()}}>Sign Up</button> 
-</div>
-
-  
-  </div>
-  </div>
-  )
+        <button
+          className="login-btn"
+          onClick={tab === 'login' ? handleLogin : handleSignup}
+          disabled={loading}
+        >
+          {loading ? <span className="login-btn-spin" /> : (tab === 'login' ? 'Log In' : 'Create Account')}
+        </button>
+      </div>
+    </div>
+  );
 }
 
 export default Login;

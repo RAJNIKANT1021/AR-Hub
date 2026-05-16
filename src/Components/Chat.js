@@ -1,959 +1,485 @@
-import React, { useState, useEffect } from "react";
-import {
-  Avatar,
-  Badge,
-  Box,
-  IconButton,
-  ListItemIcon,
-  Menu,
-  MenuItem,
-  Tooltip,
-} from "@mui/material";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import "./chat.css";
-import FriendRequest from "./FriendRequest";
-import Diversity1Icon from "@mui/icons-material/Diversity1";
-import PersonIcon from "@mui/icons-material/Person";
-import HttpsOutlinedIcon from "@mui/icons-material/HttpsOutlined";
-import ChatTile from "./Chat_component/ChatTile";
-import ArchiveIcon from "@mui/icons-material/Archive";
-import ChatOutlinedIcon from "@mui/icons-material/ChatOutlined";
-import FaceIcon from "@mui/icons-material/Face";
-
 import ChatDescription from "./Chat_component/ChatDescription";
-import { doc, getDoc, onSnapshot, setDoc } from "firebase/firestore";
-import { db } from "../userauth/FireAuth";
-import { FiSearch } from "react-icons/fi";
-import { MdOutlineCancel } from "react-icons/md";
-
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import Userinfo from "./Chat_component/Userinfo";
 import Myprofile from "./Chat_component/Myprofile";
-import FriendsList from "./Chat_component/FriendsList";
 import Myavatar from "./Myavatar";
-import { useMediaQuery } from "@material-ui/core";
+import FriendsList from "./Chat_component/FriendsList";
+import FriendRequest from "./FriendRequest";
 import SearchList from "./Chat_component/SearchList";
+import { useChatContext } from "../Context/ChatContext";
 import {
-  Link,
-  Navigate,
-  Outlet,
-  useLocation,
-  useParams,
-} from "react-router-dom";
-import Navbar from "./Navbar";
+  ensureChat, muteChat, pinChat,
+  deleteChatForEveryone,
+  subscribeAllUsers, loadMoreNotifications,
+} from "../lib/db";
+import { subscribeCallLogs } from "../lib/webrtc";
+import { FiSearch, FiVolume2, FiVolumeX } from "react-icons/fi";
+import {
+  IoPersonOutline, IoPeopleOutline, IoAddOutline,
+  IoChevronDown, IoArrowBack, IoNotificationsOutline,
+  IoCallOutline, IoVideocamOutline,
+} from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
 
-function Chat({
-  uid,
-  setshowmyaccount,
-  showmyaccount,
-  id,
-  setid,
-  username,
-  setusername,
-  showfriendrequest,
-  setshowfriendrequest,
-  showsearchlist,
-  setshowsearchlist,
-  showavatar,
-  setshowavatar,
-  showfriends,
-  setshowfriends,
-  showmyprofile,
-  setshowmyprofile,
-  archieveview,
-  setarchieveview,
-  searchopen,
-  setsearchopen,
-  searchinput,
-  setsearchinput,
-  chatid,
-  setchatid,
-  sendrecid,
-  setsendrecid,
-  showchatdesc,
-  setshowchatdesc,
-  arraynames,
-  setarraynames,
-  status,
-  setstatus,
-  descname,
-  setdescname,
-  bio,
-  setbio,
-  isloading,
-  setisloading,
-  loggeduser,
-  setavtrurl,
-}) {
-  const isSmallScreen = useMediaQuery("(max-width: 768px)");
-  let { hey } = useParams();
-  let { det } = useParams();
-  const [shownavi, setshownavi] = useState(null);
-  const location = useLocation();
-  // console.log(location);
-
-  useEffect(() => {
-    if (isSmallScreen) {
-      if (location.pathname === "/chat/userprofile") {
-        setshowsearchlist(false);
-        setshowavatar(false);
-        setshowmyprofile(true);
-        setshowfriendrequest(false);
-        setarchieveview(false);
-        setshowfriends(false);
-        setshownavi(true);
-      }
-      if (location.pathname === "/chat/myfriends") {
-        setshowsearchlist(false);
-        setshowavatar(false);
-        setshowmyprofile(false);
-        setshowfriendrequest(false);
-        setarchieveview(false);
-        setshowfriends(true);
-        setshownavi(true);
-      }
-      if (location.pathname === "/chat/setavatar") {
-        setshowsearchlist(false);
-        setshowavatar(true);
-        setshowmyprofile(false);
-        setshowfriendrequest(false);
-        setarchieveview(false);
-        setshowfriends(false);
-        setshownavi(true);
-      }
-      if (location.pathname === "/chat/search") {
-        setshowsearchlist(true);
-        setshowavatar(false);
-        setshowmyprofile(false);
-        setshowfriendrequest(false);
-        setarchieveview(false);
-        setshowfriends(false);
-        setshownavi(true);
-      }
-      if (location.pathname === "/chat") {
-        setshowsearchlist(false);
-        setshowavatar(false);
-        setshowmyprofile(false);
-        setshowfriendrequest(false);
-        setarchieveview(false);
-        setshowfriends(false);
-        setshownavi(false);
-      }
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location, isSmallScreen]);
-
-  const [anchorEl, setAnchorEl] = React.useState(null);
-
-  const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const openarchieve = () => {
-    setarchieveview(!archieveview);
-    setshowmyprofile(false);
-    setshowfriendrequest(false);
-  };
-  const handlesearchopen = () => {
-    if (searchopen === null) {
-      setsearchopen(true);
-    } else if (searchopen === true) {
-      setsearchopen(false);
-    } else if (searchopen === false) {
-      setsearchopen(true);
-    }
-  };
-
-  const [small, setsmall] = useState(false);
-  useEffect(() => {
-    if (isSmallScreen) {
-      if (hey !== undefined) {
-        setsmall(true);
-      } else {
-        setshowchatdesc(false);
-        setsmall(false);
-      }
-    } else {
-      if (showchatdesc === true) setsmall(false);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSmallScreen, showchatdesc, hey]);
-
-  // const userdatafetch =async()=>{
-
-  // }
-
-  const handlesearch = (e) => {
-    e.preventDefault();
-    setsearchinput(document.getElementById("searchinput").value);
-    setshowsearchlist(true);
-    setshowavatar(false);
-    setshowmyprofile(false);
-    setshowfriendrequest(false);
-    setarchieveview(false);
-    setshowfriends(false);
-  };
-  const handlesearchclose = () => {
-    setsearchopen(false);
-    setshowsearchlist(false);
-    setshowavatar(false);
-    setshowmyprofile(false);
-    setshowfriendrequest(false);
-    setarchieveview(false);
-    setshowfriends(false);
-  };
-
-  const handleshowfriendlist = () => {
-    setshowsearchlist(false);
-    setshowavatar(false);
-    setshowmyprofile(false);
-    setshowfriendrequest(true);
-    setarchieveview(false);
-    setshowfriends(false);
-  };
-
-  const shwmyprofile = () => {
-    setshowfriends(false);
-    setshowsearchlist(false);
-
-    setshowavatar(false);
-    setshowmyprofile(true);
-    setshowfriendrequest(false);
-    setarchieveview(false);
-  };
-  const shwmyavatar = () => {
-    setshowsearchlist(false);
-
-    setshowfriends(false);
-    setshowavatar(true);
-    setshowmyprofile(false);
-    setshowfriendrequest(false);
-    setarchieveview(false);
-  };
-
-  const shwfriens = () => {
-    setshowsearchlist(false);
-
-    setshowavatar(false);
-    setshowmyprofile(false);
-    setshowfriendrequest(false);
-    setarchieveview(false);
-    setshowfriends(true);
-  };
-  const[userfriendprof,setuserfriendprof]=useState({})
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const descriptionheader = async (id, names) => {
-    let onetooneid;
-
-    if (uid > id) {
-      onetooneid = `${uid}${id}`;
-    } else {
-      onetooneid = `${id}${uid}`;
-    }
-
-    const docRef = doc(db, "userchats", onetooneid);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-    } else {
-      setDoc(docRef, { messages: [] });
-    }
-    setuserfriendprof({
-      "name":names.name,
-      "bio":names.bio,
-      "url":names.avatar
-    })
-    setshowchatdesc(true);
-    setdescname(names.name);
-    setbio(names.bio);
-    setsendrecid(onetooneid);
-    setchatid(id);
-    setavtrurl(names.avatar);
-  };
-
-  useEffect(() => {
-    function solve(){
-    if (hey !== undefined) {
-      // console.log(arraynames);
-      let names = {};
-      for (let i = 0; i < arraynames.length; i++) {
-        if (arraynames[i].uid === hey) {
-          names = arraynames[i];
-          console.log(names);
-          descriptionheader(hey, names);
-          break;
-        }
-      }
-  }
+function fmtChatTime(ts) {
+  if (!ts) return '';
+  const d = ts.toDate ? ts.toDate() : new Date(ts);
+  const now = new Date();
+  const diffMs = now - d;
+  const diffDays = Math.floor(diffMs / 86400000);
+  if (diffDays === 0) return d.toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit', hour12: true });
+  if (diffDays === 1) return 'Yesterday';
+  if (diffDays < 7) return d.toLocaleDateString('en-IN', { weekday: 'short' });
+  return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
 }
-solve();
-return(()=>{solve()});
-  
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [arraynames, hey]);
+
+// ── Notification Bell ──────────────────────────────────────────
+function NotificationBell({ uid, onOpenChat }) {
+  const ctx = useChatContext() || {};
+  const { notifications = [], unreadNotifs = 0, markNotifRead, markAllRead } = ctx;
+  const [open, setOpen] = useState(false);
+  const [extraNotifs, setExtraNotifs] = useState([]);
+  const [lastNotifDoc, setLastNotifDoc] = useState(null);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const ref = useRef(null);
+  const listRef = useRef(null);
+
+  useEffect(() => {
+    if (!open) { setExtraNotifs([]); setLastNotifDoc(null); setHasMore(true); }
+  }, [open]);
+
+  useEffect(() => {
+    const h = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener('mousedown', h);
+    return () => document.removeEventListener('mousedown', h);
+  }, []);
+
+  const handleListScroll = async () => {
+    const el = listRef.current;
+    if (!el || loadingMore || !hasMore) return;
+    if (el.scrollTop + el.clientHeight >= el.scrollHeight - 20) {
+      setLoadingMore(true);
+      const { notifs, lastDoc } = await loadMoreNotifications(uid, lastNotifDoc);
+      if (notifs.length === 0) { setHasMore(false); }
+      else { setExtraNotifs(prev => [...prev, ...notifs]); setLastNotifDoc(lastDoc); }
+      setLoadingMore(false);
+    }
+  };
+
+  const handleNotifClick = async (n) => {
+    if (markNotifRead) await markNotifRead(n.id);
+    setOpen(false);
+    if ((n.type === 'message' || n.type === 'friend_accepted') && n.fromUid) {
+      onOpenChat?.(n.fromUid);
+    }
+  };
+
+  const notifIcon = (type) => {
+    if (type === 'friend_request') return '👋';
+    if (type === 'friend_accepted') return '🤝';
+    if (type === 'message') return '💬';
+    return '🔔';
+  };
+
+  const allNotifs = [
+    ...notifications,
+    ...extraNotifs.filter(e => !notifications.find(n => n.id === e.id)),
+  ];
+
+  return (
+    <div ref={ref} style={{ position: 'relative' }}>
+      <button className="chat-sidebar-icon-btn" onClick={() => setOpen(s => !s)} title="Notifications">
+        <span style={{ position: 'relative', display: 'inline-flex' }}>
+          <IoNotificationsOutline />
+          {unreadNotifs > 0 && (
+            <span className="notif-bell-badge">{unreadNotifs > 9 ? '9+' : unreadNotifs}</span>
+          )}
+        </span>
+      </button>
+
+      {open && (
+        <div className="notif-dropdown">
+          <div className="notif-dropdown-header">
+            <span>Notifications</span>
+            {unreadNotifs > 0 && markAllRead && (
+              <button className="notif-mark-all" onClick={markAllRead}>Mark all read</button>
+            )}
+          </div>
+          <div className="notif-list" ref={listRef} onScroll={handleListScroll}>
+            {allNotifs.length === 0 && (
+              <div className="notif-empty">
+                <div style={{ fontSize: '2rem', marginBottom: '.4rem' }}>🔔</div>
+                No notifications yet
+              </div>
+            )}
+            {allNotifs.map(n => (
+              <div
+                key={n.id}
+                className={`notif-item ${!n.read ? 'unread' : ''}`}
+                onClick={() => handleNotifClick(n)}
+              >
+                <div className="notif-icon">{notifIcon(n.type)}</div>
+                <div className="notif-body">
+                  <div className="notif-sender">{n.senderName || 'Someone'}</div>
+                  <div className="notif-text">{n.text}</div>
+                  <div className="notif-time">{n.createdAt ? fmtChatTime(n.createdAt) : ''}</div>
+                </div>
+                {!n.read && <div className="notif-unread-dot" />}
+              </div>
+            ))}
+            {loadingMore && (
+              <div style={{ textAlign: 'center', padding: '.5rem' }}>
+                <div className="chatdesc-load-spinner" style={{ margin: '0 auto' }} />
+              </div>
+            )}
+            {!hasMore && allNotifs.length > 0 && (
+              <div style={{ textAlign: 'center', fontSize: '.72rem', color: 'var(--text-tertiary)', padding: '.5rem' }}>
+                You're all caught up ✓
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Main Chat component ────────────────────────────────────────
+function Chat({ uid }) {
+  const ctx = useChatContext() || {};
+  const { me, chats = [], soundEnabled, toggleSound, activeChatId, setActiveChatId } = ctx;
+
+  const [search, setSearch] = useState("");
+  const [sidePanel, setSidePanel] = useState(null);
+  const [showMenu, setShowMenu] = useState(false);
+  const [chatPartnerInfo, setChatPartnerInfo] = useState(null);
+  const [allUsers, setAllUsers] = useState([]);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const menuRef = useRef(null);
+  const navigate = useNavigate();
+
+  // Stable sort order — only update when a chat's sortTs actually changes
+  const sortOrderRef = useRef([]); // array of cid in current display order
+
+  useEffect(() => {
+    const h = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', h);
+    return () => window.removeEventListener('resize', h);
+  }, []);
+
+  useEffect(() => {
+    const h = (e) => { if (menuRef.current && !menuRef.current.contains(e.target)) setShowMenu(false); };
+    document.addEventListener("mousedown", h);
+    return () => document.removeEventListener("mousedown", h);
+  }, []);
+
+  useEffect(() => {
+    if (!uid) return;
+    return subscribeAllUsers(setAllUsers);
+  }, [uid]);
+
+  // Call logs
+  const [callLogs, setCallLogs] = useState([]);
+  useEffect(() => {
+    if (!uid) return;
+    return subscribeCallLogs(uid, setCallLogs);
+  }, [uid]);
+
+  const mutedChats = me?.mutedChats || [];
+  const pinnedChats = me?.pinnedChats || [];
+
+  // Build enriched list — filter + map, no sort yet
+  const enrichedMap = {};
+  chats.forEach(c => {
+    const deletedAt = c.deletedFor?.[uid];
+    if (deletedAt) {
+      const lm = c.lastMessageAt;
+      if (!lm || lm.toMillis() <= deletedAt.toMillis()) return;
+    }
+    const otherId = c.members?.find(m => m !== uid);
+    if (!otherId) return;
+    const other = allUsers.find(u => u.uid === otherId) || {};
+    const name = other.name || 'Unknown';
+    if (search && !name.toLowerCase().includes(search.toLowerCase())) return;
+    enrichedMap[c.id] = {
+      ...c,
+      otherId,
+      otherName: name,
+      otherAvatar: other.avatar || null,
+      otherStatus: other.status || 'offline',
+      unread: c.unreadCount?.[uid] || 0,
+      muted: mutedChats.includes(c.id),
+      pinned: pinnedChats.includes(c.id),
+      _sortTs: (c.lastMessageAt ?? c.createdAt)?.toMillis?.() || 0,
+    };
+  });
+
+  // Stable sort: compute desired new order, then only swap items whose sortTs changed
+  const newIds = Object.keys(enrichedMap).sort((a, b) => {
+    const ca = enrichedMap[a], cb = enrichedMap[b];
+    if (ca.pinned && !cb.pinned) return -1;
+    if (!ca.pinned && cb.pinned) return 1;
+    return cb._sortTs - ca._sortTs;
+  });
+
+  // Merge with stable ref: if an id is already in sortOrderRef and its order is close, keep it
+  // This prevents flicker when two chats have the same timestamp or swap rapidly
+  const prevOrder = sortOrderRef.current;
+  const prevSet = new Set(prevOrder);
+  const newSet = new Set(newIds);
+
+  // Remove ids that no longer exist, keep existing order for survivors, append new ones
+  const stable = [
+    ...prevOrder.filter(id => newSet.has(id)),
+    ...newIds.filter(id => !prevSet.has(id)),
+  ];
+
+  // Re-sort only when pinning changes or sortTs gap > 1 second (real new message, not metadata flicker)
+  const needsResort = newIds.some((id, i) => {
+    const stableId = stable[i];
+    if (!stableId || stableId !== id) {
+      // Check if the reorder is because of a pinned change
+      const cn = enrichedMap[id];
+      const cs = stableId ? enrichedMap[stableId] : null;
+      if (cn?.pinned !== cs?.pinned) return true;
+      // Only re-sort if sortTs difference > 1s (real message, not Firestore server timestamp settling)
+      const tsDiff = cs ? Math.abs(cn._sortTs - cs._sortTs) : Infinity;
+      return tsDiff > 1000;
+    }
+    return false;
+  });
+
+  const displayIds = needsResort ? newIds : stable;
+  sortOrderRef.current = displayIds;
+
+  const enrichedChats = displayIds.map(id => enrichedMap[id]).filter(Boolean);
+
+  const openChatByUserId = useCallback(async (targetUid) => {
+    const user = allUsers.find(u => u.uid === targetUid);
+    if (!user) return;
+    const cid = await ensureChat(uid, targetUid);
+    setActiveChatId?.(cid);
+    setSidePanel(null);
+    setChatPartnerInfo(user);
+  }, [uid, allUsers, setActiveChatId]);
+
+  const openChat = useCallback(async (user) => {
+    const cid = await ensureChat(uid, user.uid);
+    setActiveChatId?.(cid);
+    setSidePanel(null);
+    setChatPartnerInfo(user);
+  }, [uid, setActiveChatId]);
+
+  const openPanel = (panel) => { setSidePanel(panel); setShowMenu(false); };
+  const closePanel = () => setSidePanel(null);
+
+  const panelTitle = sidePanel === 'profile' ? 'My Profile'
+    : sidePanel === 'friends' ? 'Friends'
+    : sidePanel === 'requests' ? 'Friend Requests'
+    : sidePanel === 'search' ? 'Find People'
+    : sidePanel === 'avatar' ? 'Set Avatar'
+    : 'Chats';
+
+  const renderPanel = () => {
+    if (sidePanel === 'profile') return <Myprofile uid={uid} me={me} />;
+    if (sidePanel === 'avatar')  return <Myavatar uid={uid} me={me} />;
+    if (sidePanel === 'friends') return <FriendsList uid={uid} onStartChat={(u) => { openChat(u); closePanel(); }} />;
+    if (sidePanel === 'requests') return <FriendRequest uid={uid} />;
+    if (sidePanel === 'search')  return <SearchList uid={uid} onStartChat={(u) => { openChat(u); closePanel(); }} />;
+    return null;
+  };
+
+  const showChatArea = !!(activeChatId && chatPartnerInfo);
+  const showSidebar = !isMobile || !showChatArea;
+
+  return (
+    <div className="chat-root">
+      {/* ── Sidebar ── */}
+      {showSidebar && (
+        <div className="chat-sidebar">
+          <div className="chat-sidebar-header">
+            <div className="chat-sidebar-top">
+              {sidePanel && (
+                <button className="chat-sidebar-icon-btn" onClick={closePanel} title="Back">
+                  <IoArrowBack />
+                </button>
+              )}
+              <span className="chat-sidebar-title">{panelTitle}</span>
+
+              {!sidePanel && (
+                <>
+                  <NotificationBell uid={uid} onOpenChat={openChatByUserId} />
+                  <button
+                    className="chat-sidebar-icon-btn"
+                    onClick={toggleSound}
+                    title={soundEnabled ? 'Mute sounds' : 'Unmute sounds'}
+                  >
+                    {soundEnabled ? <FiVolume2 /> : <FiVolumeX />}
+                  </button>
+                  <div style={{ position: 'relative' }} ref={menuRef}>
+                    <button className="chat-sidebar-icon-btn" onClick={() => setShowMenu(s => !s)} title="More">
+                      <IoPersonOutline />
+                      <IoChevronDown style={{ fontSize: '.6rem', marginLeft: '1px' }} />
+                    </button>
+                    {showMenu && (
+                      <div className="chat-user-menu">
+                        <div className="chat-menu-item" onClick={() => openPanel('profile')}><IoPersonOutline /> My Profile</div>
+                        <div className="chat-menu-item" onClick={() => openPanel('avatar')}><IoPersonOutline /> Set Avatar</div>
+                        <div className="chat-menu-item" onClick={() => openPanel('friends')}><IoPeopleOutline /> Friends</div>
+                        <div className="chat-menu-item" onClick={() => openPanel('requests')}><IoAddOutline /> Friend Requests</div>
+                        <div className="chat-menu-item" onClick={() => openPanel('search')}><FiSearch /> Find People</div>
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
+            </div>
+
+            {!sidePanel && (
+              <div className="chat-search-wrap">
+                <FiSearch className="chat-search-icon" />
+                <input
+                  className="chat-search-input"
+                  placeholder="Search chats…"
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                />
+              </div>
+            )}
+          </div>
+
+          {sidePanel ? (
+            <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+              {renderPanel()}
+            </div>
+          ) : (
+            <div className="chat-contacts">
+              {enrichedChats.length === 0 && (
+                <div className="chat-empty-state">
+                  <div className="chat-empty-icon">💬</div>
+                  {search
+                    ? <p>No chats matching "{search}"</p>
+                    : <>
+                        <p>No conversations yet</p>
+                        <button className="chat-find-btn" onClick={() => openPanel('search')}>Find People</button>
+                      </>
+                  }
+                </div>
+              )}
+              {enrichedChats.map((c, i) => (
+                <ChatTileItem
+                  key={c.id}
+                  chat={c}
+                  active={activeChatId === c.id}
+                  index={i}
+                  onClick={() => openChat({ uid: c.otherId, name: c.otherName, avatar: c.otherAvatar, status: c.otherStatus, bio: '' })}
+                  onMute={() => muteChat(uid, c.id, !c.muted)}
+                  onDelete={() => {
+                    deleteChatForEveryone(c.id);
+                    if (activeChatId === c.id) { setActiveChatId?.(null); setChatPartnerInfo(null); }
+                  }}
+                  onPin={() => pinChat(uid, c.id, !c.pinned)}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ── Chat window ── */}
+      <div className={`chat-main ${isMobile && !showChatArea ? 'chat-main-hidden' : ''}`}>
+        <ChatDescription
+          uid={uid}
+          me={me}
+          cid={activeChatId}
+          partner={chatPartnerInfo}
+          onBack={() => {
+            setActiveChatId?.(null);
+            setChatPartnerInfo(null);
+            navigate('/chat');
+          }}
+        />
+      </div>
+    </div>
+  );
+}
+
+// ── Chat tile with context menu ────────────────────────────────
+function ChatTileItem({ chat, active, index, onClick, onMute, onDelete, onPin }) {
+  const [ctxMenu, setCtxMenu] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const h = (e) => { if (ref.current && !ref.current.contains(e.target)) { setCtxMenu(false); setConfirmDelete(false); } };
+    document.addEventListener('mousedown', h);
+    return () => document.removeEventListener('mousedown', h);
+  }, []);
+
+  const initials = (chat.otherName || '?').slice(0, 2).toUpperCase();
 
   return (
     <div
-      className="d-flex flex-column"
-      style={{
-        backgroundColor: "#1F2029",
-        overflow: "",
-        width: "100%",
-        height: "100%",
-      }}
+      ref={ref}
+      className={`chat-tile-wrap ${active ? 'active' : ''}`}
+      style={{ animationDelay: `${Math.min(index * 0.03, 0.3)}s` }}
+      onClick={onClick}
+      onContextMenu={e => { e.preventDefault(); setCtxMenu(true); setConfirmDelete(false); }}
     >
-      {isSmallScreen && showchatdesc === true && (
-        <div
-          className="d-md-none d-flex flex-column top-sticky"
-          style={{
-            height: "100%",
-            position: "",
-            backgroundColor: "black",
-            flex: 1,
-            overflow: "",
-          }}
-        >
-          <Outlet />
+      <div className="chat-tile-avatar-wrap">
+        {chat.otherAvatar
+          ? <img className="chat-tile-avatar" src={chat.otherAvatar} alt={chat.otherName} />
+          : <div className="chat-tile-avatar-ph">{initials}</div>
+        }
+        {chat.otherStatus === 'online' && <span className="chat-tile-online" />}
+      </div>
+
+      <div className="chat-tile-body">
+        <div className="chat-tile-row1">
+          <span className="chat-tile-name">
+            {chat.pinned && <span style={{ marginRight: 4, fontSize: '.75rem' }}>📌</span>}
+            {chat.otherName}
+          </span>
+          <span className="chat-tile-time">{fmtChatTime(chat.lastMessageAt)}</span>
         </div>
-      )}
-      <div
-        className="d-flex flex-row"
-        style={{
-          backgroundColor: "",
-          height: showchatdesc === true && isSmallScreen ? "0" : "100%",
-          overflow: "hidden",
-          overflowX: "hidden",
-        }}
-      >
-        <div
-          className="d-flex flex-row"
-          style={{ backgroundColor: "#1F2029", width: "100vw", height: "" }}
-        >
-          {/* header */}
-
-          {small === false && (
-            <div
-              className="d-flex flex-column  bd-highlight"
-              style={{
-                height: "",
-                borderWidth: "3px",
-                borderColor: "#292A33",
-                borderStyle: "solid",
-                flex: isSmallScreen && 1,
-                maxWidth: !isSmallScreen && "30vw",
-                minWidth: !isSmallScreen && "25rem",
-                // height: "90vh",
-                // overflow: "hidden",
-              }}
-            >
-              {/* header */}
-
-              <div
-                className="d-flex flex-column mx- position-sticky"
-                style={{
-                  position: "relative",
-                  backgroundColor: "#1F2029",
-                  borderBottom: "3px",
-                  borderBottomColor: "#292A33",
-                  borderBottomStyle: "solid",
-                }}
-              >
-                <div
-                  className="d-flex flex-row mt-3 mb-3"
-                  style={{ backgroundColor: "#1F2029" }}
-                >
-                  <Box>
-                    <Tooltip title="Account settings">
-                      <IconButton
-                        onClick={handleClick}
-                        size="small"
-                        sx={{ ml: 2 }}
-                        aria-controls={open ? "account-menu" : undefined}
-                        aria-haspopup="true"
-                        aria-expanded={open ? "true" : undefined}
-                      >
-                        <Avatar
-                          sx={{ width: 50, height: 50 }}
-                          src={loggeduser.Avatar}
-                          alt="google"
-                        />
-                      </IconButton>
-                    </Tooltip>
-                    <Menu
-                      anchorEl={anchorEl}
-                      id="account-menu"
-                      open={open}
-                      onClose={handleClose}
-                      onClick={handleClose}
-                      PaperProps={{
-                        elevation: 0,
-                        sx: {
-                          backgroundColor: "black",
-                          color: "white",
-                          overflow: "visible",
-                          filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-                          mt: 1.5,
-                          "& .MuiAvatar-root": {
-                            width: 32,
-                            height: 32,
-                            ml: -0.5,
-                            mr: 1,
-                          },
-                          "&:before": {
-                            backgroundColor: "black",
-                            content: '""',
-                            display: "block",
-                            position: "absolute",
-                            top: 0,
-                            left: 32,
-                            width: 10,
-                            height: 10,
-
-                            transform: "translateY(-50%) rotate(45deg)",
-                            zIndex: 0,
-                          },
-                        },
-                      }}
-                      transformOrigin={{ horizontal: "right", vertical: "top" }}
-                      anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-                    >
-                      <MenuItem
-                        onClick={() => {
-                          handleClose();
-                          shwmyprofile();
-                        }}
-                      >
-                        <ListItemIcon style={{ color: "whitesmoke" }}>
-                          <PersonIcon fontSize="small" color="whitesmoke" />
-                        </ListItemIcon>
-                        {isSmallScreen && (
-                          <Link
-                            to="userprofile"
-                            style={{ textDecoration: "none" }}
-                          >
-                            {" "}
-                            My Account{" "}
-                          </Link>
-                        )}
-                        {!isSmallScreen && "My Account"}
-                      </MenuItem>
-                      <MenuItem
-                        onClick={() => {
-                          handleClose();
-                          shwfriens();
-                        }}
-                      >
-                        <ListItemIcon style={{ color: "whitesmoke" }}>
-                          <HttpsOutlinedIcon
-                            fontSize="small"
-                            color="whitesmoke"
-                          />
-                        </ListItemIcon>
-                        {isSmallScreen && (
-                          <Link
-                            to="myfriends"
-                            style={{ textDecoration: "none" }}
-                          >
-                            {" "}
-                            Friends{" "}
-                          </Link>
-                        )}
-                        {!isSmallScreen && "Friends"}
-                      </MenuItem>
-
-                      <MenuItem
-                        onClick={() => {
-                          handleClose();
-                          shwmyavatar();
-                        }}
-                      >
-                        <ListItemIcon style={{ color: "whitesmoke" }}>
-                          <FaceIcon fontSize="small" color="whitesmoke" />
-                        </ListItemIcon>
-                        {isSmallScreen && (
-                          <Link
-                            to="setavatar"
-                            style={{ textDecoration: "none" }}
-                          >
-                            Avatar{" "}
-                          </Link>
-                        )}
-                        {!isSmallScreen && "Avatar"}
-                      </MenuItem>
-                      <MenuItem onClick={handleClose}>
-                        <ListItemIcon style={{ color: "whitesmoke" }}>
-                          <NotificationsIcon
-                            fontSize="small"
-                            color="whitesmoke"
-                          />
-                        </ListItemIcon>
-                        Notification
-                      </MenuItem>
-
-                      <MenuItem
-                        onClick={() => {
-                          handleClose();
-                          handleshowfriendlist();
-                        }}
-                      >
-                        <ListItemIcon style={{ color: "whitesmoke" }}>
-                          <Badge badgeContent={4} color="primary">
-                            <Diversity1Icon
-                              fontSize="small"
-                              color="whitesmoke"
-                            />
-                          </Badge>
-                        </ListItemIcon>
-                        {isSmallScreen && (
-                          <Link
-                            to="friendrequests"
-                            style={{ textDecoration: "none" }}
-                          >
-                            {" "}
-                            Friend Requests{" "}
-                          </Link>
-                        )}
-                        {!isSmallScreen && "Friend Requests"}
-                      </MenuItem>
-                    </Menu>
-                  </Box>
-
-                  <div
-                    class="d-flex align-items-center pl-3"
-                    style={{ flex: 1, fontSize: "2rem", color: "#FFFFFF" }}
-                  >
-                    {searchopen !== true && <span>{username}</span>}
-                  </div>
-
-                  {searchopen === true && (
-                    <div className="d-flex flex-row">
-                      <div
-                        classs="d-flex align-items-center"
-                        style={{ fontSize: "1.3rem", color: "#FFFFFF" }}
-                      >
-                        <form
-                          onSubmit={(e) => {
-                            handlesearch(e);
-                          }}
-                        >
-                          <input
-                            id="searchinput"
-                            className="animateee my-2 pb-1 pl-3"
-                            type="text"
-                            placeholder="search contacts"
-                            style={{}}
-                          />
-                        </form>
-                      </div>
-
-                      <div
-                        className="d-flex justify-content-center align-items-center animato"
-                        style={{}}
-                      >
-                        {isSmallScreen && (
-                          <Tooltip title="Cancel  ">
-                            <Link
-                              to="search"
-                              style={{ textDecoration: "none" }}
-                            >
-                              {" "}
-                              <IconButton
-                                onClick={() => {
-                                  handlesearchclose();
-                                }}
-                              >
-                                <MdOutlineCancel
-                                  style={{ color: "#ABABAE", fontSize: "2rem" }}
-                                />
-                              </IconButton>{" "}
-                            </Link>
-                          </Tooltip>
-                        )}
-                        {!isSmallScreen && (
-                          <Tooltip title="cancel">
-                            <IconButton
-                              onClick={() => {
-                                handlesearchclose();
-                              }}
-                            >
-                              <MdOutlineCancel
-                                style={{ color: "#ABABAE", fontSize: "2rem" }}
-                              />
-                            </IconButton>
-                          </Tooltip>
-                        )}
-
-                        {/* {isloading===true &&<CircularProgress color="primary" size={22}  />} */}
-                      </div>
-                    </div>
-                  )}
-
-                  {searchopen !== true && (
-                    <div className="d-flex flex-row">
-                      {/* <div classs="d-flex align-items-center" style={{  fontSize: "1.3rem", color: "#FFFFFF" }}>
-                  <input className="animateee my-2 pb-1 pl-3" type="text" placeholder ="search contacts" style={{
-               }}/>
-
-                </div> */}
-
-                      <div
-                        className="d-flex justify-content-center align-items-center"
-                        style={{ backgroundColor: "#1F2029" }}
-                      >
-                        <Tooltip title="Search Chats">
-                          <IconButton
-                            onClick={() => {
-                              handlesearchopen();
-                            }}
-                          >
-                            <FiSearch
-                              style={{ color: "#ABABAE", fontSize: "2rem" }}
-                            />
-                          </IconButton>
-                        </Tooltip>
-                        {/* {isloading===true &&<CircularProgress color="primary" size={22}  />} */}
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* <div
-                  className=""
-                  style={{
-                    backgroundColor: "#212121",
-                    justifyItems: "center",
-                    color: "#aaaaaa",
-                    alignItems: "center",
-                    // padding: "10px",
-                    fontSize: "10px",
-                  }}
-                >
-            
-                </div> */}
-              </div>
-
-              {/* <div
-                className="d-flex flex-row justify-content-around py-1 mt-1"
-                style={{
-                  backgroundColor: "#212121",
-
-                  color: "black",
-                }}
-              >
-              
-               
-              </div> */}
-              {showsearchlist === true && (
-                <div
-                  className="d-flex flex-column"
-                  style={{ flex: 1, backgroundColor: "", height: "100%" }}
-                >
-                  {isSmallScreen && <Outlet />}
-                  {!isSmallScreen && (
-                    <SearchList
-                      searchinput={searchinput}
-                      uid={uid}
-                      loggeduser={loggeduser}
-                    />
-                  )}
-                </div>
-              )}
-
-              {showmyprofile === true && (
-                <div
-                  className="d-flex flex-column"
-                  style={{ flex: 1, backgroundColor: "", height: "100%" }}
-                >
-                  {isSmallScreen && <Outlet />}
-                  {!isSmallScreen && (
-                    <Myprofile
-                      setshowmyprofile={setshowmyprofile}
-                      loggeduser={loggeduser}
-                    />
-                  )}
-                </div>
-              )}
-              {showavatar === true && (
-                <div
-                  className="d-flex flex-column"
-                  style={{ flex: 1, backgroundColor: "", height: "100%" }}
-                >
-                  {isSmallScreen && <Outlet />}
-                  {!isSmallScreen && (
-                    <Myavatar
-                      setshowavatar={setshowavatar}
-                      loggeduser={loggeduser}
-                    />
-                  )}
-                </div>
-              )}
-              {showfriends === true && (
-                <div
-                  className="d-flex flex-column"
-                  style={{ flex: 1, backgroundColor: "", height: "100%" }}
-                >
-                  {isSmallScreen && <Outlet />}{" "}
-                  {!isSmallScreen && (
-                    <FriendsList
-                      setshowfriends={setshowfriends}
-                      loggeduser={loggeduser}
-                    />
-                  )}
-                </div>
-              )}
-
-              {showfriendrequest === true && (
-                <div
-                  className="d-flex flex-column"
-                  style={{ flex: 1, backgroundColor: "", height: "100%" }}
-                >
-                  {isSmallScreen && <Outlet />}{" "}
-                  {!isSmallScreen && (
-                    <FriendRequest
-                      setshowfriendrequest={setshowfriendrequest}
-                    />
-                  )}
-                </div>
-              )}
-              {showfriendrequest === false &&
-                showmyprofile === false &&
-                showavatar === false &&
-                showfriends === false &&
-                showsearchlist === false && (
-                  <div className="d-flex flex-row px-4 mb-4">
-                    <div className="d-flex flex-row mt-2" style={{ flex: 1 }}>
-                      <div className="d-flex flex-column">
-                        <div
-                          className="d-flex"
-                          style={{ flex: 1, color: "white", fontSize: "2rem" }}
-                        >
-                          <div className="d-flex">
-                            Message{" "}
-                            {isloading && (
-                              <div className="pt-4 ">
-                                <div
-                                  className="bouncing-loader mt-3 pl-1"
-                                  style={{ bottom: 0 }}
-                                >
-                                  <div></div>
-                                  <div></div>
-                                  <div></div>
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                        {archieveview === true ? (
-                          <div
-                            className="d-flex mt-3 px-1 tracking-in-expand"
-                            style={{
-                              flex: 1,
-                              color: "#595A61",
-                              fontSize: "1rem",
-                            }}
-                          >
-                            {`ARCHEVE CHAT`}
-                          </div>
-                        ) : (
-                          <div
-                            className="d-flex mt-3 px-1 tracking-in-expand"
-                            style={{
-                              flex: 1,
-                              color: "#595A61",
-                              fontSize: "1rem",
-                            }}
-                          >
-                            {`RECENT CHAT`}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                    <div className="d-flex" style={{ width: "" }}>
-                      <div
-                        className="d-flex flex-row hello tracking-in-expand"
-                        style={{
-                          transition: "width 0.7s",
-                          width: "9rem",
-                          justifyContent: "flex-end",
-                        }}
-                      >
-                        <div
-                          className="d-flex flex-row px-2 py-2 mt-3  hello tracking-in-expand handy"
-                          onClick={() => {
-                            openarchieve();
-                          }}
-                          style={{
-                            backgroundColor: "#E3F3FF",
-                            height: "max-content",
-                            width: "max-content",
-                            transition: "width 0.7s",
-                            borderRadius: "19px",
-                          }}
-                        >
-                          <div className="d-flex hello mr-1">
-                            {archieveview === true ? (
-                              <ChatOutlinedIcon size={1} />
-                            ) : (
-                              <ArchiveIcon size={1} />
-                            )}
-                          </div>
-
-                          <div
-                            className="d-flex hello tracking-in-expand"
-                            style={{
-                              flex: 1,
-                              fontSize: "1rem",
-                              width: "max-content",
-                            }}
-                          >
-                            {archieveview === true ? `Chats` : `Archive Chats`}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-              {archieveview === true ? (
-                <div
-                  className="d-flex flex-column openarchieve mostly-customized-scrollbar "
-                  style={{
-                    backgroundColor: "#1f2029",
-                    overflowY: "scroll",
-                    overflowX: "hidden",
-                    height: "100%",
-                  }}
-                >
-                  {arraynames.map((names, i) => (
-                    <div
-                      className=""
-                      tabIndex={i}
-                      id={names.uid}
-                      onFocus={(e) => {
-                        descriptionheader(e.target.id, names);
-                      }}
-                      style={{
-                        backgroundColor: "#1F2029",
-                        paddingTop: isSmallScreen && "1px",
-                        marginBottom: isSmallScreen && "5px",
-                      }}
-                      key={i}
-                    >
-                      <ChatTile
-                        name={names.name}
-                        key={i}
-                        Avatar={names.avatar}
-                      />
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div
-                  className="d-flex closearchieve"
-                  id=""
-                  style={{ backgroundColor: "#1f2029" }}
-                ></div>
-              )}
-
-              {showfriendrequest === false &&
-                showmyprofile === false &&
-                showavatar === false &&
-                showfriends === false &&
-                showsearchlist === false && (
-                  <div
-                    className={
-                      archieveview === true
-                        ? "d-flex flex-column pt-2 px-2 mostly-customized-scrollbar closechat"
-                        : "d-flex flex-column pt-2 px-2 mostly-customized-scrollbar openchat"
-                    }
-                    style={{
-                      backgroundColor: "",
-                      position: "relative",
-
-                      overflowY: "scroll",
-                    }}
-                  >
-                    {arraynames.map((names, i) => (
-                      <div
-                        className=""
-                        tabIndex={i * 19732}
-                        id={names.uid}
-                        onClick={(e) => {
-                          descriptionheader(names.uid, names);
-                        }}
-                        style={{
-                          backgroundColor: "#1F2029",
-                          paddingTop: isSmallScreen && "1px",
-                          marginBottom: isSmallScreen && "5px",
-                        }}
-                        key={i * 107}
-                      >
-                        <Link
-                          to={`${names.uid}`}
-                          style={{ textDecoration: "none" }}
-                        >
-                          {" "}
-                          <ChatTile
-                            name={names.name}
-                            key={i}
-                            avatar={names.avatar}
-                          />{" "}
-                        </Link>
-                      </div>
-                    ))}
-                  </div>
-                )}
-            </div>
-          )}
-          <div
-            className="d-none d-md-flex flex-column mostly-customized-scrollbar"
-            style={{
-              backgroundColor: "black",
-              flex: 1,
-
-              contain: "strict",
-            }}
-          >
-            {/* large screen chat desc */}
-            {showchatdesc === true && <Outlet />}
-            {/* header */}
-          </div>
-          {showmyaccount === true ? (
-            <div
-              className="d-none d-lg-block userprofile scale"
-              style={{
-                borderWidth: "1px",
-                borderColor: "#292A33",
-                borderStyle: "solid",
-              }}
-            >
-              <div
-                className="d-flex flex-column scale"
-                style={{ backgroundColor: "#1F2029", overflow: "hidden" }}
-              >
-                <Userinfo setshowmyaccount={setshowmyaccount} userfriendprof={userfriendprof} />
-              </div>
-            </div>
-          ) : (
-            showmyaccount === false && (
-              <div
-                className="d-none d-lg-block userprofile closscale"
-                style={{ contain: "strict" }}
-              >
-                <div
-                  className="d-flex flex-column closscale"
-                  style={{ backgroundColor: "#1F2029", contain: "strict" }}
-                >
-                  <Userinfo setshowmyaccount={setshowmyaccount} userfriendprof={userfriendprof} />
-                </div>
-              </div>
-            )
+        <div className="chat-tile-row2">
+          <span className="chat-tile-preview">
+            {chat.muted && <span className="chat-tile-muted-icon" style={{ marginRight: 3 }}>🔇</span>}
+            {chat.lastMessage || <em style={{ opacity: .6 }}>No messages yet</em>}
+          </span>
+          {chat.unread > 0 && (
+            <span className={`chat-tile-badge ${chat.muted ? 'muted' : ''}`}>
+              {chat.unread > 99 ? '99+' : chat.unread}
+            </span>
           )}
         </div>
       </div>
+
+      {ctxMenu && !confirmDelete && (
+        <div className="chat-ctx-menu" onClick={e => e.stopPropagation()}>
+          <div className="chat-ctx-item" onClick={() => { onClick(); setCtxMenu(false); }}>💬 Open</div>
+          <div className="chat-ctx-item" onClick={() => { onPin(); setCtxMenu(false); }}>
+            {chat.pinned ? '📌 Unpin' : '📌 Pin'}
+          </div>
+          <div className="chat-ctx-item" onClick={() => { onMute(); setCtxMenu(false); }}>
+            {chat.muted ? '🔔 Unmute' : '🔇 Mute'}
+          </div>
+          <div className="chat-ctx-item danger" onClick={() => setConfirmDelete(true)}>🗑️ Delete Chat</div>
+        </div>
+      )}
+
+      {ctxMenu && confirmDelete && (
+        <div className="chat-ctx-menu" onClick={e => e.stopPropagation()}>
+          <div style={{ padding: '.6rem 1rem', fontSize: '.82rem', color: 'var(--text-primary)', fontWeight: 600 }}>
+            Delete this chat?
+          </div>
+          <div className="chat-ctx-item danger" onClick={() => { onDelete(); setCtxMenu(false); setConfirmDelete(false); }}>
+            Yes, delete
+          </div>
+          <div className="chat-ctx-item" onClick={() => setConfirmDelete(false)}>Cancel</div>
+        </div>
+      )}
     </div>
   );
 }
