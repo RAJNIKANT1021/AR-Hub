@@ -111,11 +111,11 @@ export async function startCall({
   // Create data channel BEFORE offer so it's negotiated in the SDP
   const dataChannel = pc.createDataChannel("chat", { ordered: true });
 
-  // Remote stream assembly
-  const remoteStream = new MediaStream();
+  // Remote stream assembly — pass e.streams[0] directly so React sees a new reference
   pc.ontrack = (e) => {
-    e.streams[0].getTracks().forEach((t) => remoteStream.addTrack(t));
-    onRemoteStream?.(remoteStream);
+    if (e.streams && e.streams[0]) {
+      onRemoteStream?.(e.streams[0]);
+    }
   };
 
   // Write offer to Firestore
@@ -171,7 +171,7 @@ export async function startCall({
     pc.close();
   };
 
-  return { pc, cid, localStream, remoteStream, cleanup, dataChannel };
+  return { pc, cid, localStream, cleanup, dataChannel };
 }
 
 // ── Answer a call (callee side) ────────────────────────────────
@@ -199,10 +199,11 @@ export async function answerCall({
   const dataChannelPromise = new Promise(r => { resolveDataChannel = r; });
   pc.ondatachannel = (e) => resolveDataChannel(e.channel);
 
-  const remoteStream = new MediaStream();
+  // Remote stream — pass e.streams[0] directly so React sees a new reference
   pc.ontrack = (e) => {
-    e.streams[0].getTracks().forEach((t) => remoteStream.addTrack(t));
-    onRemoteStream?.(remoteStream);
+    if (e.streams && e.streams[0]) {
+      onRemoteStream?.(e.streams[0]);
+    }
   };
 
   // Get offer from Firestore
@@ -257,7 +258,7 @@ export async function answerCall({
     pc.close();
   };
 
-  return { pc, cid, localStream, remoteStream, cleanup, dataChannel: dataChannelPromise };
+  return { pc, cid, localStream, cleanup, dataChannel: dataChannelPromise };
 }
 
 // ── Screen share: swap video track on existing PC ─────────────
