@@ -17,22 +17,53 @@
  */
 
 import {
-  doc, collection, setDoc, updateDoc, onSnapshot,
-  addDoc, getDocs, deleteDoc, serverTimestamp,
-  query, where, orderBy, limit,
+  doc,
+  collection,
+  setDoc,
+  updateDoc,
+  onSnapshot,
+  addDoc,
+  getDocs,
+  deleteDoc,
+  serverTimestamp,
+  query,
+  where,
+  orderBy,
+  limit,
 } from "firebase/firestore";
 import { db } from "../userauth/FireAuth";
 
 const STUN = {
   iceServers: [
-    { urls: "stun:stun.l.google.com:19302" },
-    { urls: "stun:stun1.l.google.com:19302" },
+    {
+      urls: "stun:stun.relay.metered.ca:80",
+    },
+    {
+      urls: "turn:global.relay.metered.ca:80",
+      username: "8cbd9f8daf548ed61217abc1",
+      credential: "UY4n7IAqUs659IBq",
+    },
+    {
+      urls: "turn:global.relay.metered.ca:80?transport=tcp",
+      username: "8cbd9f8daf548ed61217abc1",
+      credential: "UY4n7IAqUs659IBq",
+    },
+    {
+      urls: "turn:global.relay.metered.ca:443",
+      username: "8cbd9f8daf548ed61217abc1",
+      credential: "UY4n7IAqUs659IBq",
+    },
+    {
+      urls: "turns:global.relay.metered.ca:443?transport=tcp",
+      username: "8cbd9f8daf548ed61217abc1",
+      credential: "UY4n7IAqUs659IBq",
+    },
   ],
 };
 
 export const callId = (uid1, uid2) => [uid1, uid2].sort().join("__call__");
 
-const callRef  = (cid) => doc(db, "calls", cid);
+const callRef = (cid) => doc(db, "calls", cid);
 const callerRef = (cid) => collection(db, "calls", cid, "callerCandidates");
 const calleeRef = (cid) => collection(db, "calls", cid, "calleeCandidates");
 
@@ -44,8 +75,8 @@ export async function endCallDoc(cid) {
       getDocs(calleeRef(cid)),
     ]);
     const deletes = [
-      ...callerSnap.docs.map(d => deleteDoc(d.ref)),
-      ...calleeSnap.docs.map(d => deleteDoc(d.ref)),
+      ...callerSnap.docs.map((d) => deleteDoc(d.ref)),
+      ...calleeSnap.docs.map((d) => deleteDoc(d.ref)),
     ];
     await Promise.all(deletes);
     await deleteDoc(callRef(cid));
@@ -55,27 +86,42 @@ export async function endCallDoc(cid) {
 // ── Start a call (caller side) ─────────────────────────────────
 // Returns { pc, cid, localStream, cleanup }
 export async function startCall({
-  myUid, myName, theirUid, callType = "video",
-  onRemoteStream, onHangup,
+  myUid,
+  myName,
+  theirUid,
+  callType = "video",
+  onRemoteStream,
+  onHangup,
 }) {
   const cid = callId(myUid, theirUid);
 
   // Get local media
-  const constraints = callType === "audio"
-    ? { audio: true, video: false }
-    : { audio: true, video: { width: 1280, height: 720 } };
+  const constraints =
+    callType === "audio"
+      ? { audio: true, video: false }
+      : { audio: true, video: { width: 1280, height: 720 } };
 
   const localStream = await navigator.mediaDevices.getUserMedia(constraints);
 
   const pc = new RTCPeerConnection(STUN);
 
   // Add tracks
-  localStream.getTracks().forEach(t => pc.addTrack(t, localStream));
+  localStream.getTracks().forEach((t) => pc.addTrack(t, localStream));
+
+  pc.oniceconnectionstatechange = () => {
+    console.log("ICE state:", pc.iceConnectionState);
+    // Look for: checking → connected ✅
+    // Bad signs: failed ❌, disconnected ❌
+  };
+
+  pc.onsignalingstatechange = () => {
+    console.log("Signaling state:", pc.signalingState);
+  };
 
   // Remote stream assembly
   const remoteStream = new MediaStream();
   pc.ontrack = (e) => {
-    e.streams[0].getTracks().forEach(t => remoteStream.addTrack(t));
+    e.streams[0].getTracks().forEach((t) => remoteStream.addTrack(t));
     onRemoteStream?.(remoteStream);
   };
 
@@ -102,17 +148,25 @@ export async function startCall({
   // Listen for answer + callee ICE candidates
   const unsubCall = onSnapshot(callRef(cid), async (snap) => {
     const data = snap.data();
-    if (!data) { onHangup?.(); return; }
-    if (data.type === "ended") { onHangup?.(); return; }
+    if (!data) {
+      onHangup?.();
+      return;
+    }
+    if (data.type === "ended") {
+      onHangup?.();
+      return;
+    }
     if (data.answer && !pc.remoteDescription) {
       await pc.setRemoteDescription(new RTCSessionDescription(data.answer));
     }
   });
 
   const unsubCallee = onSnapshot(calleeRef(cid), (snap) => {
-    snap.docChanges().forEach(change => {
+    snap.docChanges().forEach((change) => {
       if (change.type === "added") {
-        pc.addIceCandidate(new RTCIceCandidate(change.doc.data())).catch(() => {});
+        pc.addIceCandidate(new RTCIceCandidate(change.doc.data())).catch(
+          () => {},
+        );
       }
     });
   });
@@ -120,7 +174,7 @@ export async function startCall({
   const cleanup = () => {
     unsubCall();
     unsubCallee();
-    localStream.getTracks().forEach(t => t.stop());
+    localStream.getTracks().forEach((t) => t.stop());
     pc.close();
   };
 
@@ -130,28 +184,35 @@ export async function startCall({
 // ── Answer a call (callee side) ────────────────────────────────
 // Returns { pc, cid, localStream, cleanup }
 export async function answerCall({
-  cid, myUid, callType,
-  onRemoteStream, onHangup,
+  cid,
+  myUid,
+  callType,
+  onRemoteStream,
+  onHangup,
 }) {
-  const constraints = callType === "audio"
-    ? { audio: true, video: false }
-    : { audio: true, video: { width: 1280, height: 720 } };
+  const constraints =
+    callType === "audio"
+      ? { audio: true, video: false }
+      : { audio: true, video: { width: 1280, height: 720 } };
 
   const localStream = await navigator.mediaDevices.getUserMedia(constraints);
 
   const pc = new RTCPeerConnection(STUN);
 
-  localStream.getTracks().forEach(t => pc.addTrack(t, localStream));
+  localStream.getTracks().forEach((t) => pc.addTrack(t, localStream));
 
   const remoteStream = new MediaStream();
   pc.ontrack = (e) => {
-    e.streams[0].getTracks().forEach(t => remoteStream.addTrack(t));
+    e.streams[0].getTracks().forEach((t) => remoteStream.addTrack(t));
     onRemoteStream?.(remoteStream);
   };
 
   // Get offer from Firestore
-  const snap = await new Promise(resolve => {
-    const unsub = onSnapshot(callRef(cid), s => { resolve(s); unsub(); });
+  const snap = await new Promise((resolve) => {
+    const unsub = onSnapshot(callRef(cid), (s) => {
+      resolve(s);
+      unsub();
+    });
   });
   const data = snap.data();
   if (!data?.offer) throw new Error("No offer found");
@@ -174,9 +235,11 @@ export async function answerCall({
 
   // Listen for caller ICE candidates
   const unsubCaller = onSnapshot(callerRef(cid), (snap) => {
-    snap.docChanges().forEach(change => {
+    snap.docChanges().forEach((change) => {
       if (change.type === "added") {
-        pc.addIceCandidate(new RTCIceCandidate(change.doc.data())).catch(() => {});
+        pc.addIceCandidate(new RTCIceCandidate(change.doc.data())).catch(
+          () => {},
+        );
       }
     });
   });
@@ -184,13 +247,15 @@ export async function answerCall({
   // Listen for hang-up
   const unsubCall = onSnapshot(callRef(cid), (snap) => {
     const d = snap.data();
-    if (!d || d.type === "ended") { onHangup?.(); }
+    if (!d || d.type === "ended") {
+      onHangup?.();
+    }
   });
 
   const cleanup = () => {
     unsubCaller();
     unsubCall();
-    localStream.getTracks().forEach(t => t.stop());
+    localStream.getTracks().forEach((t) => t.stop());
     pc.close();
   };
 
@@ -199,10 +264,12 @@ export async function answerCall({
 
 // ── Screen share: swap video track on existing PC ─────────────
 export async function startScreenShare(pc, localStream) {
-  const screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+  const screenStream = await navigator.mediaDevices.getDisplayMedia({
+    video: true,
+  });
   const screenTrack = screenStream.getVideoTracks()[0];
 
-  const sender = pc.getSenders().find(s => s.track?.kind === "video");
+  const sender = pc.getSenders().find((s) => s.track?.kind === "video");
   if (sender) await sender.replaceTrack(screenTrack);
 
   // When user stops sharing via browser UI
@@ -214,7 +281,7 @@ export async function startScreenShare(pc, localStream) {
 export async function stopScreenShare(pc, localStream) {
   const camTrack = localStream.getVideoTracks()[0];
   if (!camTrack) return;
-  const sender = pc.getSenders().find(s => s.track?.kind === "video");
+  const sender = pc.getSenders().find((s) => s.track?.kind === "video");
   if (sender) await sender.replaceTrack(camTrack);
 }
 
@@ -224,13 +291,28 @@ export async function stopScreenShare(pc, localStream) {
 
 const logRef = (uid) => collection(db, "callLogs", uid, "items");
 
-export async function writeCallLog(uid, {
-  cid, partnerId, partnerName, partnerAvatar = null,
-  callType, direction, duration = 0, status = "completed",
-}) {
+export async function writeCallLog(
+  uid,
+  {
+    cid,
+    partnerId,
+    partnerName,
+    partnerAvatar = null,
+    callType,
+    direction,
+    duration = 0,
+    status = "completed",
+  },
+) {
   await addDoc(logRef(uid), {
-    cid, partnerId, partnerName, partnerAvatar,
-    callType, direction, duration, status,
+    cid,
+    partnerId,
+    partnerName,
+    partnerAvatar,
+    callType,
+    direction,
+    duration,
+    status,
     createdAt: serverTimestamp(),
   });
 }
@@ -239,7 +321,7 @@ export function subscribeCallLogs(uid, cb) {
   if (!uid) return () => {};
   return onSnapshot(
     query(logRef(uid), orderBy("createdAt", "desc"), limit(50)),
-    snap => cb(snap.docs.map(d => ({ id: d.id, ...d.data() })))
+    (snap) => cb(snap.docs.map((d) => ({ id: d.id, ...d.data() }))),
   );
 }
 
@@ -253,7 +335,10 @@ export function subscribeIncomingCall(myUid, cb) {
     where("type", "==", "offer"),
   );
   return onSnapshot(q, (snap) => {
-    if (snap.empty) { cb(null); return; }
+    if (snap.empty) {
+      cb(null);
+      return;
+    }
     const callDoc = snap.docs[0];
     cb({ id: callDoc.id, ...callDoc.data() });
   });
