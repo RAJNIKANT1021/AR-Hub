@@ -104,13 +104,13 @@ export function CallScreen({
   localStream,
   remoteStream,
   pc,
+  dataChannel,
   callType,
   isConnected,
   onHangup,
   cid,
   uid,
   myName,
-  isCaller, // FIX 3: needed for data channel
 }) {
   const remoteVideoRef = useRef(null);
   const localVideoRef = useRef(null);
@@ -274,35 +274,17 @@ export function CallScreen({
     } catch {}
   }, [sharing, pc, localStream]);
 
-  // ── FIX 3: Data channel — caller creates, callee receives ────
+  // ── Data channel: wired by CallManager, just attach handler ──
   useEffect(() => {
-    if (!pc) return;
-
-    if (isCaller) {
-      // Caller creates the channel
+    if (!dataChannel) return;
+    dataChannelRef.current = dataChannel;
+    dataChannel.onmessage = (e) => {
       try {
-        const dc = pc.createDataChannel("chat", { ordered: true });
-        dataChannelRef.current = dc;
-        dc.onmessage = (e) => {
-          try {
-            const msg = JSON.parse(e.data);
-            setChatMsgs((prev) => [...prev, msg]);
-          } catch {}
-        };
+        const msg = JSON.parse(e.data);
+        setChatMsgs((prev) => [...prev, msg]);
       } catch {}
-    }
-
-    // Callee receives it (also set on caller as fallback)
-    pc.ondatachannel = (e) => {
-      dataChannelRef.current = e.channel;
-      e.channel.onmessage = (ev) => {
-        try {
-          const msg = JSON.parse(ev.data);
-          setChatMsgs((prev) => [...prev, msg]);
-        } catch {}
-      };
     };
-  }, [pc, isCaller]);
+  }, [dataChannel]);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });

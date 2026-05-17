@@ -36,12 +36,13 @@ export function CallProvider({ uid, myName, myAvatar, getUser, children }) {
   const [remoteStream, setRemoteStream] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
   const [callType, setCallType] = useState("video");
-  const [pc, setPc] = useState(null); // FIX 1: was pcRef only
+  const [pc, setPc] = useState(null);
+  const [dataChannel, setDataChannel] = useState(null);
 
   const pcRef = useRef(null);
   const cleanupRef = useRef(null);
   const callStartRef = useRef(null);
-  const activeCallRef = useRef(null); // FIX 2: ref to avoid re-subscription loop
+  const activeCallRef = useRef(null);
 
   // Keep activeCallRef in sync with state
   useEffect(() => {
@@ -103,7 +104,8 @@ export function CallProvider({ uid, myName, myAvatar, getUser, children }) {
       cleanupRef.current?.();
       cleanupRef.current = null;
       pcRef.current = null;
-      setPc(null); // FIX 1: clear pc state too
+      setPc(null);
+      setDataChannel(null);
       if (shouldDeleteDoc && cid) await endCallDoc(cid).catch(() => {});
       setActiveCall(null);
       setLocalStream(null);
@@ -138,9 +140,11 @@ export function CallProvider({ uid, myName, myAvatar, getUser, children }) {
           onHangup: () => doHangup(cid, false, meta),
         });
         pcRef.current = result.pc;
-        setPc(result.pc); // FIX 1: set pc state so CallScreen gets it
+        setPc(result.pc);
         cleanupRef.current = result.cleanup;
         setLocalStream(result.localStream);
+        // dataChannel is already open for caller; resolve immediately
+        Promise.resolve(result.dataChannel).then(dc => { if (dc) setDataChannel(dc); }).catch(() => {});
       } catch (err) {
         console.error("Call failed:", err);
         doHangup(cid, true, null);
@@ -180,9 +184,11 @@ export function CallProvider({ uid, myName, myAvatar, getUser, children }) {
         onHangup: () => doHangup(cid, false, meta),
       });
       pcRef.current = result.pc;
-      setPc(result.pc); // FIX 1: set pc state so CallScreen gets it
+      setPc(result.pc);
       cleanupRef.current = result.cleanup;
       setLocalStream(result.localStream);
+      // dataChannel is a Promise for callee (resolves when caller's channel arrives)
+      Promise.resolve(result.dataChannel).then(dc => { if (dc) setDataChannel(dc); }).catch(() => {});
     } catch (err) {
       console.error("Answer failed:", err);
       doHangup(cid, false, null);
@@ -221,14 +227,14 @@ export function CallProvider({ uid, myName, myAvatar, getUser, children }) {
           partner={activeCall.partner}
           localStream={localStream}
           remoteStream={remoteStream}
-          pc={pc} // FIX 1: state not ref
+          pc={pc}
+          dataChannel={dataChannel}
           callType={callType}
           isConnected={isConnected}
           onHangup={hangup}
           cid={activeCall.cid}
           uid={uid}
           myName={myName}
-          isCaller={activeCall.role === "caller"} // FIX 3: for data channel
         />
       )}
     </CallCtx.Provider>

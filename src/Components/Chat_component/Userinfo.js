@@ -6,7 +6,7 @@ import { MdBlock, MdOutlineReport, MdPersonRemove } from 'react-icons/md';
 import { FiVolume2, FiVolumeX } from 'react-icons/fi';
 import './userinfo1.css';
 
-function Userinfo({ partner, me, uid, onClose, onDeleteChat }) {
+function Userinfo({ partner, me, uid, onClose, onDeleteChat, onBlocked }) {
   const [confirming, setConfirming] = useState(null); // 'unfriend' | 'block'
   const [busy, setBusy] = useState(false);
 
@@ -35,6 +35,10 @@ function Userinfo({ partner, me, uid, onClose, onDeleteChat }) {
     try {
       if (action === 'block') {
         await blockUser(uid, partner.uid);
+        // Close panel and navigate away — don't update state on unmounted component
+        onClose();
+        onBlocked?.();
+        return; // finally still runs but component is already unmounting — harmless
       } else if (action === 'unblock') {
         await unblockUser(uid, partner.uid);
       } else if (action === 'unfriend') {

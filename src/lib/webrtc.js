@@ -108,15 +108,8 @@ export async function startCall({
   // Add tracks
   localStream.getTracks().forEach((t) => pc.addTrack(t, localStream));
 
-  pc.oniceconnectionstatechange = () => {
-    console.log("ICE state:", pc.iceConnectionState);
-    // Look for: checking → connected ✅
-    // Bad signs: failed ❌, disconnected ❌
-  };
-
-  pc.onsignalingstatechange = () => {
-    console.log("Signaling state:", pc.signalingState);
-  };
+  // Create data channel BEFORE offer so it's negotiated in the SDP
+  const dataChannel = pc.createDataChannel("chat", { ordered: true });
 
   // Remote stream assembly
   const remoteStream = new MediaStream();
@@ -178,7 +171,7 @@ export async function startCall({
     pc.close();
   };
 
-  return { pc, cid, localStream, remoteStream, cleanup };
+  return { pc, cid, localStream, remoteStream, cleanup, dataChannel };
 }
 
 // ── Answer a call (callee side) ────────────────────────────────
@@ -200,6 +193,11 @@ export async function answerCall({
   const pc = new RTCPeerConnection(STUN);
 
   localStream.getTracks().forEach((t) => pc.addTrack(t, localStream));
+
+  // Receive the data channel the caller already negotiated
+  let resolveDataChannel;
+  const dataChannelPromise = new Promise(r => { resolveDataChannel = r; });
+  pc.ondatachannel = (e) => resolveDataChannel(e.channel);
 
   const remoteStream = new MediaStream();
   pc.ontrack = (e) => {
@@ -259,26 +257,34 @@ export async function answerCall({
     pc.close();
   };
 
-  return { pc, cid, localStream, remoteStream, cleanup };
+  return { pc, cid, localStream, remoteStream, cleanup, dataChannel: dataChannelPromise };
 }
 
 // ── Screen share: swap video track on existing PC ─────────────
 export async function startScreenShare(pc, localStream) {
+  if (!pc) throw new Error("No peer connection");
+
   const screenStream = await navigator.mediaDevices.getDisplayMedia({
-    video: true,
+    video: { cursor: "always" },
+    audio: false, // system audio capture is browser/OS-dependent; skip to avoid errors
   });
+
   const screenTrack = screenStream.getVideoTracks()[0];
+  if (!screenTrack) throw new Error("No video track from display media");
 
   const sender = pc.getSenders().find((s) => s.track?.kind === "video");
-  if (sender) await sender.replaceTrack(screenTrack);
-
-  // When user stops sharing via browser UI
-  screenTrack.onended = () => stopScreenShare(pc, localStream);
+  if (sender) {
+    await sender.replaceTrack(screenTrack);
+  } else {
+    // Audio-only call — add screen track as new track
+    pc.addTrack(screenTrack, screenStream);
+  }
 
   return screenTrack;
 }
 
 export async function stopScreenShare(pc, localStream) {
+  if (!pc || !localStream) return;
   const camTrack = localStream.getVideoTracks()[0];
   if (!camTrack) return;
   const sender = pc.getSenders().find((s) => s.track?.kind === "video");

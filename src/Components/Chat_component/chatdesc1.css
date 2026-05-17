@@ -407,6 +407,17 @@
   30% { transform: translateY(-4px); opacity: 1; }
 }
 
+/* ── Blocked banner ─────────────────────────────────────────── */
+.chatdesc-blocked-bar {
+  padding: .75rem 1rem;
+  text-align: center;
+  font-size: .85rem;
+  color: #e74c3c;
+  background: rgba(231, 76, 60, .06);
+  border-top: 1px solid rgba(231, 76, 60, .2);
+  flex-shrink: 0;
+}
+
 /* ── Reply bar above input ──────────────────────────────────── */
 .chatdesc-reply-bar {
   display: flex;

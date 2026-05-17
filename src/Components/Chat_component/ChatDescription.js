@@ -16,6 +16,7 @@ import {
   subscribeMessages, sendMessage, forwardMessage,
   subscribeUser, subscribeAllUsers, markRead, setTyping, subscribeTyping, deleteChatForEveryone,
 } from "../../lib/db";
+import { cacheMsgs, getCachedMsgs, hasChanged } from "../../lib/cache";
 import { Timestamp } from "firebase/firestore";
 
 const TYPING_DEBOUNCE = 1500;
@@ -24,7 +25,8 @@ function ChatDescription({ uid, me, cid, partner, onBack }) {
   const { theme } = useTheme();
   const { soundEnabled, playMessageSound, setActiveChatId, chats = [] } = useChatContext() || {};
   const { initiateCall } = useCallManager() || {};
-  const [messages, setMessages] = useState([]);
+  // Seed messages from sessionStorage cache so switching chats shows instantly
+  const [messages, setMessages] = useState(() => getCachedMsgs(cid) || []);
   const [inputValue, setInputValue] = useState("");
   const [showEmoji, setShowEmoji] = useState(false);
   const [showPollCreator, setShowPollCreator] = useState(false);
@@ -70,33 +72,38 @@ function ChatDescription({ uid, me, cid, partner, onBack }) {
     });
   }, [cid, uid]);
 
-  // ── Real-time messages (handles new msgs, edits, reactions, poll votes) ────
+  // ── Real-time messages ────────────────────────────────────────
   useEffect(() => {
     if (!cid) { setMessages([]); setOptimistic([]); return; }
-    setMessages([]);
+
+    // Seed from cache immediately — no empty flash when switching chats
+    const cached = getCachedMsgs(cid);
+    setMessages(cached || []);
     setOptimistic([]);
     setReplyTo(null);
-    prevMsgCount.current = 0;
+    prevMsgCount.current = cached?.length || 0;
     sessionStart.current = Timestamp.now();
     if (setActiveChatId) setActiveChatId(cid);
 
     const unsub = subscribeMessages(cid, (allMsgs) => {
       setMessages(prev => {
-        // Detect truly new incoming messages (not in previous list)
+        // Skip re-render if data is identical
+        if (!hasChanged(prev, allMsgs)) return prev;
+
         const prevIds = new Set(prev.map(m => m.id));
         const brandNew = allMsgs.filter(m => !prevIds.has(m.id) && m.senderId !== uid);
         if (brandNew.length > 0 && soundEnabled) playMessageSound?.(false);
 
-        // Mark new incoming as read
         brandNew.forEach(m => { if (m.id) markRead(cid, m.id, uid); });
 
-        // Clear optimistic once my own messages are confirmed
         const myNewConfirmed = allMsgs.filter(m => !prevIds.has(m.id) && m.senderId === uid);
         if (myNewConfirmed.length > 0) {
           const earliestMs = Math.min(...myNewConfirmed.map(f => f.createdAt?.toMillis?.() || Date.now()));
           setOptimistic(opt => opt.filter(o => (o.createdAt?.toMillis?.() || 0) > earliestMs));
         }
 
+        // Write-through to sessionStorage cache
+        cacheMsgs(cid, allMsgs);
         return allMsgs;
       });
       prevMsgCount.current = allMsgs.length;
@@ -288,11 +295,13 @@ function ChatDescription({ uid, me, cid, partner, onBack }) {
     return `last seen ${d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}`;
   })();
 
-  const initials = (partner.name || '?').slice(0, 2).toUpperCase();
-  // Show optimistic messages that aren't already confirmed in `messages`
-  // Use text+senderId match as fallback since IDs differ
+  const initials  = (partner.name || '?').slice(0, 2).toUpperCase();
+  const blocklist = me?.blocklist || [];
+  const isBlocked = blocklist.includes(partner?.uid);
+
+  // Merge optimistic with confirmed, filter blocked-sender messages
   const allMessages = [
-    ...messages,
+    ...messages.filter(m => !blocklist.includes(m.senderId)),
     ...optimistic.filter(o =>
       !messages.some(m => m.senderId === o.senderId && m.text === o.text &&
         Math.abs((m.createdAt?.toMillis?.() || 0) - (o.createdAt?.toMillis?.() || 0)) < 5000
@@ -488,8 +497,15 @@ function ChatDescription({ uid, me, cid, partner, onBack }) {
         </div>
       )}
 
+      {/* Blocked banner replaces input */}
+      {isBlocked && (
+        <div className="chatdesc-blocked-bar" onClick={e => e.stopPropagation()}>
+          🚫 You have blocked this user. Unblock to send messages.
+        </div>
+      )}
+
       {/* Input area */}
-      <div className="chatdesc-input-area" onClick={e => e.stopPropagation()}>
+      {!isBlocked && <div className="chatdesc-input-area" onClick={e => e.stopPropagation()}>
         <div className="chatdesc-input-row">
           <button
             className="chatdesc-input-icon-btn"
@@ -525,7 +541,7 @@ function ChatDescription({ uid, me, cid, partner, onBack }) {
             <BsSend />
           </button>
         </div>
-      </div>
+      </div>}
     </div>
 
     {/* Forward message dialog */}
@@ -574,6 +590,7 @@ function ChatDescription({ uid, me, cid, partner, onBack }) {
         uid={uid}
         onClose={() => setShowUserinfo(false)}
         onDeleteChat={cid ? () => deleteChatForEveryone(cid) : null}
+        onBlocked={onBack}
       />
     )}
   </>

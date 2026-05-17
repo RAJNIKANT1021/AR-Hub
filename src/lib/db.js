@@ -248,6 +248,20 @@ export async function editMessage(cid, mid, newText) {
 
 export async function sendMessage(cid, { text, senderId, senderName, type = "text", poll = null, replyTo = null }) {
   if (!text?.trim() && type === "text") return null;
+
+  // Block guard: check if either party has blocked the other
+  const chatSnap0 = await getDoc(chatRef(cid));
+  if (chatSnap0.exists()) {
+    const members = chatSnap0.data().members || [];
+    const otherUid0 = members.find(m => m !== senderId);
+    if (otherUid0) {
+      const [senderDoc, otherDoc] = await Promise.all([getDoc(userRef(senderId)), getDoc(userRef(otherUid0))]);
+      const senderBlocklist = senderDoc.data()?.blocklist || [];
+      const otherBlocklist  = otherDoc.data()?.blocklist  || [];
+      if (senderBlocklist.includes(otherUid0) || otherBlocklist.includes(senderId)) return null;
+    }
+  }
+
   const ref = doc(msgsRef(cid));
   const preview = type === "poll" ? "📊 Poll" : (text.length > 60 ? text.slice(0, 60) + "…" : text);
   const msg = {
@@ -285,17 +299,21 @@ export async function sendMessage(cid, { text, senderId, senderName, type = "tex
   batch.update(chatRef(cid), chatUpdates);
   await batch.commit();
 
-  // Send notification to other user
+  // Send notification to other user (skip if they blocked the sender)
   if (otherUid) {
-    await addDoc(collection(db, "notifications", otherUid, "items"), {
-      type: "message",
-      fromUid: senderId,
-      senderName: senderName || "Someone",
-      text: preview,
-      chatId: cid,
-      read: false,
-      createdAt: serverTimestamp(),
-    });
+    const receiverSnap = await getDoc(userRef(otherUid));
+    const receiverBlocklist = receiverSnap.data()?.blocklist || [];
+    if (!receiverBlocklist.includes(senderId)) {
+      await addDoc(collection(db, "notifications", otherUid, "items"), {
+        type: "message",
+        fromUid: senderId,
+        senderName: senderName || "Someone",
+        text: preview,
+        chatId: cid,
+        read: false,
+        createdAt: serverTimestamp(),
+      });
+    }
   }
 
   return ref.id;
@@ -430,7 +448,22 @@ export function subscribeTyping(cid, uid, cb) {
 // ── BLOCK / UNBLOCK ────────────────────────────────────────────
 
 export async function blockUser(myUid, targetUid) {
-  await updateDoc(userRef(myUid), { blocklist: arrayUnion(targetUid) });
+  const cid = chatId(myUid, targetUid);
+
+  // 1. Add to blocklist + unfriend both sides atomically
+  const batch = writeBatch(db);
+  batch.update(userRef(myUid),    { blocklist: arrayUnion(targetUid),  friends: arrayRemove(targetUid), sentRequests: arrayRemove(targetUid), friendRequests: arrayRemove(targetUid) });
+  batch.update(userRef(targetUid),{ friends: arrayRemove(myUid), sentRequests: arrayRemove(myUid), friendRequests: arrayRemove(myUid) });
+  await batch.commit();
+
+  // 2. Hard-delete the shared chat (messages + chat doc)
+  try {
+    const msgsSnap = await getDocs(collection(db, "chats", cid, "messages"));
+    const delBatch = writeBatch(db);
+    msgsSnap.docs.forEach(d => delBatch.delete(d.ref));
+    delBatch.delete(doc(db, "chats", cid));
+    await delBatch.commit();
+  } catch {}
 }
 
 export async function unblockUser(myUid, targetUid) {

@@ -13,11 +13,11 @@ import {
   subscribeAllUsers, loadMoreNotifications,
 } from "../lib/db";
 import { subscribeCallLogs } from "../lib/webrtc";
+import { cacheAllUsers, getCachedAllUsers, hasChanged } from "../lib/cache";
 import { FiSearch, FiVolume2, FiVolumeX } from "react-icons/fi";
 import {
   IoPersonOutline, IoPeopleOutline, IoAddOutline,
   IoChevronDown, IoArrowBack, IoNotificationsOutline,
-  IoCallOutline, IoVideocamOutline,
 } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 
@@ -154,7 +154,7 @@ function Chat({ uid }) {
   const [sidePanel, setSidePanel] = useState(null);
   const [showMenu, setShowMenu] = useState(false);
   const [chatPartnerInfo, setChatPartnerInfo] = useState(null);
-  const [allUsers, setAllUsers] = useState([]);
+  const [allUsers, setAllUsers] = useState(() => getCachedAllUsers());
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const menuRef = useRef(null);
   const navigate = useNavigate();
@@ -176,7 +176,13 @@ function Chat({ uid }) {
 
   useEffect(() => {
     if (!uid) return;
-    return subscribeAllUsers(setAllUsers);
+    return subscribeAllUsers((users) => {
+      setAllUsers(prev => {
+        if (!hasChanged(prev, users)) return prev;
+        cacheAllUsers(users);
+        return users;
+      });
+    });
   }, [uid]);
 
   // Call logs
@@ -186,8 +192,9 @@ function Chat({ uid }) {
     return subscribeCallLogs(uid, setCallLogs);
   }, [uid]);
 
-  const mutedChats = me?.mutedChats || [];
+  const mutedChats  = me?.mutedChats  || [];
   const pinnedChats = me?.pinnedChats || [];
+  const blocklist   = me?.blocklist   || [];
 
   // Build enriched list — filter + map, no sort yet
   const enrichedMap = {};
@@ -199,6 +206,8 @@ function Chat({ uid }) {
     }
     const otherId = c.members?.find(m => m !== uid);
     if (!otherId) return;
+    // Hide chats with blocked users from the sidebar entirely
+    if (blocklist.includes(otherId)) return;
     const other = allUsers.find(u => u.uid === otherId) || {};
     const name = other.name || 'Unknown';
     if (search && !name.toLowerCase().includes(search.toLowerCase())) return;
@@ -274,19 +283,21 @@ function Chat({ uid }) {
   const openPanel = (panel) => { setSidePanel(panel); setShowMenu(false); };
   const closePanel = () => setSidePanel(null);
 
-  const panelTitle = sidePanel === 'profile' ? 'My Profile'
-    : sidePanel === 'friends' ? 'Friends'
+  const panelTitle = sidePanel === 'profile'  ? 'My Profile'
+    : sidePanel === 'friends'  ? 'Friends'
     : sidePanel === 'requests' ? 'Friend Requests'
-    : sidePanel === 'search' ? 'Find People'
-    : sidePanel === 'avatar' ? 'Set Avatar'
+    : sidePanel === 'search'   ? 'Find People'
+    : sidePanel === 'avatar'   ? 'Set Avatar'
+    : sidePanel === 'calls'    ? 'Call Logs'
     : 'Chats';
 
   const renderPanel = () => {
-    if (sidePanel === 'profile') return <Myprofile uid={uid} me={me} />;
-    if (sidePanel === 'avatar')  return <Myavatar uid={uid} me={me} />;
-    if (sidePanel === 'friends') return <FriendsList uid={uid} onStartChat={(u) => { openChat(u); closePanel(); }} />;
+    if (sidePanel === 'profile')  return <Myprofile uid={uid} me={me} />;
+    if (sidePanel === 'avatar')   return <Myavatar uid={uid} me={me} />;
+    if (sidePanel === 'friends')  return <FriendsList uid={uid} onStartChat={(u) => { openChat(u); closePanel(); }} />;
     if (sidePanel === 'requests') return <FriendRequest uid={uid} />;
-    if (sidePanel === 'search')  return <SearchList uid={uid} onStartChat={(u) => { openChat(u); closePanel(); }} />;
+    if (sidePanel === 'search')   return <SearchList uid={uid} onStartChat={(u) => { openChat(u); closePanel(); }} />;
+    if (sidePanel === 'calls')    return <CallLogsPanel logs={callLogs} allUsers={allUsers} onStartChat={openChatByUserId} />;
     return null;
   };
 
@@ -329,6 +340,7 @@ function Chat({ uid }) {
                         <div className="chat-menu-item" onClick={() => openPanel('friends')}><IoPeopleOutline /> Friends</div>
                         <div className="chat-menu-item" onClick={() => openPanel('requests')}><IoAddOutline /> Friend Requests</div>
                         <div className="chat-menu-item" onClick={() => openPanel('search')}><FiSearch /> Find People</div>
+                        <div className="chat-menu-item" onClick={() => openPanel('calls')}>📞 Call Logs</div>
                       </div>
                     )}
                   </div>
@@ -355,7 +367,19 @@ function Chat({ uid }) {
             </div>
           ) : (
             <div className="chat-contacts">
-              {enrichedChats.length === 0 && (
+              {enrichedChats.length === 0 && allUsers.length === 0 && !search && (
+                // Skeleton tiles while data loads
+                Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="contact-skeleton">
+                    <div className="skel-avatar" style={{ animationDelay: `${i * 0.1}s` }} />
+                    <div className="skel-lines">
+                      <div className="skel-line short" style={{ animationDelay: `${i * 0.1 + 0.05}s` }} />
+                      <div className="skel-line xshort" style={{ animationDelay: `${i * 0.1 + 0.1}s` }} />
+                    </div>
+                  </div>
+                ))
+              )}
+              {enrichedChats.length === 0 && allUsers.length > 0 && (
                 <div className="chat-empty-state">
                   <div className="chat-empty-icon">💬</div>
                   {search
@@ -480,6 +504,76 @@ function ChatTileItem({ chat, active, index, onClick, onMute, onDelete, onPin })
           <div className="chat-ctx-item" onClick={() => setConfirmDelete(false)}>Cancel</div>
         </div>
       )}
+    </div>
+  );
+}
+
+// ── Call Logs Panel ────────────────────────────────────────────
+function CallLogsPanel({ logs, allUsers, onStartChat }) {
+  function fmtDur(secs) {
+    if (!secs) return 'No answer';
+    const m = Math.floor(secs / 60), s = secs % 60;
+    return m > 0 ? `${m}m ${s}s` : `${s}s`;
+  }
+  function fmtTime(ts) {
+    if (!ts) return '';
+    const d = ts.toDate ? ts.toDate() : new Date(ts);
+    const now = new Date();
+    const diffDays = Math.floor((now - d) / 86400000);
+    if (diffDays === 0) return d.toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit', hour12: true });
+    if (diffDays === 1) return 'Yesterday';
+    if (diffDays < 7) return d.toLocaleDateString('en-IN', { weekday: 'short' });
+    return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+  }
+
+  if (logs.length === 0) {
+    return (
+      <div className="chat-empty-state" style={{ marginTop: '3rem' }}>
+        <div className="chat-empty-icon">📞</div>
+        <p>No call history yet</p>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ flex: 1, overflowY: 'auto', padding: '.25rem 0' }}>
+      {logs.map(log => {
+        const other = allUsers.find(u => u.uid === log.partnerId);
+        const name = log.partnerName || other?.name || 'Unknown';
+        const avatar = log.partnerAvatar || other?.avatar;
+        const initials = name.slice(0, 2).toUpperCase();
+        const isVideo = log.callType === 'video';
+        const isMissed = log.status === 'missed';
+        const isOut = log.direction === 'outgoing';
+
+        return (
+          <div
+            key={log.id}
+            className="chat-tile-wrap"
+            onClick={() => log.partnerId && onStartChat(log.partnerId)}
+            style={{ cursor: 'pointer' }}
+          >
+            <div className="chat-tile-avatar-wrap">
+              {avatar
+                ? <img className="chat-tile-avatar" src={avatar} alt={name} />
+                : <div className="chat-tile-avatar-ph">{initials}</div>
+              }
+            </div>
+            <div className="chat-tile-body">
+              <div className="chat-tile-row1">
+                <span className="chat-tile-name">{name}</span>
+                <span className="chat-tile-time">{fmtTime(log.createdAt)}</span>
+              </div>
+              <div className="chat-tile-row2">
+                <span className="chat-tile-preview" style={{ color: isMissed ? '#e74c3c' : 'var(--text-secondary)' }}>
+                  {isOut ? '↗ ' : '↙ '}
+                  {isVideo ? '📹' : '📞'} {isMissed ? 'Missed' : fmtDur(log.duration)}
+                </span>
+              </div>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }
