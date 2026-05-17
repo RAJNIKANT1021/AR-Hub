@@ -9,6 +9,52 @@
 }
 .gh-root.playing { background: #0d0d12; }
 
+/* Fullscreen: break out of the call-games-panel container */
+.gh-root.fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 10002;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* ── Pending invite card ───────────────────────────────────────── */
+.gh-invite-card {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 12px; padding: 2rem 1.25rem; margin: auto;
+  background: linear-gradient(135deg, rgba(108,99,255,.2), rgba(99,102,241,.05));
+  border: 1px solid rgba(108,99,255,.3);
+  border-radius: 18px; width: min(280px, 92%);
+  animation: slideUp .25s ease;
+}
+.gh-invite-emoji { font-size: 3rem; animation: pulse 1.6s ease-in-out infinite; }
+.gh-invite-title { font-size: .85rem; color: rgba(255,255,255,.75); text-align: center; }
+.gh-invite-game  { font-size: 1.15rem; font-weight: 700; }
+.gh-invite-actions { display: flex; gap: 10px; margin-top: .5rem; }
+.gh-invite-accept, .gh-invite-decline {
+  padding: .5rem 1.1rem; border: none; border-radius: 22px;
+  font-size: .82rem; font-weight: 700; cursor: pointer;
+  transition: transform .12s, opacity .15s;
+  font-family: inherit;
+}
+.gh-invite-accept  { background: #22c55e; color: #fff; }
+.gh-invite-decline { background: rgba(255,255,255,.12); color: #fff; }
+.gh-invite-accept:hover, .gh-invite-decline:hover { transform: scale(1.06); }
+
+/* ── Waiting for partner to accept ─────────────────────────────── */
+.gh-waiting {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 16px; flex: 1; padding: 1.5rem;
+}
+.gh-waiting-text { font-size: .9rem; color: rgba(255,255,255,.7); text-align: center; }
+.gh-cancel-btn {
+  padding: .45rem 1rem; background: rgba(239,68,68,.2);
+  border: 1px solid rgba(239,68,68,.4); color: #fca5a5;
+  border-radius: 20px; cursor: pointer; font-size: .78rem;
+  font-weight: 600; font-family: inherit;
+}
+.gh-cancel-btn:hover { background: rgba(239,68,68,.3); }
+
 .gh-header {
   display: flex;
   align-items: center;

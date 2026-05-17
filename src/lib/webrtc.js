@@ -111,15 +111,26 @@ export async function startCall({
   // Create data channel BEFORE offer so it's negotiated in the SDP
   const dataChannel = pc.createDataChannel("chat", { ordered: true });
 
-  // Accumulate all remote tracks into one MediaStream, call onRemoteStream each time
-  const remoteStream = new MediaStream();
+  // Accumulate remote tracks; pass a *new* MediaStream reference each time so
+  // React sees a state change (same-ref setState gets bailed out, which would
+  // leave a newly-added video track invisible if audio arrived first).
+  const remoteTracks = [];
   pc.ontrack = (e) => {
-    e.track.onunmute = () => {}; // keep track alive
-    remoteStream.addTrack(e.track);
-    onRemoteStream?.(remoteStream);
+    e.track.onunmute = () => {};
+    if (!remoteTracks.includes(e.track)) remoteTracks.push(e.track);
+    onRemoteStream?.(new MediaStream(remoteTracks));
   };
 
-  // Write offer to Firestore
+  // CRITICAL: onicecandidate must be wired BEFORE setLocalDescription, since
+  // ICE gathering starts the instant the local description is applied. If we
+  // register the handler later, the first reflexive/relay candidates fire into
+  // the void and the call never establishes through NAT (audio AND video die).
+  pc.onicecandidate = async (e) => {
+    if (e.candidate) {
+      try { await addDoc(callerRef(cid), e.candidate.toJSON()); } catch {}
+    }
+  };
+
   const offer = await pc.createOffer();
   await pc.setLocalDescription(offer);
 
@@ -134,34 +145,31 @@ export async function startCall({
     createdAt: serverTimestamp(),
   });
 
-  // Upload caller ICE candidates as they arrive
-  pc.onicecandidate = async (e) => {
-    if (e.candidate) await addDoc(callerRef(cid), e.candidate.toJSON());
+  // Buffer ICE candidates until remoteDescription is applied — otherwise
+  // addIceCandidate throws and we silently lose connectivity hints.
+  const pendingCandidates = [];
+  const flushCandidates = () => {
+    while (pendingCandidates.length) {
+      pc.addIceCandidate(pendingCandidates.shift()).catch(() => {});
+    }
   };
 
-  // Listen for answer + callee ICE candidates
   const unsubCall = onSnapshot(callRef(cid), async (snap) => {
     const data = snap.data();
-    if (!data) {
-      onHangup?.();
-      return;
-    }
-    if (data.type === "ended") {
-      onHangup?.();
-      return;
-    }
+    if (!data) { onHangup?.(); return; }
+    if (data.type === "ended") { onHangup?.(); return; }
     if (data.answer && !pc.remoteDescription) {
       await pc.setRemoteDescription(new RTCSessionDescription(data.answer));
+      flushCandidates();
     }
   });
 
   const unsubCallee = onSnapshot(calleeRef(cid), (snap) => {
     snap.docChanges().forEach((change) => {
-      if (change.type === "added") {
-        pc.addIceCandidate(new RTCIceCandidate(change.doc.data())).catch(
-          () => {},
-        );
-      }
+      if (change.type !== "added") return;
+      const c = new RTCIceCandidate(change.doc.data());
+      if (pc.remoteDescription) pc.addIceCandidate(c).catch(() => {});
+      else pendingCandidates.push(c);
     });
   });
 
@@ -200,12 +208,13 @@ export async function answerCall({
   const dataChannelPromise = new Promise(r => { resolveDataChannel = r; });
   pc.ondatachannel = (e) => resolveDataChannel(e.channel);
 
-  // Accumulate all remote tracks into one MediaStream, call onRemoteStream each time
-  const remoteStream = new MediaStream();
+  // Accumulate remote tracks; pass a *new* MediaStream reference each time so
+  // React's setRemoteStream actually re-renders and re-attaches srcObject.
+  const remoteTracks = [];
   pc.ontrack = (e) => {
     e.track.onunmute = () => {};
-    remoteStream.addTrack(e.track);
-    onRemoteStream?.(remoteStream);
+    if (!remoteTracks.includes(e.track)) remoteTracks.push(e.track);
+    onRemoteStream?.(new MediaStream(remoteTracks));
   };
 
   // Get offer from Firestore
@@ -218,14 +227,16 @@ export async function answerCall({
   const data = snap.data();
   if (!data?.offer) throw new Error("No offer found");
 
-  await pc.setRemoteDescription(new RTCSessionDescription(data.offer));
-
-  // Upload callee ICE candidates
+  // Wire onicecandidate BEFORE applying offer / creating answer — same reason
+  // as caller side: ICE gathering starts the moment setLocalDescription runs.
   pc.onicecandidate = async (e) => {
-    if (e.candidate) await addDoc(calleeRef(cid), e.candidate.toJSON());
+    if (e.candidate) {
+      try { await addDoc(calleeRef(cid), e.candidate.toJSON()); } catch {}
+    }
   };
 
-  // Create answer
+  await pc.setRemoteDescription(new RTCSessionDescription(data.offer));
+
   const answer = await pc.createAnswer();
   await pc.setLocalDescription(answer);
 

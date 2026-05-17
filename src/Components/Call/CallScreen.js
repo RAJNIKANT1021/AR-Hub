@@ -156,24 +156,23 @@ export function CallScreen({
       .catch(() => {});
   }, []);
 
-  // Attach remote stream to video element — runs on every render so even
-  // same-reference streams (mutated by addTrack) get applied correctly.
-  const setRemoteVideoRef = useCallback((el) => {
-    remoteVideoRef.current = el;
-    if (el && remoteStream) el.srcObject = remoteStream;
-  }, [remoteStream]);
-
+  // Attach remote stream to <video>. Because webrtc.js now hands us a fresh
+  // MediaStream reference each time a track arrives, this effect fires on
+  // both the initial audio track AND the video track that arrives later.
   useEffect(() => {
     const el = remoteVideoRef.current;
     if (!el || !remoteStream) return;
-    // Always re-assign so newly added tracks are reflected
     el.srcObject = remoteStream;
-    el.play().catch(() => {});
-  });
+    el.muted = false;
+    const playIt = () => el.play().catch(() => {});
+    if (el.readyState >= 1) playIt();
+    else el.onloadedmetadata = playIt;
+  }, [remoteStream]);
 
   useEffect(() => {
     if (localVideoRef.current && localStream) {
       localVideoRef.current.srcObject = localStream;
+      localVideoRef.current.play().catch(() => {});
     }
   }, [localStream]);
 
@@ -347,7 +346,7 @@ export function CallScreen({
     <div className="call-overlay" onClick={() => setDeviceMenu(null)}>
       {/* FIX 1: Always render video, toggle visibility so ref is always mounted */}
       <video
-        ref={setRemoteVideoRef}
+        ref={remoteVideoRef}
         className="call-remote-video"
         autoPlay
         playsInline
