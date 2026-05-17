@@ -9,9 +9,10 @@ import {
   IoChatbubbleOutline,
   IoSendOutline,
   IoChevronDownOutline,
+  IoGameControllerOutline,
 } from "react-icons/io5";
 import { MdScreenShare, MdStopScreenShare, MdVolumeUp } from "react-icons/md";
-import { startScreenShare, stopScreenShare } from "../../lib/webrtc";
+import GameHub from "../Games/GameHub";
 
 // ── Duration timer ─────────────────────────────────────────────
 function useDuration(running) {
@@ -118,6 +119,7 @@ export function CallScreen({
   const [camOn, setCamOn] = useState(callType === "video");
   const [sharing, setSharing] = useState(false);
   const [showChat, setShowChat] = useState(false);
+  const [showGames, setShowGames] = useState(false);
   const [chatMsgs, setChatMsgs] = useState([]);
   const [chatInput, setChatInput] = useState("");
 
@@ -154,23 +156,20 @@ export function CallScreen({
       .catch(() => {});
   }, []);
 
-  // ── FIX 1: ref callback so stream attaches whenever el or stream is ready ──
-  const setRemoteVideoRef = useCallback(
-    (el) => {
-      remoteVideoRef.current = el;
-      if (el && remoteStream) {
-        el.srcObject = remoteStream;
-      }
-    },
-    [remoteStream],
-  );
-
-  // Also update if remoteStream changes after mount
-  useEffect(() => {
-    if (remoteVideoRef.current && remoteStream) {
-      remoteVideoRef.current.srcObject = remoteStream;
-    }
+  // Attach remote stream to video element — runs on every render so even
+  // same-reference streams (mutated by addTrack) get applied correctly.
+  const setRemoteVideoRef = useCallback((el) => {
+    remoteVideoRef.current = el;
+    if (el && remoteStream) el.srcObject = remoteStream;
   }, [remoteStream]);
+
+  useEffect(() => {
+    const el = remoteVideoRef.current;
+    if (!el || !remoteStream) return;
+    // Always re-assign so newly added tracks are reflected
+    el.srcObject = remoteStream;
+    el.play().catch(() => {});
+  });
 
   useEffect(() => {
     if (localVideoRef.current && localStream) {
@@ -257,22 +256,47 @@ export function CallScreen({
     if (!pc) return;
     try {
       if (sharing) {
-        await stopScreenShare(pc, localStream);
+        // Stop screen track, restore camera track on sender
         screenTrackRef.current?.stop();
         screenTrackRef.current = null;
+        if (callType === "video" && localStream) {
+          const camTrack = localStream.getVideoTracks()[0];
+          const sender = pc.getSenders().find(s => s.track?.kind === "video");
+          if (sender && camTrack) await sender.replaceTrack(camTrack);
+          // Restore local PiP
+          if (localVideoRef.current) localVideoRef.current.srcObject = localStream;
+        }
         setSharing(false);
       } else {
-        const track = await startScreenShare(pc, localStream);
-        screenTrackRef.current = track;
-        track.onended = () => {
-          stopScreenShare(pc, localStream);
+        const screenStream = await navigator.mediaDevices.getDisplayMedia({ video: { cursor: "always" }, audio: false });
+        const screenTrack = screenStream.getVideoTracks()[0];
+        if (!screenTrack) return;
+        screenTrackRef.current = screenTrack;
+        // Replace video sender with screen track
+        const sender = pc.getSenders().find(s => s.track?.kind === "video");
+        if (sender) {
+          await sender.replaceTrack(screenTrack);
+        } else {
+          pc.addTrack(screenTrack, screenStream);
+        }
+        // Show screen in local PiP
+        if (localVideoRef.current) localVideoRef.current.srcObject = screenStream;
+        screenTrack.onended = () => {
           screenTrackRef.current = null;
+          if (callType === "video" && localStream) {
+            const camTrack = localStream.getVideoTracks()[0];
+            const s = pc.getSenders().find(s => s.track?.kind === "video");
+            if (s && camTrack) s.replaceTrack(camTrack).catch(() => {});
+            if (localVideoRef.current) localVideoRef.current.srcObject = localStream;
+          }
           setSharing(false);
         };
         setSharing(true);
       }
-    } catch {}
-  }, [sharing, pc, localStream]);
+    } catch (err) {
+      console.error("Screen share error:", err);
+    }
+  }, [sharing, pc, localStream, callType]);
 
   // ── Data channel: wired by CallManager, just attach handler ──
   useEffect(() => {
@@ -369,6 +393,19 @@ export function CallScreen({
           ) : (
             <div className="call-pip-off">Cam off</div>
           )}
+        </div>
+      )}
+
+      {/* In-call games panel */}
+      {showGames && (
+        <div className="call-games-panel" onClick={(e) => e.stopPropagation()}>
+          <GameHub
+            myUid={uid}
+            myName={myName || "You"}
+            partnerUid={partner?.uid}
+            partnerName={partner?.name || "Opponent"}
+            onClose={() => setShowGames(false)}
+          />
         </div>
       )}
 
@@ -529,7 +566,7 @@ export function CallScreen({
         <div style={{ textAlign: "center" }}>
           <button
             className={`call-ctrl-btn ${showChat ? "active" : ""}`}
-            onClick={() => setShowChat((v) => !v)}
+            onClick={() => { setShowChat((v) => !v); setShowGames(false); }}
             title="In-call chat"
           >
             <IoChatbubbleOutline />
@@ -537,7 +574,19 @@ export function CallScreen({
           </button>
         </div>
 
-        {/* FIX 4: use handleHangup not onHangup directly */}
+        {/* Games */}
+        <div style={{ textAlign: "center" }}>
+          <button
+            className={`call-ctrl-btn ${showGames ? "active" : ""}`}
+            onClick={() => { setShowGames((v) => !v); setShowChat(false); }}
+            title="Play games"
+          >
+            <IoGameControllerOutline />
+            <span className="call-ctrl-label">Games</span>
+          </button>
+        </div>
+
+        {/* End call */}
         <div style={{ textAlign: "center" }}>
           <button
             className="call-ctrl-btn danger"

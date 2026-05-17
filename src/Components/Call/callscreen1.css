@@ -504,6 +504,29 @@
 }
 .call-chat-send:hover { background: #4338ca; }
 
+/* ── In-call games panel ─────────────────────────────────── */
+.call-games-panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 340px;
+  height: 100%;
+  background: rgba(10,10,18,.96);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-left: 1px solid rgba(255,255,255,.08);
+  display: flex;
+  flex-direction: column;
+  z-index: 4;
+  animation: slideInRight .22s ease;
+  overflow: hidden;
+}
+
+@media (max-width: 480px) {
+  .call-games-panel { width: 100%; border-left: none; }
+  .call-chat-panel  { width: 100%; border-left: none; }
+}
+
 /* ── Mobile ───────────────────────────────────────────────── */
 @media (max-width: 480px) {
   .call-avatar-circle,

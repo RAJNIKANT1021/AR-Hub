@@ -111,11 +111,12 @@ export async function startCall({
   // Create data channel BEFORE offer so it's negotiated in the SDP
   const dataChannel = pc.createDataChannel("chat", { ordered: true });
 
-  // Remote stream assembly — pass e.streams[0] directly so React sees a new reference
+  // Accumulate all remote tracks into one MediaStream, call onRemoteStream each time
+  const remoteStream = new MediaStream();
   pc.ontrack = (e) => {
-    if (e.streams && e.streams[0]) {
-      onRemoteStream?.(e.streams[0]);
-    }
+    e.track.onunmute = () => {}; // keep track alive
+    remoteStream.addTrack(e.track);
+    onRemoteStream?.(remoteStream);
   };
 
   // Write offer to Firestore
@@ -199,11 +200,12 @@ export async function answerCall({
   const dataChannelPromise = new Promise(r => { resolveDataChannel = r; });
   pc.ondatachannel = (e) => resolveDataChannel(e.channel);
 
-  // Remote stream — pass e.streams[0] directly so React sees a new reference
+  // Accumulate all remote tracks into one MediaStream, call onRemoteStream each time
+  const remoteStream = new MediaStream();
   pc.ontrack = (e) => {
-    if (e.streams && e.streams[0]) {
-      onRemoteStream?.(e.streams[0]);
-    }
+    e.track.onunmute = () => {};
+    remoteStream.addTrack(e.track);
+    onRemoteStream?.(remoteStream);
   };
 
   // Get offer from Firestore
