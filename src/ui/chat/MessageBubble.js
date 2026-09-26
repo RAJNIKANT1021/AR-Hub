@@ -224,7 +224,7 @@ function MessageBubble({
       <div className="msg-swipe" ref={rowRef}>
         <span className="swipe-hint"><IoArrowUndo /></span>
         <div
-          className={`bubble ${mine ? "out" : "in"} ${emojiOnly ? "emoji-only" : ""} ${msg.type} ${deleted ? "deleted" : ""} ${first ? "tail" : ""} ${(msg.edited && !deleted) || starred || msg.expiresAt ? "has-edit" : ""}`}
+          className={`bubble ${mine ? "out" : "in"} ${emojiOnly ? "emoji-only" : ""} ${msg.type}${msg.viewOnce ? " snap" : ""} ${deleted ? "deleted" : ""} ${first ? "tail" : ""} ${(msg.edited && !deleted) || starred || msg.expiresAt ? "has-edit" : ""}`}
           onContextMenu={lp.onContextMenu} onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd} onTouchCancel={lp.onTouchCancel}
           onClick={onClick}
         >
@@ -240,6 +240,16 @@ function MessageBubble({
 
           {deleted ? (
             <span className="bubble-text deleted-text">🚫 {mine ? "You deleted this message" : "This message was deleted"}</span>
+          ) : msg.type === "image" && msg.viewOnce ? (
+            <button className={`snap-card ${mine ? "mine" : ""} ${!mine && msg.image && !(msg.openedBy || []).includes(uid) ? "fresh" : ""}`}
+              onClick={(e) => { e.stopPropagation(); onOpenImage(msg); }}>
+              <span className="snap-icon">{mine ? "👻" : msg.image && !(msg.openedBy || []).includes(uid) ? "📸" : "🫥"}</span>
+              <span className="snap-label">
+                {mine
+                  ? ((msg.openedBy || []).length ? `Snap · opened${group ? ` by ${(msg.openedBy || []).length}` : ""}` : "Snap · sent")
+                  : msg.image && !(msg.openedBy || []).includes(uid) ? "Tap to view snap" : "Snap · opened"}
+              </span>
+            </button>
           ) : msg.type === "image" ? (
             <>
               <button className="bubble-img" onClick={(e) => { e.stopPropagation(); onOpenImage(msg); }} style={{ aspectRatio: msg.image?.width && msg.image?.height ? `${msg.image.width}/${msg.image.height}` : undefined }}>

@@ -1,5 +1,6 @@
 // Hub module registry (metadata only — components are lazy-loaded by HubPage).
 export const HUB_MODULES = [
+  { key: "code",       label: "Code Arena",     emoji: "💻", color: "#22c55e", desc: "LeetCode-style JS challenges & leaderboard" },
   { key: "games",      label: "Games Arcade",   emoji: "🎮", color: "#7c5cff", desc: "11 real-time multiplayer games with friends" },
   { key: "weather",    label: "Weather",        emoji: "🌤️", color: "#0ea5e9", desc: "Live conditions & 5-day forecast" },
   { key: "news",       label: "News",           emoji: "📰", color: "#f59e0b", desc: "Top headlines by topic & country" },

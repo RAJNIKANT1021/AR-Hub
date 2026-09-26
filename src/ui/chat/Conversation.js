@@ -13,7 +13,7 @@ import { useCallManager } from "../../Components/Call/CallManager";
 import {
   subscribeChat, subscribeMessages, PAGE_SIZE, sendMessage, editMessage, addReaction, deleteMessage,
   deleteMessageForEveryone, markMessagesRead, clearUnread, markChatNotificationsRead, setTyping, pinMessage,
-  starMessage, subscribeStarred, muteChat, unblockUser, joinRoom, isGroup, previewOf, addNotification,
+  starMessage, subscribeStarred, muteChat, unblockUser, joinRoom, isGroup, previewOf, addNotification, openSnap,
 } from "../../lib/db";
 import { subscribePendingInvite } from "../../lib/games";
 import { fmtDayLabel, toDate, toMillis, lastSeenText, fmtTime } from "../../lib/format";
@@ -295,11 +295,11 @@ export default function Conversation({ cid }) {
       items: [
         { label: "Reply", icon: <IoArrowUndoOutline />, onClick: () => onReply(m), hidden: deleted },
         { label: "Copy", icon: <IoCopyOutline />, hidden: deleted || !m.text, onClick: () => navigator.clipboard?.writeText(m.text).then(() => toastOk("Copied")).catch(() => {}) },
-        { label: "Forward", icon: <IoArrowRedoOutline />, hidden: deleted || m._pending, onClick: () => setForwardMsg(m) },
-        { label: isStarred ? "Unstar" : "Star", icon: isStarred ? <IoStar /> : <IoStarOutline />, hidden: deleted || m._pending, onClick: () => safe(starMessage(uid, cid, m, !isStarred, title)) },
+        { label: "Forward", icon: <IoArrowRedoOutline />, hidden: deleted || m._pending || m.viewOnce, onClick: () => setForwardMsg(m) },
+        { label: isStarred ? "Unstar" : "Star", icon: isStarred ? <IoStar /> : <IoStarOutline />, hidden: deleted || m._pending || m.viewOnce, onClick: () => safe(starMessage(uid, cid, m, !isStarred, title)) },
         { label: pinned ? "Unpin" : "Pin", icon: <IoPinOutline />, hidden: deleted || m._pending || (group && !(chat?.admins || []).includes(uid)), onClick: () => safe(pinMessage(cid, pinned ? null : m)) },
         { label: "Edit", icon: <IoCreateOutline />, hidden: !canEdit, onClick: () => { setReplyTo(null); setEditing(m); } },
-        { label: "Save", icon: <IoDownloadOutline />, hidden: deleted || !(m.type === "image" || m.type === "voice"), onClick: () => downloadDataUrl(m.type === "image" ? (m.image?.url || m.image) : m.voice?.url, `arhub-${m.id}.${m.type === "image" ? "jpg" : "webm"}`) },
+        { label: "Save", icon: <IoDownloadOutline />, hidden: deleted || m.viewOnce || !(m.type === "image" || m.type === "voice"), onClick: () => downloadDataUrl(m.type === "image" ? (m.image?.url || m.image) : m.voice?.url, `arhub-${m.id}.${m.type === "image" ? "jpg" : "webm"}`) },
         { label: "Info", icon: <IoInformationCircleOutline />, hidden: !mine || deleted || m._pending, onClick: () => setInfoMsg(m) },
         { divider: true },
         { label: "Delete", icon: <IoTrashOutline />, danger: true, hidden: m._pending, onClick: () => setDeleteMsg(m) },
@@ -307,7 +307,14 @@ export default function Conversation({ cid }) {
     });
   }, [uid, usersById, starred, chat, group, cid, title, react, onReply]);
 
-  const openImage = useCallback((m) => setViewer(m), []);
+  const openImage = useCallback((m) => {
+    if (m.viewOnce) {
+      if (m.senderId === uid || !m.image || (m.openedBy || []).includes(uid)) return;
+      setViewer({ ...m, _snap: true });
+      return;
+    }
+    setViewer(m);
+  }, [uid]);
 
   const exportChat = () => {
     const lines = view.map(m => `[${toDate(m.createdAt)?.toLocaleString() || ""}] ${m.type === "system" ? "" : (m.senderName || "") + ": "}${m.deletedForEveryone ? "<deleted>" : previewOf(m)}`);
@@ -482,7 +489,7 @@ export default function Conversation({ cid }) {
           onEdit={(m, text) => safe(editMessage(cid, m.id, text))}
           onTyping={onTyping}
           onSendText={sendText}
-          onSendImage={(img, caption) => sendOther({ type: "image", image: img, text: caption })}
+          onSendImage={(img, caption, viewOnce) => sendOther({ type: "image", image: img, text: caption, viewOnce })}
           onSendVoice={(v) => sendOther({ type: "voice", voice: { url: v.url, duration: v.duration, mime: v.mime, waveform: v.waveform } })}
           onSendLocation={(loc) => sendOther({ type: "location", location: loc })}
           onSendPoll={(poll) => sendOther({ type: "poll", poll })}
@@ -494,7 +501,7 @@ export default function Conversation({ cid }) {
         <ChatInfo
           chat={chat} partner={partner} members={members} focus={infoOpen === "ephemeral" ? "ephemeral" : null}
           onClose={() => setInfoOpen(false)} onJump={(id) => { setInfoOpen(false); setTimeout(() => jumpTo(id), 50); }}
-          onOpenImage={openImage} media={view.filter(m => m.type === "image" && !m.deletedForEveryone)}
+          onOpenImage={openImage} media={view.filter(m => m.type === "image" && !m.viewOnce && !m.deletedForEveryone)}
           onSearch={() => { setInfoOpen(false); setSearchOn(true); }}
         />
       )}
@@ -505,7 +512,8 @@ export default function Conversation({ cid }) {
       <DeleteSheet msg={deleteMsg} uid={uid} onClose={() => setDeleteMsg(null)}
         onForMe={(m) => safe(deleteMessage(cid, m.id, uid))}
         onForAll={(m) => { safe(deleteMessageForEveryone(cid, m.id)); if (chat.pinnedMessage?.id === m.id) safe(pinMessage(cid, null)); }} />
-      {viewer && <ImageViewer msg={viewer} sender={usersById[viewer.senderId]} onClose={() => setViewer(null)} />}
+      {viewer && <ImageViewer msg={viewer} sender={usersById[viewer.senderId]} snap={viewer._snap}
+        onClose={() => { if (viewer._snap) safe(openSnap(cid, viewer, uid, chat.members)); setViewer(null); }} />}
 
       <Sheet open={gamesOpen} onClose={() => setGamesOpen(false)} size="lg" className="games-sheet" hideClose>
         {gamesOpen && partner && (
@@ -574,19 +582,35 @@ function DeleteSheet({ msg, uid, onClose, onForMe, onForAll }) {
   );
 }
 
-export function ImageViewer({ msg, sender, onClose }) {
+const SNAP_SECONDS = 10;
+
+export function ImageViewer({ msg, sender, onClose, snap = false }) {
+  const [left, setLeft] = useState(SNAP_SECONDS);
+  const closeRef = useRef(onClose);
+  closeRef.current = onClose;
   useEffect(() => {
-    const h = (e) => e.key === "Escape" && onClose();
+    const h = (e) => e.key === "Escape" && closeRef.current();
     window.addEventListener("keydown", h);
     return () => window.removeEventListener("keydown", h);
-  }, [onClose]);
+  }, []);
+  // Snaps self-destruct after a short countdown
+  useEffect(() => {
+    if (!snap) return;
+    const t0 = Date.now();
+    const t = setInterval(() => {
+      const l = SNAP_SECONDS - (Date.now() - t0) / 1000;
+      if (l <= 0) { clearInterval(t); closeRef.current(); } else setLeft(l);
+    }, 100);
+    return () => clearInterval(t);
+  }, [snap]);
   const url = msg.image?.url || msg.image;
   return (
-    <div className="viewer" onClick={onClose}>
+    <div className={`viewer ${snap ? "snap" : ""}`} onClick={onClose} onContextMenu={snap ? (e) => e.preventDefault() : undefined}>
+      {snap && <div className="snap-bar"><span style={{ width: `${(left / SNAP_SECONDS) * 100}%` }} /></div>}
       <div className="viewer-top" onClick={e => e.stopPropagation()}>
         <Avatar src={sender?.avatar} name={sender?.name || msg.senderName} size={38} />
         <div className="viewer-who"><strong>{sender?.name || msg.senderName}</strong><span>{toDate(msg.createdAt)?.toLocaleString()}</span></div>
-        <button className="icon-btn" onClick={() => downloadDataUrl(url, `arhub-${msg.id}.jpg`)} aria-label="Download"><IoDownloadOutline /></button>
+        {!snap && <button className="icon-btn" onClick={() => downloadDataUrl(url, `arhub-${msg.id}.jpg`)} aria-label="Download"><IoDownloadOutline /></button>}
         <button className="icon-btn" onClick={onClose} aria-label="Close"><IoClose /></button>
       </div>
       <img src={url} alt={msg.text || "Photo"} onClick={e => e.stopPropagation()} />

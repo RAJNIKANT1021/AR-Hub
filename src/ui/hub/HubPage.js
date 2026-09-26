@@ -2,12 +2,14 @@ import React, { Suspense, lazy, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { IoArrowBack, IoSearch } from "react-icons/io5";
 import "../../styles/hub.css";
+import "../../styles/explore.css";
 import { useApp } from "../../Context/ChatContext";
 import { HUB_MODULES } from "./registry";
 import { Spinner } from "../common/Empty";
 
 const COMPONENTS = {
   games: lazy(() => import("./modules/GamesArcade")),
+  code: lazy(() => import("./modules/CodeArena")),
   weather: lazy(() => import("../../Components/Chat_component/Weather_component/main_weather")),
   news: lazy(() => import("./modules/News")),
   notes: lazy(() => import("./modules/Notes")),
@@ -46,7 +48,7 @@ export default function HubPage() {
           <h1 className="page-title sm">{mod.label}</h1>
         </header>
         <div className="page-body">
-          <div className={`page-inner ${module === "weather" || module === "news" || module === "games" ? "wide" : ""} hub-mod-body`}>
+          <div className={`page-inner ${module === "weather" || module === "news" || module === "games" || module === "code" ? "wide" : ""} hub-mod-body`}>
             <Suspense fallback={<div className="page-loader" style={{ height: 240 }}><Spinner /></div>}>
               <C />
             </Suspense>

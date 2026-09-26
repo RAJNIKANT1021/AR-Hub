@@ -3,7 +3,7 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import {
   IoChatbubbles, IoChatbubblesOutline, IoPeople, IoPeopleOutline, IoCall, IoCallOutline,
   IoApps, IoAppsOutline, IoNotifications, IoNotificationsOutline, IoSettingsOutline,
-  IoPersonCircleOutline, IoSunnyOutline, IoMoonOutline, IoSearch,
+  IoPersonCircleOutline, IoSunnyOutline, IoMoonOutline, IoSearch, IoCompass, IoCompassOutline,
 } from "react-icons/io5";
 import { TbCircleDashed } from "react-icons/tb";
 import { useApp } from "../../Context/ChatContext";
@@ -12,12 +12,14 @@ import Avatar from "../common/Avatar";
 import CommandPalette from "./CommandPalette";
 
 export const NAV = [
-  { to: "/chat",   label: "Chats",  icon: IoChatbubblesOutline, active: IoChatbubbles, badge: "chats" },
-  { to: "/rooms",  label: "Rooms",  icon: IoPeopleOutline, active: IoPeople },
-  { to: "/status", label: "Status", icon: TbCircleDashed, active: TbCircleDashed },
-  { to: "/calls",  label: "Calls",  icon: IoCallOutline, active: IoCall },
-  { to: "/hub",    label: "Hub",    icon: IoAppsOutline, active: IoApps },
+  { to: "/chat",    label: "Chats",   icon: IoChatbubblesOutline, active: IoChatbubbles, badge: "chats" },
+  { to: "/rooms",   label: "Rooms",   icon: IoPeopleOutline, active: IoPeople },
+  { to: "/explore", label: "Explore", icon: IoCompassOutline, active: IoCompass },
+  { to: "/calls",   label: "Calls",   icon: IoCallOutline, active: IoCall },
+  { to: "/hub",     label: "Hub",     icon: IoAppsOutline, active: IoApps },
 ];
+// Desktop rail has room for Status too (on phones it lives in Explore's stories bar)
+const RAIL = [...NAV.slice(0, 3), { to: "/status", label: "Status", icon: TbCircleDashed, active: TbCircleDashed }, ...NAV.slice(3)];
 
 // Captured once so the "Install app" button can be offered anywhere
 let deferredInstall = null;
@@ -42,7 +44,7 @@ export default function AppShell({ children }) {
 
   // Bottom tabs only on top-level screens (hidden inside a conversation / sub page)
   const path = loc.pathname;
-  const showBottom = ["/chat", "/rooms", "/status", "/calls", "/hub"].includes(path);
+  const showBottom = ["/chat", "/rooms", "/status", "/calls", "/hub", "/explore", "/explore/feed", "/explore/forums", "/explore/confessions"].includes(path);
 
   useEffect(() => {
     const onKey = (e) => {
@@ -64,7 +66,7 @@ export default function AppShell({ children }) {
       <nav className="rail" aria-label="Main">
         <div className="rail-logo" title="AR Hub"><img src="/icon.svg" alt="AR Hub" /></div>
         <div className="rail-items">
-          {NAV.map(n => {
+          {RAIL.map(n => {
             const Icon = isActive(n.to) ? n.active : n.icon;
             return (
               <NavLink key={n.to} to={n.to} className={`rail-item ${isActive(n.to) ? "active" : ""}`} title={n.label}>

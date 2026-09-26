@@ -39,7 +39,7 @@ export function previewOf(msg) {
   if (!msg) return "";
   switch (msg.type) {
     case "poll":     return `📊 ${msg.poll?.question || "Poll"}`;
-    case "image":    return msg.text ? `📷 ${msg.text.slice(0, 70)}` : "📷 Photo";
+    case "image":    return msg.viewOnce ? "📸 Snap" : msg.text ? `📷 ${msg.text.slice(0, 70)}` : "📷 Photo";
     case "voice":    return "🎤 Voice message";
     case "location": return "📍 Location";
     case "system":   return msg.text || "";
@@ -358,7 +358,7 @@ async function addSystemMessage(cid, text, byUid) {
  */
 export async function sendMessage(cid, {
   chat, me, text = "", type = "text", poll = null, replyTo = null,
-  image = null, voice = null, location = null, mentions = [], forwarded = false,
+  image = null, voice = null, location = null, mentions = [], forwarded = false, viewOnce = false,
 }) {
   const senderId = me.uid;
   if (type === "text" && !text.trim()) return null;
@@ -384,6 +384,7 @@ export async function sendMessage(cid, {
     poll, replyTo, image, voice, location,
     mentions: mentions || [],
     forwarded: !!forwarded,
+    ...(viewOnce ? { viewOnce: true, openedBy: [] } : {}),
     reactions: {}, readBy: [senderId], deliveredTo: [senderId], deletedFor: [],
     edited: false,
     createdAt: serverTimestamp(),
@@ -453,6 +454,15 @@ export async function forwardMessage(targetCid, msg, { chat, me }) {
 }
 
 /** Mark a set of messages read (and delivered) in one batch. */
+/** Open a view-once snap; the image is wiped once every recipient has opened it. */
+export async function openSnap(cid, msg, uid, members) {
+  const others = (members || []).filter(m => m !== msg.senderId);
+  const opened = Array.from(new Set([...(msg.openedBy || []), uid]));
+  const upd = { openedBy: arrayUnion(uid), readBy: arrayUnion(uid) };
+  if (others.every(o => opened.includes(o))) upd.image = null;
+  await updateDoc(msgRef(cid, msg.id), upd);
+}
+
 export async function markMessagesRead(cid, mids, uid) {
   if (!mids.length) return;
   const batch = writeBatch(db);

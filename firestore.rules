@@ -70,6 +70,59 @@ service cloud.firestore {
       allow create: if signedIn();
     }
 
+    // ── Explore: feed posts ──────────────────────────────────
+    function onlyKeys(keys) { return request.resource.data.diff(resource.data).affectedKeys().hasOnly(keys); }
+    match /posts/{pid} {
+      allow read: if signedIn();
+      allow create: if signedIn() && request.resource.data.uid == request.auth.uid;
+      allow update: if signedIn() && (resource.data.uid == request.auth.uid || onlyKeys(['likes', 'commentCount']));
+      allow delete: if signedIn() && resource.data.uid == request.auth.uid;
+      match /comments/{c} {
+        allow read: if signedIn();
+        allow create: if signedIn() && request.resource.data.uid == request.auth.uid;
+        allow delete: if signedIn() && resource.data.uid == request.auth.uid;
+      }
+    }
+
+    // ── Explore: forum threads ───────────────────────────────
+    match /threads/{tid} {
+      allow read: if signedIn();
+      allow create: if signedIn() && request.resource.data.uid == request.auth.uid;
+      allow update: if signedIn() && (resource.data.uid == request.auth.uid || onlyKeys(['up', 'down', 'score', 'commentCount']));
+      allow delete: if signedIn() && resource.data.uid == request.auth.uid;
+      match /comments/{c} {
+        allow read: if signedIn();
+        allow create: if signedIn() && request.resource.data.uid == request.auth.uid;
+        allow delete: if signedIn() && resource.data.uid == request.auth.uid;
+      }
+    }
+
+    // ── Explore: anonymous confessions (no author on the public doc) ──
+    function ownsAnon(id) {
+      return signedIn() && get(/databases/$(database)/documents/confessionOwners/$(id)).data.uid == request.auth.uid;
+    }
+    match /confessions/{id} {
+      allow read: if signedIn();
+      allow create: if signedIn() && !('uid' in request.resource.data);
+      allow update: if signedIn() && onlyKeys(['reactions', 'commentCount']);
+      allow delete: if ownsAnon(id);
+      match /comments/{c} {
+        allow read: if signedIn();
+        allow create: if signedIn() && !('uid' in request.resource.data);
+        allow delete: if ownsAnon('c_' + c);
+      }
+    }
+    match /confessionOwners/{id} {
+      allow read, delete: if signedIn() && resource.data.uid == request.auth.uid;
+      allow create: if signedIn() && request.resource.data.uid == request.auth.uid;
+    }
+
+    // ── Code arena leaderboard ───────────────────────────────
+    match /codeSolves/{uid} {
+      allow read: if signedIn();
+      allow write: if isMe(uid);
+    }
+
     // ── Abuse reports (write-only) ───────────────────────────
     match /reports/{id} {
       allow create: if signedIn() && request.resource.data.by == request.auth.uid;

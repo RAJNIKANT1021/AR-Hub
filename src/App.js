@@ -23,6 +23,7 @@ const HubPage       = lazy(() => import("./ui/hub/HubPage"));
 const NotificationsPage = lazy(() => import("./ui/notifications/NotificationsPage"));
 const SettingsPage  = lazy(() => import("./ui/settings/SettingsPage"));
 const StarredPage   = lazy(() => import("./ui/chat/StarredPage"));
+const ExplorePage   = lazy(() => import("./ui/explore/ExplorePage"));
 
 export function PageLoader() {
   return <div className="page-loader"><Spinner size={28} /></div>;
@@ -102,6 +103,9 @@ function CallLayer({ uid }) {
             <Route path="/rooms" element={<RoomsPage />} />
             <Route path="/join/:code" element={<JoinRoom />} />
             <Route path="/status" element={<StatusPage />} />
+            <Route path="/explore" element={<ExplorePage />} />
+            <Route path="/explore/:tab" element={<ExplorePage />} />
+            <Route path="/explore/:tab/:id" element={<ExplorePage />} />
             <Route path="/calls" element={<CallsPage />} />
             <Route path="/contacts" element={<ContactsPage />} />
             <Route path="/hub" element={<HubPage />} />

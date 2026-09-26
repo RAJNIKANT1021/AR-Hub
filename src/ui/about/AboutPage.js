@@ -16,6 +16,9 @@ export const FEATURES = [
   { icon: "⭕", title: "Status stories", text: "24-hour text & photo stories with progress bars, view receipts and quick replies." },
   { icon: "🎮", title: "Multiplayer games", text: "11 real-time games — Tic Tac Toe, Connect 4, Snake Battle and more — playable from chats or calls." },
   { icon: "🔔", title: "Smart notifications", text: "In-app toasts, system push via service worker, per-chat mute, app-icon badges and a notification centre." },
+  { icon: "🧭", title: "Explore & social", text: "An X/Instagram-style feed with photos, likes, comments and trending #hashtags, Reddit-style forums with voting, and fully anonymous confessions." },
+  { icon: "👻", title: "Snaps", text: "Snapchat-style view-once photos that self-destruct after a 10-second view and can't be saved or reopened." },
+  { icon: "💻", title: "Code Arena", text: "LeetCode-style JavaScript challenges run in a sandboxed Web Worker against hidden tests, with a live leaderboard." },
   { icon: "🧰", title: "Productivity hub", text: "Cloud-synced notes & tasks, a Pomodoro focus timer, whiteboard, calculator, unit converter, news and weather." },
   { icon: "⚡", title: "Fast & offline-ready", text: "Installable PWA with an offline cache, code-split routes, optimistic UI and instant cached loads." },
   { icon: "⌨️", title: "Power-user UX", text: "Command palette (Ctrl K), keyboard shortcuts, swipe-to-reply, long-press menus, smart reply suggestions and rich text." },
@@ -71,9 +74,9 @@ export default function AboutPage({ publicView = false }) {
         </section>
 
         <section className="about-stats">
-          <div><strong>40+</strong><span>features shipped</span></div>
+          <div><strong>50+</strong><span>features shipped</span></div>
           <div><strong>11</strong><span>multiplayer games</span></div>
-          <div><strong>10</strong><span>hub modules</span></div>
+          <div><strong>13</strong><span>coding challenges</span></div>
           <div><strong>100%</strong><span>responsive & PWA</span></div>
         </section>
 

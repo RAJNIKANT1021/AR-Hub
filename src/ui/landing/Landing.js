@@ -46,7 +46,7 @@ export default function Landing() {
         <header className="land-hero">
           <div className="land-glow" aria-hidden />
           <div className="land-copy">
-            <span className="land-kicker">✨ Chat · Rooms · Calls · Stories · Games</span>
+            <span className="land-kicker">✨ Chat · Rooms · Calls · Feed · Forums · Games</span>
             <h1>All your conversations.<br /><span className="grad">One beautiful hub.</span></h1>
             <p>AR Hub is a real-time messenger for the web and your phone — with group rooms, HD voice & video calls, voice notes, status stories, multiplayer games and a productivity toolkit built in.</p>
             <div className="land-cta">

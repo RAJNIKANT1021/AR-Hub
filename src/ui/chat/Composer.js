@@ -43,6 +43,7 @@ export default function Composer({
   const [pollOpen, setPollOpen] = useState(false);
   const [imagePreview, setImagePreview] = useState(null); // {url,width,height}
   const [caption, setCaption] = useState("");
+  const [viewOnce, setViewOnce] = useState(false);
   const [rec, setRec] = useState(null); // { ctrl, secs, level }
   const [mention, setMention] = useState(null); // { start, query }
   const [mentionIdx, setMentionIdx] = useState(0);
@@ -167,6 +168,7 @@ export default function Composer({
     try {
       const img = await compressImage(file);
       setCaption(text);
+      setViewOnce(false);
       setImagePreview(img);
     } catch (e) { toastError(e); }
   };
@@ -177,7 +179,7 @@ export default function Composer({
     setText("");
     setDraft(cid, "");
     sounds.send();
-    onSendImage(img, caption.trim());
+    onSendImage(img, viewOnce ? "" : caption.trim(), viewOnce);
     setCaption("");
   };
 
@@ -329,7 +331,8 @@ export default function Composer({
 
       <Sheet open={!!imagePreview} onClose={() => setImagePreview(null)} title="Send photo" size="md"
         footer={<>
-          <input className="input" style={{ flex: 1 }} placeholder="Add a caption…" value={caption} onChange={e => setCaption(e.target.value)} onKeyDown={e => e.key === "Enter" && sendImage()} />
+          <button className={`snap-toggle ${viewOnce ? "on" : ""}`} onClick={() => setViewOnce(v => !v)} title="View once (snap)" aria-pressed={viewOnce}>👻<span>{viewOnce ? "Snap" : "Once"}</span></button>
+          <input className="input" style={{ flex: 1 }} placeholder={viewOnce ? "Snaps disappear after they're viewed" : "Add a caption…"} disabled={viewOnce} value={viewOnce ? "" : caption} onChange={e => setCaption(e.target.value)} onKeyDown={e => e.key === "Enter" && sendImage()} />
           <button className="send-btn" onClick={sendImage} aria-label="Send photo"><IoSend /></button>
         </>}>
         {imagePreview && <img className="img-preview" src={imagePreview.url} alt="Preview" />}

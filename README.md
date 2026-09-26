@@ -9,6 +9,9 @@ A modern, mobile-first real-time messenger and personal hub built with **React 1
 - **Rooms**: public and private group chats with admins, invite links and codes, @mentions, member management, a Discover page and join-by-link.
 - **Calls**: peer-to-peer WebRTC voice and video, screen sharing, device switching, in-call chat, in-call games, missed-call alerts and call history.
 - **Status**: 24-hour text and photo stories with a full-screen viewer, view receipts and replies.
+- **Explore**: an X/Instagram-style feed (photos, likes, comments, trending #hashtags, stories bar), Reddit-style forums with up/down votes, and anonymous confessions with pseudonymous replies (the author is never stored on the public post).
+- **Snaps**: view-once photos in chat that self-destruct after 10 seconds.
+- **Code Arena**: LeetCode-style JavaScript problems run in a sandboxed Web Worker, with a 3s time limit and a leaderboard.
 - **Notifications**: in-app toasts, system notifications through the service worker, per-chat mute, a notification centre, and a badge on the app icon and tab title.
 - **Hub**: a games arcade (11 multiplayer games), weather, news, cloud-synced notes and tasks, a Pomodoro focus timer, whiteboard, calculator, unit converter and invite QR codes.
 - **UX**: Ctrl/⌘+K command palette, keyboard shortcuts, long-press menus, smart reply suggestions, light/dark/system themes, accent colours, wallpapers and text size.
