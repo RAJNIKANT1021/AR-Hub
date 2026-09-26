@@ -25,7 +25,7 @@ import SnakeBattle,{ getInitialState as snakeInit }        from "./SnakeBattle";
 import WhackAMole, { getInitialState as whackInit }        from "./WhackAMole";
 import "./games.css";
 
-const GAME_LIST = [
+export const GAME_LIST = [
   { key: "tictactoe",   label: "Tic Tac Toe",        emoji: "⭕",  init: tttInit,   Component: TicTacToe,        desc: "Classic 3×3 strategy" },
   { key: "connect4",    label: "Connect 4",          emoji: "🔴",  init: c4Init,    Component: Connect4,         desc: "Drop discs, connect 4" },
   { key: "rps",         label: "Rock Paper Scissors",emoji: "✊",  init: rpsInit,   Component: RockPaperScissors, desc: "5-round battle" },
@@ -80,7 +80,7 @@ function LogsPanel({ uid, onClose }) {
   );
 }
 
-export default function GameHub({ myUid, myName, partnerUid, partnerName, onClose }) {
+export default function GameHub({ myUid, myName, partnerUid, partnerName, onClose, onInvite, autoLaunch }) {
   const [screen, setScreen]         = useState("lobby"); // lobby | waiting | playing | logs
   const [gid, setGid]               = useState(null);
   const [gameDoc, setGameDoc]       = useState(null);
@@ -118,7 +118,14 @@ export default function GameHub({ myUid, myName, partnerUid, partnerName, onClos
     const newGid = await inviteGame(myUid, myName, partnerUid, partnerName, gameKey, initialState);
     setGid(newGid);
     setScreen("waiting");
-  }, [myUid, myName, partnerUid, partnerName]);
+    onInvite?.(g.label);
+  }, [myUid, myName, partnerUid, partnerName, onInvite]);
+
+  // Launch straight into a game when opened from the arcade
+  const autoLaunched = useRef(false);
+  useEffect(() => {
+    if (autoLaunch && !autoLaunched.current) { autoLaunched.current = true; launchGame(autoLaunch); }
+  }, [autoLaunch, launchGame]);
 
   // ── Guest: accept invite ─────────────────────────────────────
   const acceptIncoming = useCallback(async () => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import React, { useEffect, useRef, useState, useCallback, Suspense, lazy } from "react";
 import "./callscreen1.css";
 import {
   IoMicOutline,
@@ -12,7 +12,8 @@ import {
   IoGameControllerOutline,
 } from "react-icons/io5";
 import { MdScreenShare, MdStopScreenShare, MdVolumeUp } from "react-icons/md";
-import GameHub from "../Games/GameHub";
+
+const GameHub = lazy(() => import("../Games/GameHub"));
 
 // ── Duration timer ─────────────────────────────────────────────
 function useDuration(running) {
@@ -398,6 +399,7 @@ export function CallScreen({
       {/* In-call games panel */}
       {showGames && (
         <div className="call-games-panel" onClick={(e) => e.stopPropagation()}>
+          <Suspense fallback={null}>
           <GameHub
             myUid={uid}
             myName={myName || "You"}
@@ -405,6 +407,7 @@ export function CallScreen({
             partnerName={partner?.name || "Opponent"}
             onClose={() => setShowGames(false)}
           />
+          </Suspense>
         </div>
       )}
 
