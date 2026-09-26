@@ -1,8 +1,6 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth} from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
-
+import { getAuth, connectAuthEmulator } from "firebase/auth";
+import { getFirestore, connectFirestoreEmulator, enableMultiTabIndexedDbPersistence } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBqEaIk2X6dbSgMBfWWnrOOpnvOD9AuzTs",
@@ -14,7 +12,16 @@ const firebaseConfig = {
   measurementId: "G-YZPT74GYLZ"
 };
 
-// Initialize Firebase
 export const app = initializeApp(firebaseConfig);
-export const auth = getAuth();
-export const db = getFirestore(app); 
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+
+// Local development against the Firebase emulator suite:
+//   REACT_APP_USE_EMULATOR=true npm start   (with `firebase emulators:start` running)
+if (process.env.REACT_APP_USE_EMULATOR === "true") {
+  connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
+  connectFirestoreEmulator(db, "127.0.0.1", 8080);
+}
+
+// Offline cache: chats/messages load instantly and queued writes survive reloads.
+enableMultiTabIndexedDbPersistence(db).catch(() => {});

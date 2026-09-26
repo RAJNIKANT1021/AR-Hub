@@ -1,8 +1,78 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if true;
+
+    function signedIn() { return request.auth != null; }
+    function isMe(uid) { return signedIn() && request.auth.uid == uid; }
+    function chatDoc(cid) { return get(/databases/$(database)/documents/chats/$(cid)); }
+    function isMember(cid) { return signedIn() && request.auth.uid in chatDoc(cid).data.members; }
+    // Other users may only touch the social arrays on your profile (friend requests etc.)
+    function onlySocialFields() {
+      return request.resource.data.diff(resource.data).affectedKeys()
+        .hasOnly(['friends', 'sentRequests', 'friendRequests']);
+    }
+
+    // ── Users ────────────────────────────────────────────────
+    match /users/{uid} {
+      allow read: if signedIn();
+      allow create: if isMe(uid);
+      allow update: if isMe(uid) || (signedIn() && onlySocialFields());
+      allow delete: if false;
+
+      match /{sub}/{docId} {            // starred, notes, tasks — private to the owner
+        allow read, write: if isMe(uid);
+      }
+    }
+
+    // ── Chats (DMs + rooms) ──────────────────────────────────
+    match /chats/{cid} {
+      // Readable when signed in so invite codes / public rooms can be looked up
+      allow read: if signedIn();
+      allow create: if signedIn() && request.auth.uid in request.resource.data.members;
+      // Members can update; non-members may only add themselves (joining a room)
+      allow update: if signedIn() && (
+        request.auth.uid in resource.data.members ||
+        (request.auth.uid in request.resource.data.members && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['members', 'unreadCount']))
+      );
+      allow delete: if signedIn() && request.auth.uid in resource.data.members;
+
+      match /messages/{mid} {
+        allow read: if isMember(cid);
+        allow create: if isMember(cid) && (request.resource.data.senderId == request.auth.uid || request.resource.data.type == 'system');
+        allow update: if isMember(cid);
+        allow delete: if isMember(cid);
+      }
+    }
+
+    // ── Notifications ────────────────────────────────────────
+    match /notifications/{uid}/items/{nid} {
+      allow read, update, delete: if isMe(uid);
+      allow create: if signedIn();
+    }
+
+    // ── Status stories ───────────────────────────────────────
+    match /statuses/{sid} {
+      allow read: if signedIn();
+      allow create: if signedIn() && request.resource.data.uid == request.auth.uid;
+      allow update: if signedIn() && (resource.data.uid == request.auth.uid || request.resource.data.diff(resource.data).affectedKeys().hasOnly(['viewers']));
+      allow delete: if signedIn() && resource.data.uid == request.auth.uid;
+    }
+
+    // ── Calls (WebRTC signalling) & games ────────────────────
+    match /calls/{callId} {
+      allow read, write: if signedIn();
+      match /{sub}/{docId} { allow read, write: if signedIn(); }
+    }
+    match /callLogs/{uid}/items/{id} { allow read, write: if isMe(uid); }
+    match /games/{gid} { allow read, write: if signedIn(); }
+    match /gameLogs/{uid}/items/{id} {
+      allow read: if isMe(uid);
+      allow create: if signedIn();
+    }
+
+    // ── Abuse reports (write-only) ───────────────────────────
+    match /reports/{id} {
+      allow create: if signedIn() && request.resource.data.by == request.auth.uid;
     }
   }
 }

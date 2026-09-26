@@ -118,3 +118,8 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Firebase emulator logs
+firebase-debug.log*
+firestore-debug.log*
+ui-debug.log*

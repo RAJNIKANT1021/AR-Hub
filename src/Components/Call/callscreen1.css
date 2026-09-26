@@ -536,3 +536,17 @@
   .call-controls { gap: 10px; padding: 8px 14px; }
   .call-ctrl-btn { width: 46px; height: 46px; font-size: 1.1rem; }
 }
+
+/* ── Phones: controls span the width and wrap; device pickers hidden ── */
+@media (max-width: 560px) {
+  .call-controls {
+    left: 8px; right: 8px; transform: none;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    flex-wrap: wrap; justify-content: center;
+    gap: 22px 12px; padding: 12px 10px 24px; border-radius: 24px;
+  }
+  .call-ctrl-chevron { display: none; }
+  .call-ctrl-btn { width: 50px; height: 50px; }
+  .call-ctrl-btn:hover { transform: none; }
+  .call-local-pip { bottom: 190px; }
+}

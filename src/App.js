@@ -1,138 +1,126 @@
-import React, { useState, useEffect } from "react";
-import "./app1.css";
-import Navbar from "./Components/Navbar";
-import Login from "./userauth/login";
-import { Routes, Route, useLocation, Navigate } from "react-router-dom";
-import Feed from "./Components/Feed";
-import Chat from "./Components/Chat";
-import Main from "./Components/Chat_component/Weather_component/main_weather";
-import { ChatProvider, useChatContext } from "./Context/ChatContext";
+import React, { Suspense, lazy, useEffect, useState } from "react";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "./userauth/FireAuth";
+import { ChatProvider, useApp } from "./Context/ChatContext";
 import { CallProvider } from "./Components/Call/CallManager";
-import { getUser, setPresence } from "./lib/db";
+import { getUser, createUser } from "./lib/db";
+import { consumePendingSignupName } from "./ui/auth/pending";
+import AppShell from "./ui/shell/AppShell";
+import ChatsPage from "./ui/chat/ChatsPage";
+import { Spinner } from "./ui/common/Empty";
 
-/* ── Full-screen skeleton loader ─────────────────────────────── */
-function AppLoader() {
+// Route-level code splitting keeps the first load small
+const Landing       = lazy(() => import("./ui/landing/Landing"));
+const AuthPage      = lazy(() => import("./ui/auth/AuthPage"));
+const AboutPage     = lazy(() => import("./ui/about/AboutPage"));
+const RoomsPage     = lazy(() => import("./ui/rooms/RoomsPage"));
+const JoinRoom      = lazy(() => import("./ui/rooms/JoinRoom"));
+const StatusPage    = lazy(() => import("./ui/status/StatusPage"));
+const CallsPage     = lazy(() => import("./ui/calls/CallsPage"));
+const ContactsPage  = lazy(() => import("./ui/contacts/ContactsPage"));
+const HubPage       = lazy(() => import("./ui/hub/HubPage"));
+const NotificationsPage = lazy(() => import("./ui/notifications/NotificationsPage"));
+const SettingsPage  = lazy(() => import("./ui/settings/SettingsPage"));
+const StarredPage   = lazy(() => import("./ui/chat/StarredPage"));
+
+export function PageLoader() {
+  return <div className="page-loader"><Spinner size={28} /></div>;
+}
+
+function Splash() {
   return (
-    <div style={{
-      width: '100vw', height: '100vh',
-      display: 'flex', flexDirection: 'column',
-      background: 'var(--bg-primary)', overflow: 'hidden'
-    }}>
-      <div style={{
-        height: 56, background: 'var(--bg-secondary)',
-        borderBottom: '1px solid var(--border)',
-        display: 'flex', alignItems: 'center', padding: '0 1.25rem', gap: '1rem'
-      }}>
-        <div className="skeleton" style={{ width: 90, height: 20 }} />
-        <div style={{ flex: 1, display: 'flex', justifyContent: 'center', gap: '.5rem' }}>
-          {[70, 70, 70].map((w, i) => <div key={i} className="skeleton" style={{ width: w, height: 32, borderRadius: 8 }} />)}
-        </div>
-        <div className="skeleton" style={{ width: 36, height: 36, borderRadius: '50%' }} />
-      </div>
-      <div style={{ flex: 1, display: 'flex' }}>
-        <div style={{
-          width: 380, background: 'var(--bg-secondary)',
-          borderRight: '1px solid var(--border)', padding: '.75rem',
-          display: 'flex', flexDirection: 'column', gap: '.75rem'
-        }}>
-          <div className="skeleton" style={{ height: 36, borderRadius: 10 }} />
-          {Array(6).fill(0).map((_, i) => (
-            <div key={i} style={{ display: 'flex', gap: '.75rem', alignItems: 'center' }}>
-              <div className="skeleton" style={{ width: 48, height: 48, borderRadius: '50%', flexShrink: 0 }} />
-              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '.35rem' }}>
-                <div className="skeleton" style={{ height: 14, width: `${50 + (i * 7) % 30}%` }} />
-                <div className="skeleton" style={{ height: 12, width: `${65 + (i * 5) % 25}%` }} />
-              </div>
-            </div>
-          ))}
-        </div>
-        <div style={{ flex: 1, background: 'var(--bg-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{ opacity: .12, fontSize: '5rem' }}>💬</div>
-        </div>
-      </div>
+    <div className="splash">
+      <img src="/icon.svg" alt="" width="76" height="76" />
+      <div className="splash-name">AR Hub</div>
+      <div className="splash-bar"><span /></div>
     </div>
   );
 }
 
-function App() {
-  const [uid, setUid] = useState(null);
-  const [loggedin, setLoggedin] = useState(false);
-  const [appReady, setAppReady] = useState(false);
-  const location = useLocation();
+export default function App() {
+  const [authState, setAuthState] = useState({ ready: false, uid: null });
 
-  /* ── Auth gate: verify stored uid against new schema ── */
-  useEffect(() => {
-    const storedUid = localStorage.getItem('user');
-    if (!storedUid) { setAppReady(true); return; }
-
-    getUser(storedUid).then(user => {
-      if (user) {
-        setUid(storedUid);
-        setLoggedin(true);
-        setPresence(storedUid, true);
-      } else {
-        localStorage.removeItem('user');
+  useEffect(() => onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      localStorage.removeItem("user");
+      setAuthState({ ready: true, uid: null });
+      return;
+    }
+    try {
+      const existing = await getUser(user.uid);
+      if (!existing) {
+        const name = consumePendingSignupName() || user.displayName || (user.email || "user").split("@")[0];
+        await createUser(user.uid, { name: name.charAt(0).toUpperCase() + name.slice(1), email: user.email || "" });
       }
-      setAppReady(true);
-    }).catch(() => {
-      setAppReady(true);
-    });
-  }, []);
+    } catch {
+      // Offline with no cached profile — the live subscription will fill it in later
+    }
+    localStorage.setItem("user", user.uid);
+    setAuthState({ ready: true, uid: user.uid });
+  }), []);
 
-  const checker = (isLoggedIn, newUid) => {
-    setLoggedin(isLoggedIn);
-    setUid(isLoggedIn ? newUid : null);
-  };
+  if (!authState.ready) return <Splash />;
 
-  if (!appReady) return <AppLoader />;
+  if (!authState.uid) {
+    return (
+      <Suspense fallback={<Splash />}>
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/login" element={<AuthPage />} />
+          <Route path="/about" element={<AboutPage publicView />} />
+          <Route path="*" element={<RedirectToLogin />} />
+        </Routes>
+      </Suspense>
+    );
+  }
 
   return (
-    <div className="app-layout">
-      {/* ChatProvider only active when logged in */}
-      {loggedin && uid
-        ? (
-          <ChatProvider uid={uid}>
-            <AppWithCall uid={uid} loggedin={loggedin} checker={checker} />
-          </ChatProvider>
-        )
-        : (
-          <>
-            <Navbar loggedin={loggedin} checker={checker} uid={uid} />
-            <div className="app-body">
-              <Routes>
-                <Route
-                  path="/"
-                  element={<Login checker={checker} key={location.key} />}
-                />
-                <Route path="/weather" element={<Main />} />
-                <Route path="/feed" element={<Feed />} />
-                <Route path="*" element={<Navigate to="/" replace />} />
-              </Routes>
-            </div>
-          </>
-        )
-      }
-    </div>
+    <ChatProvider uid={authState.uid} key={authState.uid}>
+      <CallLayer uid={authState.uid} />
+    </ChatProvider>
   );
 }
 
-// Inner component: reads me from ChatContext to pass name/avatar to CallProvider
-function AppWithCall({ uid, loggedin, checker }) {
-  const { me } = useChatContext() || {};
+function RedirectToLogin() {
+  const loc = useLocation();
+  const next = loc.pathname + loc.search;
+  return <Navigate to={`/login?next=${encodeURIComponent(next)}`} replace />;
+}
+
+function CallLayer({ uid }) {
+  const { me } = useApp();
   return (
     <CallProvider uid={uid} myName={me?.name || ""} myAvatar={me?.avatar || null} getUser={getUser}>
-      <Navbar loggedin={loggedin} checker={checker} uid={uid} />
-      <div className="app-body">
-        <Routes>
-          <Route path="/" element={<Navigate to="/chat" replace />} />
-          <Route path="/weather" element={<Main />} />
-          <Route path="/feed" element={<Feed />} />
-          <Route path="/chat/*" element={<Chat uid={uid} />} />
-          <Route path="*" element={<Navigate to="/chat" replace />} />
-        </Routes>
-      </div>
+      <AppShell>
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
+            <Route path="/" element={<Navigate to="/chat" replace />} />
+            <Route path="/login" element={<LoginRedirect />} />
+            <Route path="/chat" element={<ChatsPage />} />
+            <Route path="/chat/:cid" element={<ChatsPage />} />
+            <Route path="/rooms" element={<RoomsPage />} />
+            <Route path="/join/:code" element={<JoinRoom />} />
+            <Route path="/status" element={<StatusPage />} />
+            <Route path="/calls" element={<CallsPage />} />
+            <Route path="/contacts" element={<ContactsPage />} />
+            <Route path="/hub" element={<HubPage />} />
+            <Route path="/hub/:module" element={<HubPage />} />
+            <Route path="/notifications" element={<NotificationsPage />} />
+            <Route path="/starred" element={<StarredPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/settings/:section" element={<SettingsPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="*" element={<Navigate to="/chat" replace />} />
+          </Routes>
+        </Suspense>
+      </AppShell>
     </CallProvider>
   );
 }
 
-export default App;
+function LoginRedirect() {
+  const loc = useLocation();
+  const next = new URLSearchParams(loc.search).get("next");
+  return <Navigate to={next && next.startsWith("/") ? next : "/chat"} replace />;
+}

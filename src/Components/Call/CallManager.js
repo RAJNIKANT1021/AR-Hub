@@ -25,6 +25,8 @@ import {
   writeCallLog,
 } from "../../lib/webrtc";
 import { IncomingCallCard, CallScreen } from "./CallScreen";
+import { addNotification } from "../../lib/db";
+import { pushToast } from "../../Context/ChatContext";
 
 const CallCtx = createContext(null);
 export const useCallManager = () => useContext(CallCtx);
@@ -43,6 +45,8 @@ export function CallProvider({ uid, myName, myAvatar, getUser, children }) {
   const cleanupRef = useRef(null);
   const callStartRef = useRef(null);
   const activeCallRef = useRef(null);
+  const ringingRef = useRef(null);
+  const ringTimeoutRef = useRef(null);
 
   // Keep activeCallRef in sync with state
   useEffect(() => {
@@ -55,6 +59,20 @@ export function CallProvider({ uid, myName, myAvatar, getUser, children }) {
     if (!uid) return;
     return subscribeIncomingCall(uid, async (callDoc) => {
       if (!callDoc) {
+        // Caller hung up before we answered or declined → missed call
+        const ringing = ringingRef.current;
+        if (ringing && !activeCallRef.current) {
+          writeCallLog(uid, {
+            cid: ringing.id, partnerId: ringing.callerId, partnerName: ringing.callerName || "Unknown",
+            partnerAvatar: ringing.callerAvatar || null, callType: ringing.callType, direction: "incoming",
+            duration: 0, status: "missed",
+          }).catch(() => {});
+          addNotification(uid, {
+            type: "missed_call", fromUid: ringing.callerId, senderName: ringing.callerName,
+            text: `Missed ${ringing.callType === "audio" ? "voice" : "video"} call`,
+          }).catch(() => {});
+        }
+        ringingRef.current = null;
         setIncomingCall(null);
         return;
       }
@@ -64,6 +82,7 @@ export function CallProvider({ uid, myName, myAvatar, getUser, children }) {
         const caller = await getUser?.(callDoc.callerId);
         callerAvatar = caller?.avatar || null;
       } catch {}
+      ringingRef.current = { ...callDoc, callerAvatar };
       setIncomingCall({ ...callDoc, callerAvatar });
     });
   }, [uid, getUser]); // no activeCall dep
@@ -86,6 +105,7 @@ export function CallProvider({ uid, myName, myAvatar, getUser, children }) {
         ? Math.round((Date.now() - callStartRef.current) / 1000)
         : 0;
       callStartRef.current = null;
+      clearTimeout(ringTimeoutRef.current);
 
       if (callMeta && uid) {
         const { partner, callType: ct, direction } = callMeta;
@@ -97,7 +117,7 @@ export function CallProvider({ uid, myName, myAvatar, getUser, children }) {
           callType: ct,
           direction,
           duration,
-          status: duration > 0 ? "completed" : "missed",
+          status: duration > 0 ? "completed" : direction === "outgoing" ? "no_answer" : "missed",
         }).catch(() => {});
       }
 
@@ -143,12 +163,20 @@ export function CallProvider({ uid, myName, myAvatar, getUser, children }) {
         setPc(result.pc);
         cleanupRef.current = result.cleanup;
         setLocalStream(result.localStream);
+        // Stop ringing after 45s with no answer
+        clearTimeout(ringTimeoutRef.current);
+        ringTimeoutRef.current = setTimeout(() => {
+          if (!callStartRef.current && activeCallRef.current?.cid === cid) {
+            doHangup(cid, true, meta);
+            pushToast({ title: "No answer", body: `${partner.name || "They"} didn't pick up.` });
+          }
+        }, 45000);
         // dataChannel is already open for caller; resolve immediately
         Promise.resolve(result.dataChannel).then(dc => { if (dc) setDataChannel(dc); }).catch(() => {});
       } catch (err) {
         console.error("Call failed:", err);
         doHangup(cid, true, null);
-        alert("Could not start call. Please check camera/mic permissions.");
+        pushToast({ kind: "error", title: "Couldn't start the call", body: "Please allow camera and microphone access, then try again." });
       }
     },
     [uid, myName, doHangup],
@@ -166,6 +194,7 @@ export function CallProvider({ uid, myName, myAvatar, getUser, children }) {
     } = incomingCall;
     const partner = { uid: callerId, name: callerName, avatar: callerAvatar };
     const meta = { partner, callType: type, direction: "incoming" };
+    ringingRef.current = null;
     setIncomingCall(null);
     setCallType(type);
     setActiveCall({ type, partner, cid, role: "callee", meta });
@@ -192,16 +221,22 @@ export function CallProvider({ uid, myName, myAvatar, getUser, children }) {
     } catch (err) {
       console.error("Answer failed:", err);
       doHangup(cid, false, null);
-      alert("Could not join call. Please check camera/mic permissions.");
+      pushToast({ kind: "error", title: "Couldn't join the call", body: "Please allow camera and microphone access, then try again." });
     }
   }, [incomingCall, uid, doHangup]);
 
   // ── Decline ────────────────────────────────────────────────
   const declineCall = useCallback(async () => {
     if (!incomingCall) return;
+    ringingRef.current = null;
     setIncomingCall(null);
+    writeCallLog(uid, {
+      cid: incomingCall.id, partnerId: incomingCall.callerId, partnerName: incomingCall.callerName || "Unknown",
+      partnerAvatar: incomingCall.callerAvatar || null, callType: incomingCall.callType, direction: "incoming",
+      duration: 0, status: "declined",
+    }).catch(() => {});
     await endCallDoc(incomingCall.id).catch(() => {});
-  }, [incomingCall]);
+  }, [incomingCall, uid]);
 
   // ── Hang up active call ────────────────────────────────────
   const hangup = useCallback(() => {

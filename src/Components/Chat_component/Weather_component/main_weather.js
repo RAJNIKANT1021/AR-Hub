@@ -31,7 +31,8 @@ const tempGradient = (temp) => {
 
 const Main = () => {
   const inputRef = useRef();
-  const [cityName, setCityName] = useState("New Delhi");
+  const [cityName, setCityName] = useState(() => localStorage.getItem("arhub_weather_city") || "New Delhi");
+  useEffect(() => { localStorage.setItem("arhub_weather_city", cityName); }, [cityName]);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [current, setCurrent] = useState(null);
@@ -48,7 +49,7 @@ const Main = () => {
         const res = await fetch(
           `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&APPID=${APP_KEY}&units=metric`
         );
-        if (!res.ok) { setError(true); return; }
+        if (!res.ok) { setError(res.status === 404 ? "notfound" : "service"); return; }
         const data = await res.json();
 
         setCity(data.city);
@@ -66,7 +67,7 @@ const Main = () => {
         setForecast(daily);
         setError(false);
       } catch {
-        setError(true);
+        setError("network");
       } finally {
         setLoading(false);
       }
@@ -113,7 +114,7 @@ const Main = () => {
         {error && !loading && (
           <div className="wx-error">
             <div className="wx-error-icon">🌩️</div>
-            <p>City not found.<br />Try a different spelling.</p>
+            <p>{error === "notfound" ? <>City not found.<br />Try a different spelling.</> : error === "network" ? <>Couldn't reach the weather service.<br />Check your connection and try again.</> : <>Weather is unavailable right now.<br />Please try again later.</>}</p>
           </div>
         )}
 
