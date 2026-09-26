@@ -17,8 +17,8 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  background: #1a1a2e;
+  object-fit: contain;
+  background: #0b0c10;
 }
 
 /* Audio-only / connecting placeholder */
@@ -504,6 +504,29 @@
 }
 .call-chat-send:hover { background: #4338ca; }
 
+/* ── In-call games panel ─────────────────────────────────── */
+.call-games-panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 340px;
+  height: 100%;
+  background: rgba(10,10,18,.96);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-left: 1px solid rgba(255,255,255,.08);
+  display: flex;
+  flex-direction: column;
+  z-index: 4;
+  animation: slideInRight .22s ease;
+  overflow: hidden;
+}
+
+@media (max-width: 480px) {
+  .call-games-panel { width: 100%; border-left: none; }
+  .call-chat-panel  { width: 100%; border-left: none; }
+}
+
 /* ── Mobile ───────────────────────────────────────────────── */
 @media (max-width: 480px) {
   .call-avatar-circle,
@@ -512,4 +535,18 @@
   .call-local-pip { width: 90px; height: 70px; bottom: 100px; right: 12px; }
   .call-controls { gap: 10px; padding: 8px 14px; }
   .call-ctrl-btn { width: 46px; height: 46px; font-size: 1.1rem; }
+}
+
+/* ── Phones: controls span the width and wrap; device pickers hidden ── */
+@media (max-width: 560px) {
+  .call-controls {
+    left: 8px; right: 8px; transform: none;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    flex-wrap: wrap; justify-content: center;
+    gap: 22px 12px; padding: 12px 10px 24px; border-radius: 24px;
+  }
+  .call-ctrl-chevron { display: none; }
+  .call-ctrl-btn { width: 50px; height: 50px; }
+  .call-ctrl-btn:hover { transform: none; }
+  .call-local-pip { bottom: 190px; }
 }

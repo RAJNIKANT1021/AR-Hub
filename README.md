@@ -1,70 +1,52 @@
-# Getting Started with Create React App
+# AR Hub
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern, mobile-first real-time messenger and personal hub built with **React 18, Firebase and WebRTC**. It's an installable PWA that works from a 360px phone to a 4K desktop.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- **Chats**: real-time DMs with sent, delivered and read ticks, typing indicators, replies (swipe right on mobile), reactions (double-tap ❤️), edit, forward, star, pin, delete for me or everyone, disappearing messages, drafts, in-chat search, export, and `*bold* _italic_ ~strike~ \`code\`` formatting.
+- **Media**: photos with captions (paste, pick or camera), voice notes with live waveform and 1×/1.5×/2× playback, polls, location sharing, and hand-drawn sketches.
+- **Rooms**: public and private group chats with admins, invite links and codes, @mentions, member management, a Discover page and join-by-link.
+- **Calls**: peer-to-peer WebRTC voice and video, screen sharing, device switching, in-call chat, in-call games, missed-call alerts and call history.
+- **Status**: 24-hour text and photo stories with a full-screen viewer, view receipts and replies.
+- **Explore**: an X/Instagram-style feed (photos, likes, comments, trending #hashtags, stories bar), Reddit-style forums with up/down votes, and anonymous confessions with pseudonymous replies (the author is never stored on the public post).
+- **Snaps**: view-once photos in chat that self-destruct after 10 seconds.
+- **Code Arena**: LeetCode-style JavaScript problems run in a sandboxed Web Worker, with a 3s time limit and a leaderboard.
+- **Notifications**: in-app toasts, system notifications through the service worker, per-chat mute, a notification centre, and a badge on the app icon and tab title.
+- **Hub**: a games arcade (11 multiplayer games), weather, news, cloud-synced notes and tasks, a Pomodoro focus timer, whiteboard, calculator, unit converter and invite QR codes.
+- **UX**: Ctrl/⌘+K command palette, keyboard shortcuts, long-press menus, smart reply suggestions, light/dark/system themes, accent colours, wallpapers and text size.
+- **About the developer**: a portfolio / hire-me page. Edit `src/config/profile.js` to personalise it.
 
-### `npm start`
+## Getting started
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```bash
+npm install --legacy-peer-deps
+npm start
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Local development with the Firebase emulators
 
-### `npm test`
+```bash
+npx firebase emulators:start --only auth,firestore --project ar-hub-d45d1
+REACT_APP_USE_EMULATOR=true npm start
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Deploying
 
-### `npm run build`
+Hosting deploys automatically from `main` via GitHub Actions. Security rules are **not** deployed by CI, so deploy them once:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+npx firebase deploy --only firestore:rules,firestore:indexes
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Project structure
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```
+src/
+  lib/          data layer (db.js), media, notifications, formatting, WebRTC, games
+  Context/      app state (ChatContext) and theming
+  ui/           screens: chat, rooms, status, calls, hub, settings, about, landing, auth
+  styles/       design system and per-area stylesheets
+  Components/   call screen and multiplayer games
+  config/       profile.js (About page content)
+```
